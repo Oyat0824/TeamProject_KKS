@@ -10,6 +10,6 @@ public class UsrHomeController {
 	@ResponseBody
 	public String showMain() {
 		
-		return "안녕하세요. s";
+		return "안녕하세요.";
 	}
 }
