@@ -11,13 +11,13 @@ CREATE TABLE `member`(
 	loginId VARCHAR(20) NOT NULL UNIQUE,
 	loginPw VARCHAR(200) NOT NULL,
 	`name` VARCHAR(20) NOT NULL,
-	gender TINYINT NOT NULL COMMENT '성별 (1 = 남자, 2 = 여자)',
+	gender VARCHAR(10) NOT NULL COMMENT '성별 (male = 남자, female = 여자)',
 	birthday DATE NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	cellphoneNum VARCHAR(20) NOT NULL,
-	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
 	profileImg VARCHAR(40),
 	salt VARCHAR(100) NOT NULL,
+	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
 	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
 	delDate DATETIME COMMENT '탈퇴 날짜'
 );
@@ -36,6 +36,7 @@ CREATE TABLE store(
 
 ##### 테이블 조회
 SELECT * FROM `member`;
+DESC `member`;
 SELECT * FROM store;
 
 ### member 테스트 데이터 생성

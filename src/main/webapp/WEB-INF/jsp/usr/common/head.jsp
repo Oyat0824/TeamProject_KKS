@@ -8,8 +8,10 @@
 <!-- 파비콘 불러오기 -->
 <link rel="shortcut icon" href="/favicon.ico" />
 <!-- 노말라이즈, 라이브러리 -->
-<!-- 제이쿼리 불러오기 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<!-- 제이쿼리, 제이쿼리UI 불러오기 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" />
 <!-- 테일윈드, 데이지 UI 불러오기 -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/daisyui@2.45.0/dist/full.css" rel="stylesheet" type="text/css" />
@@ -34,6 +36,7 @@
 				</ul>
 			</div>
 			<div class="navbar-end">
+				<a class="btn btn-outline mr-2" href="/usr/member/join">JOIN</a>
 				<a class="btn" href="#">Status Btn</a>
 			</div>
 		</div>

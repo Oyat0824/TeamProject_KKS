@@ -16,13 +16,14 @@ public class Member{
 	private String loginId;
 	private String loginPw;
 	private String name;
-	private int gender;
+	private String gender;
 	private String birthday;
-	private String cellphoneNum;
 	private String email;
+	private String cellphoneNum;
 	private int memberType;
+	private String profileImg;
+	private String salt;
 	private String delStatus;
 	private LocalDateTime delDate;
-	private String salt;
 
 }
