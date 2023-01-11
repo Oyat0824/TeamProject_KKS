@@ -1,6 +1,17 @@
 server:
   port: 8084
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: langue0824@gmail.com
+    password: giymmytntrdngovz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -12,3 +23,8 @@ spring:
     password: 
 mybatis:
   type-aliases-package: com.kks.work.project.vo
+custom:
+  siteName: 소상공인 스토어
+  siteMainUri: http://localhost:8084
+  emailFrom: no-reply@localhost
+  emailFromName: Admin

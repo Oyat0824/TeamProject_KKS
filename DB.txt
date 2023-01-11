@@ -2,3 +2,102 @@
 DROP DATABASE IF EXISTS KKS_PROJECT;
 CREATE DATABASE KKS_PROJECT;
 USE KKS_PROJECT;
+
+##### member 테이블 생성
+CREATE TABLE `member`(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	loginId VARCHAR(20) NOT NULL UNIQUE,
+	loginPw VARCHAR(200) NOT NULL,
+	`name` VARCHAR(20) NOT NULL,
+	gender VARCHAR(10) NOT NULL COMMENT '성별 (male = 남자, female = 여자)',
+	birthday DATE NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	cellphoneNum VARCHAR(20) NOT NULL,
+	profileImg VARCHAR(40),
+	salt VARCHAR(100) NOT NULL,
+	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
+	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
+	delDate DATETIME COMMENT '탈퇴 날짜'
+);
+
+##### attr 테이블 생성 (인증코드 테이블)
+CREATE TABLE attr (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    `relTypeCode` VARCHAR(20) NOT NULL,
+    `relId` INT UNSIGNED NOT NULL,
+    `typeCode` VARCHAR(30) NOT NULL,
+    `type2Code` VARCHAR(70) NOT NULL,
+    `value` TEXT NOT NULL,
+    `expireDate` DATETIME NULL
+);
+
+# attr 유니크 인덱스 걸기
+## 중복변수 생성금지
+## 변수찾는 속도 최적화
+ALTER TABLE `attr` ADD UNIQUE INDEX (`relTypeCode`, `relId`, `typeCode`, `type2Code`);
+
+## 특정 조건을 만족하는 회원 또는 게시물(기타 데이터)를 빠르게 찾기 위해서
+ALTER TABLE `attr` ADD INDEX (`relTypeCode`, `typeCode`, `type2Code`);
+
+##### store 테이블 생성
+CREATE TABLE store(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	storeName VARCHAR(40) NOT NULL,
+	storeLogo VARCHAR(40),
+	storeImg VARCHAR(40),
+	storeDesc VARCHAR(100) NOT NULL,
+	memberId INT UNSIGNED NOT NULL
+);
+
+##### 테이블 조회
+SELECT * FROM `member`;
+SELECT * FROM attr;
+SELECT * FROM store;
+
+### member 테스트 데이터 생성
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test1',
+loginPw = 'test1',
+`name` = '유저 1',
+gender = 'female',
+birthday = NOW(),
+email = 'test@naver.com',
+cellphoneNum = '010-1234-5678',
+salt = 'test1';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test2',
+loginPw = 'test2',
+`name` = '판매자',
+gender = 'male',
+birthday = NOW(),
+email = 'test@naver.com',
+cellphoneNum = '010-1234-5678',
+memberType = 6,
+salt = 'test2';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'admin',
+loginPw = 'admin',
+`name` = '관리자',
+gender = 'male',
+birthday = NOW(),
+email = 'test@naver.com',
+cellphoneNum = '010-1234-5678',
+memberType = 9,
+salt = 'admin';
+
+UPDATE `member`
+SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
