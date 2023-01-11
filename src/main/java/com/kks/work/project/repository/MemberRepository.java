@@ -3,12 +3,12 @@ package com.kks.work.project.repository;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Member;
 
 @Mapper
 public interface MemberRepository {
-	
 	// 회원가입
 	@Insert("""
 			INSERT INTO `member`
@@ -52,6 +52,32 @@ public interface MemberRepository {
 			AND email = #{email}
 			""")
 	public Member getMemberByNameAndEmail(String name, String email);
-
 	
+	// 회원정보 수정
+	@Update("""
+			<script>
+				UPDATE `member`
+					<set>
+						updateDate = NOW(),
+						<if test="cellphoneNum != null">
+							cellphoneNum = #{cellphoneNum},
+						</if>
+						<if test="email != null">
+							email = #{email}
+						</if>
+					</set>
+					WHERE id = #{loginedMemberId}
+			</script>
+			""")
+	public void doModify(int loginedMemberId, String email, String cellphoneNum);
+
+	// 비밀번호 수정
+	@Update("""
+			UPDATE `member`
+			SET updateDate = NOW(),
+			loginPw = #{loginPw},
+			salt = #{salt}
+			WHERE id = #{loginedMemberId}
+			""")
+	public void doPasswordModify(int loginedMemberId, String loginPw, String salt);
 }

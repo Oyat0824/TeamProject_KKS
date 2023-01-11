@@ -67,10 +67,15 @@ public class Rq {
 		print(Utility.jsHistoryBack(msg));
 	}
 	
-	public String jsReturnOnView(String msg, boolean historyBack) {
+	public String jsReturnOnView(String msg, boolean historyBack, String uri) {
 		req.setAttribute("msg", msg);
 		req.setAttribute("historyBack", historyBack);
+		req.setAttribute("replaceUri", uri);
 
 		return "usr/common/js";
+	}
+	
+	public String jsReturnOnView(String msg, boolean historyBack) {
+		return jsReturnOnView(msg, historyBack, "");
 	}
 }

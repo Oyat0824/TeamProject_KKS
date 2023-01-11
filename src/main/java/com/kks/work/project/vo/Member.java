@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor 
 public class Member{
 	private int id;
-	private LocalDateTime regDate;
-	private LocalDateTime updateDate;
+	private String regDate;
+	private String updateDate;
 	private String loginId;
 	private String loginPw;
 	private String name;
@@ -25,5 +25,4 @@ public class Member{
 	private String salt;
 	private String delStatus;
 	private LocalDateTime delDate;
-
 }
