@@ -39,9 +39,9 @@ public class MemberService {
 	}
 
 	// 아이디를 통해 멤버 가져오기
-		public Member getMemberById(int id) {
-			return memberRepository.getMemberById(id);
-		}
+	public Member getMemberById(int id) {
+		return memberRepository.getMemberById(id);
+	}
 
 	// 로그인 아이디를 통해 멤버 가져오기
 	public Member getMemberByLoginId(String loginId) {

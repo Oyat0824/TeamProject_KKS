@@ -11,14 +11,17 @@ import com.kks.work.project.service.MemberService;
 import com.kks.work.project.util.ResultData;
 import com.kks.work.project.util.Utility;
 import com.kks.work.project.vo.Member;
+import com.kks.work.project.vo.Rq;
 
 @Controller
 public class UsrMemberController {
 	private MemberService memberService;
+	private Rq rq;
 
 	@Autowired
-	public UsrMemberController(MemberService memberService) {
+	public UsrMemberController(MemberService memberService, Rq rq) {
 		this.memberService = memberService;
+		this.rq = rq;
 	}
 
 // 액션 메서드
@@ -82,7 +85,9 @@ public class UsrMemberController {
 		ResultData<Integer> doJoinRd = memberService.doJoin(loginId, Utility.getEncrypt(loginPw, salt), name, gender, birthday, email, cellphoneNum, salt);
 		
 		// 회원가입 실패
-		if (doJoinRd.isFail()) return Utility.jsHistoryBack(doJoinRd.getMsg());
+		if (doJoinRd.isFail()) {
+			return Utility.jsHistoryBack(doJoinRd.getMsg());
+		}
 		
 		Member member = memberService.getMemberById( (int) doJoinRd.getData1() );
 		
@@ -104,5 +109,39 @@ public class UsrMemberController {
 		
 		return ResultData.from("S-1", "사용 가능한 아이디입니다.", "loginId", loginId);
 	}
+	
+	// 로그인 페이지
+	@RequestMapping("/usr/member/login")
+	public String showLogin() {
+		return "usr/member/login";
+	}
 
+	// 로그인
+	@RequestMapping("/usr/member/doLogin")
+	@ResponseBody
+	public String doLogin(String loginId, String loginPw) {
+		// 유효성 검사
+		if (Utility.empty(loginId)) {
+			return Utility.jsHistoryBack("아이디를 입력해주세요!");
+		}
+		if (Utility.empty(loginPw)) {
+			return Utility.jsHistoryBack("비밀번호를 입력해주세요!");
+		}
+		
+		// 로그인ID 로 멤버가 존재하는지 확인
+		Member member = memberService.getMemberByLoginId(loginId);
+
+		if (member == null) {
+			return Utility.jsHistoryBack(Utility.f("존재하지 않는 아이디(%s)입니다.", loginId));
+		}
+
+		if (member.getLoginPw().equals(Utility.getEncrypt(loginPw, member.getSalt())) == false) {
+			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다!");
+		}
+		
+		// Rq 객체에 멤버를 넣음 및 생성
+		rq.login(member);
+
+		return Utility.jsReplace(Utility.f("%s님 환영합니다.", member.getName()), "/");
+	}
 }

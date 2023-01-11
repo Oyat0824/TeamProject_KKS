@@ -36,8 +36,14 @@
 				</ul>
 			</div>
 			<div class="navbar-end">
-				<a class="btn btn-outline mr-2" href="/usr/member/join">JOIN</a>
-				<a class="btn" href="#">Status Btn</a>
+				<c:if test="${rq.getLoginedMemberId() == 0}">
+					<a class="btn btn-outline mr-2" href="/usr/member/join">JOIN</a>
+					<a class="btn" href="/usr/member/login">LOGIN</a>
+				</c:if>
+				<c:if test="${rq.getLoginedMemberId() != 0}">
+					<a class="btn btn-outline mr-2 " href="/usr/member/myPage">${rq.loginedMember.name}</a>
+					<a class="btn" href="/usr/member/doLogout">LOGOUT</a>
+				</c:if>
 			</div>
 		</div>
 	</header>
