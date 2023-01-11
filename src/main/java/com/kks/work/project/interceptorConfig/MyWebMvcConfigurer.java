@@ -36,11 +36,17 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
 		// 로그인 후 이용
 		ir = registry.addInterceptor(needLoginInterceptor);
+		// 로그아웃
 		ir.addPathPatterns("/usr/member/doLogout");
 		
 		// 로그아웃 후 이용
-		// ir = registry.addInterceptor(needLogoutInterceptor);
-
+		ir = registry.addInterceptor(needLogoutInterceptor);
+		// 로그인
+		ir.addPathPatterns("/usr/member/login");
+		ir.addPathPatterns("/usr/member/doLogin");
+		// 회원가입
+		ir.addPathPatterns("/usr/member/join");
+		ir.addPathPatterns("/usr/member/doJoin");
 	}
 
 }

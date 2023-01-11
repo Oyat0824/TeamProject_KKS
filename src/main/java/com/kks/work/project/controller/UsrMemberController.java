@@ -144,4 +144,13 @@ public class UsrMemberController {
 
 		return Utility.jsReplace(Utility.f("%s님 환영합니다.", member.getName()), "/");
 	}
+	
+	// 로그아웃
+	@RequestMapping("/usr/member/doLogout")
+	@ResponseBody
+	public String doLogout() {
+		rq.logout();
+	
+		return Utility.jsReplace("로그아웃 완료!", "/");
+	}
 }
