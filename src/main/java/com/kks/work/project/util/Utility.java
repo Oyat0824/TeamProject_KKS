@@ -13,9 +13,7 @@ public class Utility {
 	 */
 	public static boolean empty(Object obj) {
 		// 매개 변수 값이 NULL 이라면
-		if (obj == null) {
-			return true;
-		}
+		if (obj == null) return true;
 
 		// String 으로 형 변환
 		String str = (String) obj;
@@ -43,8 +41,7 @@ public class Utility {
 	 * 
 	 */
 	public static String jsHistoryBack(String msg) {
-		if (msg == null)
-			msg = "";
+		if (msg == null) msg = "";
 
 		return Utility.f("""
 				<script>
@@ -67,10 +64,8 @@ public class Utility {
 	 * @param uri 이동시킬 페이지 주소
 	 */
 	public static String jsReplace(String msg, String uri) {
-		if (msg == null)
-			msg = "";
-		if (uri == null)
-			uri = "";
+		if (msg == null) msg = "";
+		if (uri == null) uri = "";
 
 		return Utility.f("""
 				<script>
