@@ -19,11 +19,12 @@ public interface MemberRepository {
 			`name` = #{name},
 			gender = #{gender},
 			birthday = #{birthday},
-			cellphoneNum = #{cellphoneNum},
 			email = #{email},
+			cellphoneNum = #{cellphoneNum},
+			salt = #{salt}
 
 			""")
-	public void doJoin(String loginId, String loginPw, String name, int gender, String birthday, String cellphoneNum, String email);
+	public void doJoin(String loginId, String loginPw, String name, int gender,  String birthday, String email, String cellphoneNum, String salt);
 
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -36,5 +37,13 @@ public interface MemberRepository {
 
 			""")
 	public Member getMemberById(int id);
+
+	@Select("""
+			SELECT *
+			FROM `member`
+			WHERE loginId = #{id}
+			""")
+	public Member getMemberByLoginId(String loginId);
+
 	
 }
