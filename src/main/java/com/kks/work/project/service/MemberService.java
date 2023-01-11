@@ -26,7 +26,8 @@ public class MemberService {
 		this.attrService = attrService;
 		this.mailService = mailService;
 	}
-	
+
+// 서비스 메서드
 	// 회원가입
 	public ResultData<Integer> doJoin(String loginId, String loginPw, String name, String gender, String birthday, String email , String cellphoneNum, String salt) {
 		// 로그인 아이디 중복체크
