@@ -5,32 +5,33 @@ USE KKS_PROJECT;
 
 ##### member 테이블 생성
 CREATE TABLE `member`(
-    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    regDate DATETIME NOT NULL,
-    updateDate DATETIME NOT NULL,
-    loginId VARCHAR(20) NOT NULL UNIQUE,
-    loginPw VARCHAR(200) NOT NULL,
-    `name` VARCHAR(20) NOT NULL,
-    gender TINYINT NOT NULL COMMENT '성별 (1 = 남자, 2 = 여자)',
-    birthday DATE NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    cellphoneNum VARCHAR(20) NOT NULL,
-    memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
-    salt VARCHAR(100) NOT NULL,
-    delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
-    delDate DATETIME COMMENT '탈퇴 날짜'
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	loginId VARCHAR(20) NOT NULL UNIQUE,
+	loginPw VARCHAR(200) NOT NULL,
+	`name` VARCHAR(20) NOT NULL,
+	gender TINYINT NOT NULL COMMENT '성별 (1 = 남자, 2 = 여자)',
+	birthday DATE NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	cellphoneNum VARCHAR(20) NOT NULL,
+	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
+	profileImg VARCHAR(40),
+	salt VARCHAR(100) NOT NULL,
+	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
+	delDate DATETIME COMMENT '탈퇴 날짜'
 );
 
 ##### store 테이블 생성
 CREATE TABLE store(
-    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    regDate DATETIME NOT NULL,
-    updateDate DATETIME NOT NULL,
-    storeName VARCHAR(40) NOT NULL,
-    storeLogo VARCHAR(40) NOT NULL,
-    storeImg VARCHAR(40) NOT NULL,
-    storeDesc VARCHAR(100) NOT NULL,
-    memberId INT UNSIGNED NOT NULL
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	storeName VARCHAR(40) NOT NULL,
+	storeLogo VARCHAR(40),
+	storeImg VARCHAR(40),
+	storeDesc VARCHAR(100) NOT NULL,
+	memberId INT UNSIGNED NOT NULL
 );
 
 ##### 테이블 조회
@@ -46,7 +47,7 @@ loginPw = 'test1',
 `name` = '유저 1',
 gender = 1,
 birthday = NOW(),
-email = 'sks2949@naver.com',
+email = 'test@naver.com',
 cellphoneNum = '01012345678',
 salt = 'test1';
 
@@ -58,7 +59,7 @@ loginPw = 'test2',
 `name` = '판매자',
 gender = 1,
 birthday = NOW(),
-email = 'sks2949@naver.com',
+email = 'test@naver.com',
 cellphoneNum = '01012345678',
 memberType = 6,
 salt = 'test2';
@@ -71,7 +72,7 @@ loginPw = 'admin',
 `name` = '관리자',
 gender = 1,
 birthday = NOW(),
-email = 'sks2949@naver.com',
+email = 'test@naver.com',
 cellphoneNum = '01012345678',
 memberType = 9,
 salt = 'admin';
