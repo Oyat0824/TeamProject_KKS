@@ -153,4 +153,189 @@ public class UsrMemberController {
 	
 		return Utility.jsReplace("로그아웃 완료!", "/");
 	}
+	
+	// 마이 페이지
+	@RequestMapping("/usr/member/myPage")
+	public String showMyPage() {
+		return "usr/member/myPage";
+	}
+	
+	// 패스워드 확인 페이지
+	@RequestMapping("/usr/member/chkPassword")
+	public String showCheckPassword() {
+		return "usr/member/chkPassword";
+	}
+
+	// 패스워드 확인
+	@RequestMapping("/usr/member/doChkPassword")
+	@ResponseBody
+	public String doCheckPassword(String loginPw) {
+		// 유효성 검사
+		if (Utility.empty(loginPw)) {
+			return Utility.jsHistoryBack("비밀번호를 입력해주세요!");
+		}
+
+		if (rq.getLoginedMember().getLoginPw().equals(Utility.getEncrypt(loginPw, rq.getLoginedMember().getSalt())) == false) {
+			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다!");
+		}
+
+		String memberModifyAuthKey = memberService.genMemberModifyAuthKey(rq.getLoginedMemberId());
+
+		return Utility.jsReplace("", Utility.f("modify?memberModifyAuthKey=%s", memberModifyAuthKey));
+	}
+	
+	// 회원정보 수정 페이지
+	@RequestMapping("/usr/member/modify")
+	public String showModify(String memberModifyAuthKey) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
+		}
+
+		ResultData<?> chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(), memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkMemberModifyAuthKeyRd.getMsg(), false, "chkPassword");
+		}
+
+		return "usr/member/modify";
+	}
+	
+	// 회원정보 수정
+	@RequestMapping("/usr/member/doModify")
+	@ResponseBody
+	public String doModify(String memberModifyAuthKey, String email, String cellphoneNum) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
+		}
+
+		ResultData<?> chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(), memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return Utility.jsReplace(chkMemberModifyAuthKeyRd.getMsg(), "chkPassword");
+		}
+
+		// 유효성 검사
+		if (Utility.empty(email)) {
+			return Utility.jsHistoryBack("이메일을 입력해주세요!");
+		}
+		if (Utility.empty(cellphoneNum)) {
+			return Utility.jsHistoryBack("전화번호를 입력해주세요!");
+		}
+
+		memberService.doModify(rq.getLoginedMemberId(), email, cellphoneNum);
+
+		return Utility.jsReplace("회원정보가 수정됐습니다.", "myPage");
+	}
+	
+	// 패스워드 수정 페이지
+	@RequestMapping("/usr/member/passwordModify")
+	public String passwordModify(String memberModifyAuthKey) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
+		}
+
+		ResultData<?> chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(), memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkMemberModifyAuthKeyRd.getMsg(), false, "chkPassword");
+		}
+
+		return "usr/member/passwordModify";
+	}
+
+	// 패스워드 수정
+	@RequestMapping("/usr/member/doPasswordModify")
+	@ResponseBody
+	public String doPasswordModify(String memberModifyAuthKey, String loginPw, String loginPwChk) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
+		}
+
+		ResultData<?> chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(), memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return Utility.jsReplace(chkMemberModifyAuthKeyRd.getMsg(), "chkPassword");
+		}
+
+		if (Utility.empty(loginPw)) {
+			return Utility.jsHistoryBack("새 비밀번호를 입력해주세요!");
+		}
+		if (Utility.empty(loginPwChk)) {
+			return Utility.jsHistoryBack("새 비밀번호 확인을 입력해주세요!");
+		}
+		if (loginPw.equals(loginPwChk) == false) {
+			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다.");
+		}
+
+		String salt = Utility.getTempPassword(20);
+		
+		memberService.doPasswordModify(rq.getLoginedMemberId(), Utility.getEncrypt(loginPw, salt), salt);
+
+		return Utility.jsReplace("비밀번호가 수정됐습니다.", "myPage");
+	}
+	
+	// 아이디 찾기 페이지
+	@RequestMapping("/usr/member/findLoginId")
+	public String findLoginId() {
+		return "usr/member/findLoginId";
+	}
+	
+	// 아이디 찾기
+	@RequestMapping("/usr/member/doFindLoginId")
+	@ResponseBody
+	public String doFindLoginId(String name, String email) {
+		if (Utility.empty(name)) {
+			return Utility.jsHistoryBack("이름을 입력해주세요");
+		}
+		if (Utility.empty(email)) {
+			return Utility.jsHistoryBack("이메일을 입력해주세요");
+		}
+
+		Member member = memberService.getMemberByNameAndEmail(name, email);
+
+		if (member == null) {
+			return Utility.jsHistoryBack("입력하신 정보와 일치하는 회원이 없습니다");
+		}
+
+		return Utility.jsReplace(Utility.f("회원님의 아이디는 [ %s ] 입니다", member.getLoginId()), "login");
+	}
+	
+	// 비밀번호 찾기 페이지
+	@RequestMapping("/usr/member/findLoginPw")
+	public String findLoginPw() {
+		return "usr/member/findLoginPw";
+	}
+	
+	// 비밀번호 찾기
+	@RequestMapping("/usr/member/doFindLoginPw")
+	@ResponseBody
+	public String doFindLoginPw(String loginId, String name, String email) {
+		if (Utility.empty(loginId)) {
+			return Utility.jsHistoryBack("아이디를 입력해주세요");
+		}
+		if (Utility.empty(name)) {
+			return Utility.jsHistoryBack("이름을 입력해주세요");
+		}
+		if (Utility.empty(email)) {
+			return Utility.jsHistoryBack("이메일을 입력해주세요");
+		}
+
+		Member member = memberService.getMemberByLoginId(loginId);
+
+		if (member == null) {
+			return Utility.jsHistoryBack("입력하신 정보와 일치하는 회원이 없습니다");
+		}
+
+		if (member.getName().equals(name) == false) {
+			return Utility.jsHistoryBack("이름이 일치하지 않습니다");
+		}
+
+		if (member.getEmail().equals(email) == false) {
+			return Utility.jsHistoryBack("이메일이 일치하지 않습니다");
+		}
+
+		ResultData<?> notifyTempLoginPwByEmailRd = memberService.notifyTempLoginPwByEmail(member);
+
+		return Utility.jsReplace(notifyTempLoginPwByEmailRd.getMsg(), "login");
+	}
 }
