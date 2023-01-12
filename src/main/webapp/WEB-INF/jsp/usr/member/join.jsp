@@ -66,6 +66,24 @@
 			return false;
 		}
 		
+		// 성별 검증
+		form.gender.value = form.gender.value.trim();
+		if(form.gender.value.length == 0  || (!form.gender.value == "male" && !form.gender.value == "female")) {
+			alert("성별을 선택해주세요.");
+			form.gender.focus();
+			
+			return false;
+		}
+		
+		// 생년월일 검증
+		form.birthday.value = form.birthday.value.trim();
+		if(form.birthday.value.length == 0) {
+			alert("생년월일을 선택해주세요.");
+			form.birthday.focus();
+			
+			return false;
+		}
+		
 		// 이메일 검증
 		form.email.value = form.email.value.trim();
 		if(form.email.value.length == 0) {
@@ -117,14 +135,7 @@
 				
 				return false;
 			}
-		}
-		
-		if(el.val().length == 0) {
-			el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html("필수 정보입니다.");
-			return false;
-		}
-		
-		if(el[0].name == "loginId") {
+			
 			$.get('getLoginIdDup', {
 				loginId : el.val(),
 				ajaxMode : 'Y'
@@ -138,6 +149,11 @@
 				}
 			}, 'json');
 			
+			return false;
+		}
+		
+		if(el.val().length == 0) {
+			el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html("필수 정보입니다.");
 			return false;
 		}
 		
@@ -175,10 +191,10 @@
 		});
 		
 		// 생년월일 달력 표기
-		$("#birthDay").datepicker({
-			showOn: "both", // 버튼과 텍스트 필드 모두 캘린더를 보여준다.
+		$("#birthday").datepicker({
+			// showOn: "both", // 버튼과 텍스트 필드 모두 캘린더를 보여준다.
 			// buttonImage: "", // 버튼 이미지
-			buttonImageOnly: false, // 버튼에 있는 이미지만 표시한다.
+			// buttonImageOnly: false, // 버튼에 있는 이미지만 표시한다.
 			changeMonth: true, // 월을 바꿀수 있는 셀렉트 박스를 표시한다.
 			changeYear: true, // 년을 바꿀 수 있는 셀렉트 박스를 표시한다.
 			minDate: '-100y', // 현재날짜로부터 100년이전까지 년을 표시한다.
@@ -242,7 +258,7 @@
 						<tr>
 							<th>생년월일</th>
 							<td><input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400"
-								id="birthDay" name="birthday" readonly />
+								id="birthday" name="birthday" placeholder="생년월일을 입력해주세요." readonly />
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
 						</tr>
 						<tr>

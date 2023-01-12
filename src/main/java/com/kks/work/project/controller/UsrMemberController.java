@@ -60,7 +60,7 @@ public class UsrMemberController {
 			return Utility.jsHistoryBack("성별을 선택해주세요!");
 		}
 		if (Utility.empty(birthday)) {
-			return Utility.jsHistoryBack("생일을 입력해주세요!");
+			return Utility.jsHistoryBack("생년월일을 입력해주세요!");
 		}
 		if (Utility.empty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");

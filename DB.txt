@@ -51,7 +51,7 @@ CREATE TABLE store(
 	storeName VARCHAR(40) NOT NULL,
 	storeLogo VARCHAR(40),
 	storeImg VARCHAR(40),
-	storeDesc VARCHAR(100) NOT NULL,
+	storeDesc VARCHAR(100),
 	memberId INT UNSIGNED NOT NULL
 );
 
