@@ -37,9 +37,6 @@ public class UsrStoreController {
 		if (Utility.empty(storeName)) {
 			return Utility.jsHistoryBack("가게 이름을 입력해주세요!");
 		}
-		if (rq.getLoginedMember().getMemberType() != 6 && rq.getLoginedMember().getMemberType() != 9) {
-			return Utility.jsHistoryBack("판매자 신청 후 등록해주세요!");
-		}
 
 		ResultData<Integer> registerStoreRd = storeService.registerStore(storeName, storeLogo, storeImg, storeDesc, rq.getLoginedMemberId());
 		

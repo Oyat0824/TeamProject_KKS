@@ -36,8 +36,7 @@ CREATE TABLE attr (
 );
 
 # attr 유니크 인덱스 걸기
-## 중복변수 생성금지
-## 변수찾는 속도 최적화
+## 중복변수 생성금지, 변수찾는 속도 최적화
 ALTER TABLE `attr` ADD UNIQUE INDEX (`relTypeCode`, `relId`, `typeCode`, `type2Code`);
 
 ## 특정 조건을 만족하는 회원 또는 게시물(기타 데이터)를 빠르게 찾기 위해서
@@ -55,6 +54,10 @@ CREATE TABLE store(
 	memberId INT UNSIGNED NOT NULL
 );
 
+# store 유니크 인덱스 걸기
+ALTER TABLE store ADD UNIQUE (`storeName`, `memberId`);
+ALTER TABLE store ADD INDEX (`memberId`);
+
 ##### 테이블 조회
 SELECT * FROM `member`;
 SELECT * FROM attr;
@@ -66,7 +69,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test1',
 loginPw = 'test1',
-`name` = '유저 1',
+`name` = '유저',
 gender = 'female',
 birthday = NOW(),
 email = 'test@naver.com',
