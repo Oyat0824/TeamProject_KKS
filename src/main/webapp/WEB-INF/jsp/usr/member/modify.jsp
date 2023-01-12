@@ -130,7 +130,9 @@
 						</tr>
 						<tr>
 							<th>프로필 사진</th>
-							<td>${rq.loginedMember.profileImg }</td>
+							<td>${rq.loginedMember.profileImg }
+								<input class="file-input file-input-bordered w-full border-gray-400" type="file" name="profileImg" />
+							</td>
 						</tr>
 						<tr>
 							<th>회원 등급</th>
