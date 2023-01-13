@@ -23,6 +23,14 @@ public interface StoreRepository {
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+	
+	// memberId를 통해 가게 가져오기
+	@Select("""
+			SELECT *
+			FROM store
+			WHERE id = #{id}
+			""")
+		public Store getStoreById(int id);
 
 	// MemberId를 통해 가게 정보 가져오기
 	@Select("""
