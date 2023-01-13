@@ -92,14 +92,14 @@
 							<td><textarea class="input w-full text-lg border-gray-400" name="storeDesc" placeholder="가게 소개 글" /></textarea></td>
 						</tr>
 						<tr>
-							<td colspan="2"><button class="btn btn-outline btn-accent w-full">가게 등록</button></td>
+							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>가게 등록</button></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</form>
 		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
 		</div>
 	</div>
 </section>

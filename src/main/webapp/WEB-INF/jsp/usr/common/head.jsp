@@ -44,7 +44,7 @@
 					<c:if test="${rq.getLoginedMember().getMemberType() == 6}">
 						<a class="btn btn-outline mr-2 " href="/usr/store/register">가게 등록</a>
 					</c:if>
-					<a class="btn btn-outline mr-2 " href="/usr/member/myPage">${rq.loginedMember.name}</a>
+					<a class="btn btn-outline mr-2 " href="/usr/member/myPage"><i class="fa-solid fa-user-large"></i>${rq.loginedMember.name}</a>
 					<a class="btn" href="/usr/member/doLogout">LOGOUT</a>
 				</c:if>
 			</div>

@@ -283,7 +283,7 @@
 			</div>
 		</form>
 		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
 		</div>
 	</div>
 </section>

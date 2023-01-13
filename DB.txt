@@ -58,10 +58,24 @@ CREATE TABLE store(
 ALTER TABLE store ADD UNIQUE (`storeName`, `memberId`);
 ALTER TABLE store ADD INDEX (`memberId`);
 
+CREATE TABLE product(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	p_Name VARCHAR(40) NOT NULL,
+	p_Price VARCHAR(40),
+	p_Cetegory VARCHAR(20),  
+	p_Stock VARCHAR(20), # 상품재고
+	p_Img VARCHAR(40),
+	p_Desc VARCHAR(100),
+	stroeId INT UNSIGNED NOT NULL
+);
+
 ##### 테이블 조회
 SELECT * FROM `member`;
 SELECT * FROM attr;
 SELECT * FROM store;
+SELECT * FROM product;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`
