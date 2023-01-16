@@ -1,22 +1,21 @@
 package com.kks.work.project.util;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 데이터의 정보를 JSON으로 뽑아주는 클래스
  * */
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ResultData<DT> {
-	@Getter
 	private String resultCode;
-	@Getter
 	private String msg;
-	@Getter
 	private String data1Name;
-	@Getter
 	private DT data1;
-	@Getter
 	private String data2Name;
-	@Getter
 	private DT data2;
 	
 	/**

@@ -3,12 +3,33 @@ DROP DATABASE IF EXISTS KKS_PROJECT;
 CREATE DATABASE KKS_PROJECT;
 USE KKS_PROJECT;
 
+##### genFile 테이블 생성
+CREATE TABLE genFile (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME DEFAULT NULL,
+    updateDate DATETIME DEFAULT NULL,
+    `relTypeCode` VARCHAR(20) NOT NULL,
+    `relId` INT UNSIGNED NOT NULL,
+    originFileName VARCHAR(100) NOT NULL,
+    fileExt VARCHAR(10) NOT NULL,
+    typeCode VARCHAR(20) NOT NULL,
+    type2Code VARCHAR(20) NOT NULL,
+    fileNo SMALLINT UNSIGNED NOT NULL,
+    fileDir VARCHAR(20) NOT NULL,
+    fileSize INT UNSIGNED NOT NULL,
+    fileExtTypeCode VARCHAR(10) NOT NULL,
+    fileExtType2Code VARCHAR(10) NOT NULL,
+    delDate DATETIME DEFAULT NULL COMMENT '삭제 날짜',
+	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제상태 (0 = 미삭제, 1 = 삭제)',
+    KEY relId (relTypeCode, relId, typeCode, type2Code, fileNo)
+);
+
 ##### member 테이블 생성
 CREATE TABLE `member`(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
-	loginId VARCHAR(20) NOT NULL UNIQUE,
+	loginId VARCHAR(20) NOT NULL,
 	loginPw VARCHAR(200) NOT NULL,
 	`name` VARCHAR(20) NOT NULL,
 	gender VARCHAR(10) NOT NULL COMMENT '성별 (male = 남자, female = 여자)',
@@ -19,7 +40,8 @@ CREATE TABLE `member`(
 	salt VARCHAR(100) NOT NULL,
 	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
 	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
-	delDate DATETIME COMMENT '탈퇴 날짜'
+	delDate DATETIME COMMENT '탈퇴 날짜',
+	UNIQUE `uniqueKey` (loginId)
 );
 
 ##### attr 테이블 생성 (인증코드 테이블)
@@ -27,19 +49,15 @@ CREATE TABLE attr (
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME NOT NULL,
     updateDate DATETIME NOT NULL,
-    `relTypeCode` VARCHAR(20) NOT NULL,
-    `relId` INT UNSIGNED NOT NULL,
-    `typeCode` VARCHAR(30) NOT NULL,
-    `type2Code` VARCHAR(70) NOT NULL,
+    relTypeCode VARCHAR(20) NOT NULL,
+    relId INT UNSIGNED NOT NULL,
+    typeCode VARCHAR(30) NOT NULL,
+    type2Code VARCHAR(70) NOT NULL,
     `value` TEXT NOT NULL,
-    `expireDate` DATETIME NULL
+    expireDate DATETIME NULL,
+    UNIQUE `uniqueKey` (relTypeCode, relId, typeCode, type2Code),
+    KEY `indexKey` (relTypeCode, relId, typeCode, type2Code)
 );
-# attr 유니크 인덱스 걸기
-## 중복변수 생성금지, 변수찾는 속도 최적화
-ALTER TABLE `attr` ADD UNIQUE INDEX (`relTypeCode`, `relId`, `typeCode`, `type2Code`);
-
-## 특정 조건을 만족하는 회원 또는 게시물(기타 데이터)를 빠르게 찾기 위해서
-ALTER TABLE `attr` ADD INDEX (`relTypeCode`, `typeCode`, `type2Code`);
 
 ##### store 테이블 생성
 CREATE TABLE store(
@@ -50,11 +68,10 @@ CREATE TABLE store(
 	storeLogo VARCHAR(40),
 	storeImg VARCHAR(40),
 	storeDesc VARCHAR(100),
-	memberId INT UNSIGNED NOT NULL
+	memberId INT UNSIGNED NOT NULL,
+	UNIQUE `uniqueKey` (storeName, memberId),
+	KEY `indexKey` (memberId)
 );
-# store 유니크 인덱스 걸기
-ALTER TABLE store ADD UNIQUE (`storeName`, `memberId`);
-ALTER TABLE store ADD INDEX (`memberId`);
 
 ##### product 테이블 생성
 CREATE TABLE product(
@@ -68,17 +85,16 @@ CREATE TABLE product(
 	productImg VARCHAR(40),
 	productBody VARCHAR(100) NOT NULL,
 	stroeId INT UNSIGNED NOT NULL,
-	memberId INT UNSIGNED NOT NULL
+	memberId INT UNSIGNED NOT NULL,
+	KEY `indexKey` (stroeId, memberId)
 );
-# product 유니크 인덱스 걸기
-ALTER TABLE product ADD UNIQUE (`stroeId`, `memberId`);
-ALTER TABLE product ADD INDEX (`stroeId`, `memberId`);
 
 ##### 테이블 조회
 SELECT * FROM `member`;
 SELECT * FROM attr;
 SELECT * FROM store;
 SELECT * FROM product;
+SELECT * FROM genFile;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`
