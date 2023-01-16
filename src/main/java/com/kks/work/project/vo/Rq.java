@@ -84,4 +84,23 @@ public class Rq {
 	public String jsReturnOnView(String msg, boolean historyBack) {
 		return jsReturnOnView(msg, historyBack, "");
 	}
+	
+	// memberId 로 프로필 사진 Uri 가져오기
+	public String getProfileImgUri(int membeId) {
+		return "/common/genFile/file/member/" + membeId + "/extra/profileImg/1";
+	}
+
+	// 프로필 이미지가 없는 경우
+	public String getProfileFallbackImgUri() {
+		return "https://via.placeholder.com/160/?text=?";
+	}
+
+	// 프로필 이미지가 에러가 난 경우
+	public String getProfileFallbackImgOnErrorHtml() {
+		return "this.src = '" + getProfileFallbackImgUri() + "'";
+	}
+
+	public String getRemoveProfileImgIfNotExitOnErrorHtmlAttr() {
+		return "$(this).remove()";
+	}
 }
