@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.kks.work.project.service.MemberService;
+import com.kks.work.project.service.StoreService;
 import com.kks.work.project.util.Utility;
 
 import lombok.Getter;
@@ -22,11 +23,15 @@ public class Rq {
 	private int loginedMemberId;
 	@Getter
 	private Member loginedMember;
+	@Getter
+	private int registerStoreId;
+	@Getter
+	private Store registerStore;
 	private HttpServletRequest req;
 	private HttpServletResponse res;
 	private HttpSession session;
 
-	public Rq(HttpServletRequest req, HttpServletResponse res, MemberService memberService) {
+	public Rq(HttpServletRequest req, HttpServletResponse res, MemberService memberService, StoreService storeService) {
 		this.req = req;
 		this.res = res;
 		this.session = req.getSession();
@@ -34,15 +39,24 @@ public class Rq {
 		// 변수 초기화
 		int loginedMemberId = 0;
 		Member loginedMember = null;
-
+		
 		// 세션에 멤버 ID 값이 없다면 집어 넣기
 		if (session.getAttribute("loginedMemberId") != null) {
 			loginedMemberId = (int) session.getAttribute("loginedMemberId");
 			loginedMember = memberService.getMemberById(loginedMemberId);
 		}
-
+		
 		this.loginedMemberId = loginedMemberId;
 		this.loginedMember = loginedMember;
+		
+		int registerStoreId = 0;
+		Store registerStore = null;
+		
+		// 세션에 멤버 ID 값이 없다면 집어 넣기
+		if (session.getAttribute("registerStoreId") != null) {
+			registerStoreId = (int) session.getAttribute("registerStoreId");
+			registerStore = storeService.getStoreById(registerStoreId);
+		}
 	}
 	
 	public void login(Member member) {

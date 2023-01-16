@@ -39,6 +39,11 @@ public class StoreService {
 		return ResultData.from("S-1", Utility.f("%d번 가게가 생성되었습니다.", id), "id", id);
 	}
 	
+	// 아이디를 통해 가게 가져오기
+	public Store getStoreById(int id) {
+		return storeRepository.getStoreById(id);
+	}
+	
 	// memberId로 가게 정보 가져오기
 	private Store getStoreByMemberId(int memberId) {
 		return storeRepository.getStoreByMemberId(memberId);
