@@ -74,7 +74,7 @@
 			</div>
 		</form>
 		<div class="btns flex justify-between mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
 			<div>
 				<a class="btn btn-success" href="findLoginPw">비밀번호 찾기</a> <a class="btn btn-active" href="login">로그인</a>
 			</div>
