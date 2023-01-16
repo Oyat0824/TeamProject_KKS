@@ -20,8 +20,8 @@ public class ProductService {
 // 서비스 메서드
 
 	// 상품 등록
-	public ResultData<Integer> registerProduct(String p_Name, String p_Price, String p_Cetegory, String p_Stock,
-			String p_Img, String p_Desc, int storeId) {
+	public ResultData<Integer> registerProduct(String productName, String productPrice, String productCetegory, String productStock,
+			String productImg, String productBody, int storeId) {
 		// 상품 중복 신청 금지
 		Product existsProduct = getProductByStoreId(storeId);
 		
@@ -30,12 +30,12 @@ public class ProductService {
 			}
 				
 			// 상품 이름 중복 체크
-			existsProduct = getProductByProductName(p_Name);
+			existsProduct = getProductByProductName(productName);
 			if (existsProduct != null) {
-				return ResultData.from("F-2", Utility.f("이미 사용중인 가게 이름(%s)입니다.", p_Name));
+				return ResultData.from("F-2", Utility.f("이미 사용중인 가게 이름(%s)입니다.", productName));
 			}
 				
-		productRepository.registerProduct(p_Name, p_Price, p_Cetegory, p_Stock, p_Img, p_Desc);
+		productRepository.registerProduct(productName, productPrice, productCetegory, productStock, productImg, productBody);
 				
 		int id = productRepository.getLastInsertId();
 				
@@ -48,8 +48,8 @@ public class ProductService {
 	}
 	
 	// 상품 이름으로 상품 정보 가져오기
-	public Product getProductByProductName(String p_Name) {
-		return productRepository.getProductByProductNam(p_Name);
+	public Product getProductByProductName(String productName) {
+		return productRepository.getProductByProductNam(productName);
 	}
 	
 }
