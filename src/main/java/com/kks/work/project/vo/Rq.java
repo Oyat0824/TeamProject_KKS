@@ -47,14 +47,17 @@ public class Rq {
 		
 	}
 	
+	// 로그인 시 Rq에 로그인 정보 등록
 	public void login(Member member) {
 		session.setAttribute("loginedMemberId", member.getId());
 	}
-
+	
+	// 로그아웃 시 Rq에 로그인 정보 삭제
 	public void logout() {
 		session.removeAttribute("loginedMemberId");
 	}
 
+	// 메시지 출력용
 	private void print(String str) {
 		try {
 			res.getWriter().append(str);
@@ -63,12 +66,14 @@ public class Rq {
 		}
 	}
 	
+	// 인터셉터에서 사용, 메시지 출력
 	public void jsPrintHistoryBack(String msg) {
 		res.setContentType("text/html; charset=UTF-8");
 
 		print(Utility.jsHistoryBack(msg));
 	}
 	
+	// alert, historyBack, locationReplace 기능 종합
 	public String jsReturnOnView(String msg, boolean historyBack, String uri) {
 		req.setAttribute("msg", msg);
 		req.setAttribute("historyBack", historyBack);
@@ -76,7 +81,6 @@ public class Rq {
 
 		return "usr/common/js";
 	}
-	
 	public String jsReturnOnView(String msg, boolean historyBack) {
 		return jsReturnOnView(msg, historyBack, "");
 	}

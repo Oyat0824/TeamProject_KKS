@@ -87,11 +87,13 @@ public class MemberService {
 	// 회원정보 수정
 	public void doModify(int loginedMemberId, String email, String cellphoneNum) {
 		memberRepository.doModify(loginedMemberId, email, cellphoneNum);
+		attrService.remove("member", loginedMemberId, "extra", "memberModifyAuthKey");
 	}
 	
 	// 비밀번호 수정
 	public void doPasswordModify(int loginedMemberId, String loginPw, String salt) {
 		memberRepository.doPasswordModify(loginedMemberId, loginPw, salt);
+		attrService.remove("member", loginedMemberId, "extra", "memberModifyAuthKey");
 	}
 	
 	// 임시 비밀번호 보내기

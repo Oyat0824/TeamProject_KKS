@@ -41,34 +41,34 @@ public class UsrMemberController {
 		String reg_id = "^[A-Za-z]{1}[A-Za-z0-9_-]{3,19}$"; // 반드시 영문으로 시작 숫자+언더바/하이픈 허용 4~20자리
 		
 		// 유효성 검사
-		if (Utility.empty(loginId)) {
+		if (Utility.isEmpty(loginId)) {
 			 return Utility.jsHistoryBack("아이디를 입력해주세요!");
 		}
 		if (!Pattern.matches(reg_id, loginId)) {
 			return Utility.jsHistoryBack("4글자 이상으로 영문 + 숫자 조합으로 입력해주세요.\\n" + "언더바(_), 하이픈(-)도 조합으로 사용가능합니다.");
 		}
-		if (Utility.empty(loginPw)) {
+		if (Utility.isEmpty(loginPw)) {
 			return Utility.jsHistoryBack("비밀번호를 입력해주세요!");
 		}
-		if (Utility.empty(loginPwChk)) {
+		if (Utility.isEmpty(loginPwChk)) {
 			return Utility.jsHistoryBack("비밀번호 확인을 입력해주세요!");
 		}
-		if (Utility.empty(name)) {
+		if (Utility.isEmpty(name)) {
 			return Utility.jsHistoryBack("이름을 입력해주세요!");
 		}
-		if (Utility.empty(gender) || !gender.equals("male") && !gender.equals("female")) {
+		if (Utility.isEmpty(gender) || !gender.equals("male") && !gender.equals("female")) {
 			return Utility.jsHistoryBack("성별을 선택해주세요!");
 		}
-		if (Utility.empty(birthday)) {
+		if (Utility.isEmpty(birthday)) {
 			return Utility.jsHistoryBack("생년월일을 입력해주세요!");
 		}
-		if (Utility.empty(email)) {
+		if (Utility.isEmpty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");
 		}
 		if (!Pattern.matches(reg_email, email)) {
 			return Utility.jsHistoryBack("이메일 형식이 틀렸습니다.\\n" + "ex) abc123@email.com" );
 		}
-		if (Utility.empty(cellphoneNum)) {
+		if (Utility.isEmpty(cellphoneNum)) {
 			return Utility.jsHistoryBack("전화번호를 입력해주세요!");
 		}
 		if (!Pattern.matches(reg_num, cellphoneNum)) {
@@ -89,6 +89,7 @@ public class UsrMemberController {
 			return Utility.jsHistoryBack(doJoinRd.getMsg());
 		}
 		
+		// 회원가입 후 해당 멤버 객체를 불러옴
 		Member member = memberService.getMemberById( (int) doJoinRd.getData1() );
 		
 		return Utility.jsReplace(Utility.f("%s님 가입을 축하드립니다.", member.getName()), "/");
@@ -99,7 +100,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public ResultData<String> getLoginIdDup(String loginId) {
 		// 유효성 검사
-		if(Utility.empty(loginId)) return ResultData.from("F-1", "아이디를 입력해주세요");
+		if(Utility.isEmpty(loginId)) return ResultData.from("F-1", "아이디를 입력해주세요");
 		
 		Member member = memberService.getMemberByLoginId(loginId);
 		
@@ -121,10 +122,10 @@ public class UsrMemberController {
 	@ResponseBody
 	public String doLogin(String loginId, String loginPw) {
 		// 유효성 검사
-		if (Utility.empty(loginId)) {
+		if (Utility.isEmpty(loginId)) {
 			return Utility.jsHistoryBack("아이디를 입력해주세요!");
 		}
-		if (Utility.empty(loginPw)) {
+		if (Utility.isEmpty(loginPw)) {
 			return Utility.jsHistoryBack("비밀번호를 입력해주세요!");
 		}
 		
@@ -171,7 +172,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public String doCheckPassword(String loginPw) {
 		// 유효성 검사
-		if (Utility.empty(loginPw)) {
+		if (Utility.isEmpty(loginPw)) {
 			return Utility.jsHistoryBack("비밀번호를 입력해주세요!");
 		}
 
@@ -187,7 +188,7 @@ public class UsrMemberController {
 	// 회원정보 수정 페이지
 	@RequestMapping("/usr/member/modify")
 	public String showModify(String memberModifyAuthKey) {
-		if (Utility.empty(memberModifyAuthKey)) {
+		if (Utility.isEmpty(memberModifyAuthKey)) {
 			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
 		}
 
@@ -204,7 +205,7 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
 	public String doModify(String memberModifyAuthKey, String email, String cellphoneNum) {
-		if (Utility.empty(memberModifyAuthKey)) {
+		if (Utility.isEmpty(memberModifyAuthKey)) {
 			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
 		}
 
@@ -215,10 +216,10 @@ public class UsrMemberController {
 		}
 
 		// 유효성 검사
-		if (Utility.empty(email)) {
+		if (Utility.isEmpty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");
 		}
-		if (Utility.empty(cellphoneNum)) {
+		if (Utility.isEmpty(cellphoneNum)) {
 			return Utility.jsHistoryBack("전화번호를 입력해주세요!");
 		}
 
@@ -230,7 +231,7 @@ public class UsrMemberController {
 	// 패스워드 수정 페이지
 	@RequestMapping("/usr/member/passwordModify")
 	public String passwordModify(String memberModifyAuthKey) {
-		if (Utility.empty(memberModifyAuthKey)) {
+		if (Utility.isEmpty(memberModifyAuthKey)) {
 			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
 		}
 
@@ -247,7 +248,7 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doPasswordModify")
 	@ResponseBody
 	public String doPasswordModify(String memberModifyAuthKey, String loginPw, String loginPwChk) {
-		if (Utility.empty(memberModifyAuthKey)) {
+		if (Utility.isEmpty(memberModifyAuthKey)) {
 			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
 		}
 
@@ -257,10 +258,10 @@ public class UsrMemberController {
 			return Utility.jsReplace(chkMemberModifyAuthKeyRd.getMsg(), "chkPassword");
 		}
 
-		if (Utility.empty(loginPw)) {
+		if (Utility.isEmpty(loginPw)) {
 			return Utility.jsHistoryBack("새 비밀번호를 입력해주세요!");
 		}
-		if (Utility.empty(loginPwChk)) {
+		if (Utility.isEmpty(loginPwChk)) {
 			return Utility.jsHistoryBack("새 비밀번호 확인을 입력해주세요!");
 		}
 		if (loginPw.equals(loginPwChk) == false) {
@@ -284,10 +285,10 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doFindLoginId")
 	@ResponseBody
 	public String doFindLoginId(String name, String email) {
-		if (Utility.empty(name)) {
+		if (Utility.isEmpty(name)) {
 			return Utility.jsHistoryBack("이름을 입력해주세요");
 		}
-		if (Utility.empty(email)) {
+		if (Utility.isEmpty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요");
 		}
 
@@ -310,13 +311,13 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doFindLoginPw")
 	@ResponseBody
 	public String doFindLoginPw(String loginId, String name, String email) {
-		if (Utility.empty(loginId)) {
+		if (Utility.isEmpty(loginId)) {
 			return Utility.jsHistoryBack("아이디를 입력해주세요");
 		}
-		if (Utility.empty(name)) {
+		if (Utility.isEmpty(name)) {
 			return Utility.jsHistoryBack("이름을 입력해주세요");
 		}
-		if (Utility.empty(email)) {
+		if (Utility.isEmpty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요");
 		}
 

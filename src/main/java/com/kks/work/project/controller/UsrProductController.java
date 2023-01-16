@@ -34,7 +34,7 @@ public class UsrProductController {
 	@ResponseBody // 실행할 몸통
 	public String doRegister(String productName, String productPrice, String productCetegory, String productStock, String productImg, String productBody) {
 		// 유효성 검사
-		if (Utility.empty(productName)) {
+		if (Utility.isEmpty(productName)) {
 			return Utility.jsHistoryBack("상품 이름을 입력해주세요!");
 		}
 
@@ -55,7 +55,7 @@ public class UsrProductController {
 	@ResponseBody
 	public ResultData<String> getLoginIdDup(String productName) {
 		// 유효성 검사
-		if(Utility.empty(productName)) {
+		if(Utility.isEmpty(productName)) {
 			return ResultData.from("F-1", "상품 이름을 입력해주세요");
 		}
 		

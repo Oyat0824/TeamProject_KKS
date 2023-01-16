@@ -1,9 +1,11 @@
 package com.kks.work.project.interceptorConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.kks.work.project.interceptor.BeforeActionInterceptor;
@@ -17,6 +19,10 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 	private NeedLoginInterceptor needLoginInterceptor;
 	private NeedLogoutInterceptor needLogoutInterceptor;
 	private NeedSellerInterceptor needSellerInterceptor;
+	
+	// 파일 생성 경로
+	@Value("${custom.genFileDirPath}")
+	private String genFileDirPath;
 
 	// [의존성] 생성자 주입
 	@Autowired
@@ -27,6 +33,13 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		this.needLoginInterceptor = needLoginInterceptor;
 		this.needLogoutInterceptor = needLogoutInterceptor;
 		this.needSellerInterceptor = needSellerInterceptor;
+	}
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/gen/**")
+				.addResourceLocations("file:///" + genFileDirPath + "/")
+				.setCachePeriod(20);
 	}
 
 	@Override

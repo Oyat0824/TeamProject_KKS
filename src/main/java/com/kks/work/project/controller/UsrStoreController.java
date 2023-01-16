@@ -34,7 +34,7 @@ public class UsrStoreController {
 	@ResponseBody // 실행할 몸통
 	public String doRegister(String storeName, String storeLogo, String storeImg, String storeDesc) {
 		// 유효성 검사
-		if (Utility.empty(storeName)) {
+		if (Utility.isEmpty(storeName)) {
 			return Utility.jsHistoryBack("가게 이름을 입력해주세요!");
 		}
 
@@ -55,7 +55,7 @@ public class UsrStoreController {
 	@ResponseBody
 	public ResultData<String> getLoginIdDup(String storeName) {
 		// 유효성 검사
-		if(Utility.empty(storeName)) {
+		if(Utility.isEmpty(storeName)) {
 			return ResultData.from("F-1", "가게 이름을 입력해주세요");
 		}
 		
