@@ -8,16 +8,16 @@
 	// Submit 전 검증
 	const ProductRegister__submit = function(form) {
 		// 상품 이름 검증
-		form.p_Name.value = form.p_Name.value.trim();
-		if(form.p_Name.value.length == 0) {
+		form.productName.value = form.productName.value.trim();
+		if(form.productName.value.length == 0) {
 			alert("상품 이름을 입력해주세요.");
-			form.p_Name.focus();
+			form.productName.focus();
 			
 			return false;
 		}
-		if(form.p_Name.value == validProductName) {
+		if(form.productName.value == validProductName) {
 			alert("이미 사용중인 상품이름입니다.");
-			form.p_Name.focus();
+			form.productName.focus();
 			
 			return false;
 		}	
@@ -33,7 +33,7 @@
 			return false;
 		}
 		
-		if(el[0].name == "p_Name") {
+		if(el[0].name == "productName") {
 			$.get('getProductNameDup', {
 				p_Name : el.val(),
 				ajaxMode : 'Y'
@@ -75,29 +75,29 @@
 						<tr>
 							<th>상품 이름</th>
 							<td>
-								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="p_Name" placeholder="상품 이름을 적어주세요." />
+								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="productName" placeholder="상품 이름을 적어주세요." />
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
 							<th>상품 가격</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" name="p_Price" /></td>
+							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productPrice" /></td>
 						</tr>
 						<tr>
 							<th>상품 카테고리</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" name="p_Cetegory" /></td>
+							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productCetegory" /></td>
 						</tr>
 						<tr>
 							<th>상품 재고</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" name="p_Stock" /></td>
+							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productStock" /></td>
 						</tr>
 						<tr>
 							<th>상품 이미지</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" type="file" name="p_Img" /></td>
+							<td><input class="file-input file-input-bordered w-full border-gray-400" type="file" name="productImg" /></td>
 						</tr>
 						<tr>
 							<th>상품 설명</th>
-							<td><textarea class="input w-full text-lg border-gray-400" name="p_Desc" placeholder="상품 소개 글" /></textarea></td>
+							<td><textarea class="input w-full text-lg border-gray-400" name="productBody" placeholder="상품 소개 글" /></textarea></td>
 						</tr>
 						<tr>
 							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-product"></i>상품 등록</button></td>

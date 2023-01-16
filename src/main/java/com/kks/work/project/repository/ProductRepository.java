@@ -14,16 +14,16 @@ public interface ProductRepository {
 			INSERT INTO product
 			SET regDate = NOW(),
 			updateDate = NOW(),
-			p_Name = #{p_Name},
-			p_Price = #{p_Price},
-			p_Cetegory = #{p_Cetegory},
-			p_Stock = #{p_Stock},
-			p_Img = #{p_Img},
-			p_Desc = #{p_Desc},
+			productName = #{productName},
+			productPrice = #{productPrice},
+			productCetegory = #{productCetegory},
+			productStock = #{productStock},
+			productImg = #{productImg},
+			productBody = #{productBody},
 			stroeId = #{stroeId}
 			""")
-	public void registerProduct(String p_Name, String p_Price, String p_Cetegory, String p_Stock, String p_Img,
-			String p_Desc);
+	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productImg,
+			String productBody);
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -40,9 +40,9 @@ public interface ProductRepository {
 	@Select("""
 			SELECT *
 			FROM product
-			WHERE p_Name = #{p_Name}
+			WHERE productName = #{productName}
 			""")	
-	public Product getProductByProductNam(String p_Name);
+	public Product getProductByProductNam(String productName);
 
 	
 }
