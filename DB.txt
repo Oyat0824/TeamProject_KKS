@@ -34,7 +34,6 @@ CREATE TABLE attr (
     `value` TEXT NOT NULL,
     `expireDate` DATETIME NULL
 );
-
 # attr 유니크 인덱스 걸기
 ## 중복변수 생성금지, 변수찾는 속도 최적화
 ALTER TABLE `attr` ADD UNIQUE INDEX (`relTypeCode`, `relId`, `typeCode`, `type2Code`);
@@ -53,23 +52,27 @@ CREATE TABLE store(
 	storeDesc VARCHAR(100),
 	memberId INT UNSIGNED NOT NULL
 );
-
 # store 유니크 인덱스 걸기
 ALTER TABLE store ADD UNIQUE (`storeName`, `memberId`);
 ALTER TABLE store ADD INDEX (`memberId`);
 
+##### product 테이블 생성
 CREATE TABLE product(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
-	p_Name VARCHAR(40) NOT NULL,
-	p_Price VARCHAR(40),
-	p_Cetegory VARCHAR(20),  
-	p_Stock VARCHAR(20), # 상품재고
-	p_Img VARCHAR(40),
-	p_Desc VARCHAR(100),
-	stroeId INT UNSIGNED NOT NULL
+	productName VARCHAR(40) NOT NULL,
+	productPrice VARCHAR(40) NOT NULL,
+	productCetegory VARCHAR(20),  
+	productStock VARCHAR(20) NOT NULL, # 상품재고
+	productImg VARCHAR(40),
+	productBody VARCHAR(100) NOT NULL,
+	stroeId INT UNSIGNED NOT NULL,
+	memberId INT UNSIGNED NOT NULL
 );
+# product 유니크 인덱스 걸기
+ALTER TABLE product ADD UNIQUE (`stroeId`, `memberId`);
+ALTER TABLE product ADD INDEX (`stroeId`, `memberId`);
 
 ##### 테이블 조회
 SELECT * FROM `member`;
