@@ -48,7 +48,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doFindLoginId" onsubmit="return FindLoginId__submit(this);">
+		<form action="doFindLoginId" method="POST" onsubmit="return FindLoginId__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>

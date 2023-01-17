@@ -35,7 +35,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doPasswordModify" onsubmit="return MemberModify__submit(this);">
+		<form action="doPasswordModify" method="POST" onsubmit="return MemberModify__submit(this);">
 			<input type="hidden" name="memberModifyAuthKey" value="${param.memberModifyAuthKey}" />
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">

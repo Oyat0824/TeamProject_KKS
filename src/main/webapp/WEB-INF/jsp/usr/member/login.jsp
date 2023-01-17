@@ -28,7 +28,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doLogin" onsubmit="return MemberLogin__submit(this);">
+		<form action="doLogin" method="POST" onsubmit="return MemberLogin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>

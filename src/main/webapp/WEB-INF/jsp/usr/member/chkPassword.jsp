@@ -19,7 +19,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doChkPassword" onsubmit="return MemberLogin__submit(this);">
+		<form action="doChkPassword" method="POST" onsubmit="return MemberLogin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
