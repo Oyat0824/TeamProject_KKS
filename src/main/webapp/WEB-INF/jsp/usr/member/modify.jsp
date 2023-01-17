@@ -77,6 +77,18 @@
 		}
 	}
 	
+	// 이미지 미리보기 기능
+	const imgChg = function(e) {
+		const selectedFile = e.files[0];
+		const fileReader = new FileReader();
+		
+		fileReader.readAsDataURL(selectedFile);
+		
+		fileReader.onload = function () {
+			$(e).siblings("div").children("#profileImg").attr("src", fileReader.result);
+		};
+	}
+	
 	$(function(){
 		// 인풋에 입력 시, 에러 메시지 삭제
 		$(".input").on("propertychange change paste input", function() {
@@ -140,15 +152,14 @@
 							<th>프로필 이미지</th>
 							<td>
 								<img class="w-40 h-40 object-cover" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" onerror="${rq.getRemoveProfileImgIfNotExitOnErrorHtmlAttr() }" alt="" />
+								<div><img id="profileImg" src="" alt="" /></div>
 								<div class="mt-2">
 									<label class="cursor-pointer inline-flex">
 										<span class="label-text mr-2 mt-1">이미지 삭제</span>
-										<div>
-											<input class="ckeckbox" type="checkbox" name="deleteFile__member__0__extra__profileImg__1" value="Y" />
-										</div>
+										<input class="ckeckbox" type="checkbox" name="deleteFile__member__0__extra__profileImg__1" value="Y" />
 									</label>
 								</div>
-								<input accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" />
+								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" />
 							</td>
 						</tr>
 						<tr>

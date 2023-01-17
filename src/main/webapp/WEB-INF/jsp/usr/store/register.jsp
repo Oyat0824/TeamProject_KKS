@@ -76,6 +76,17 @@
 			return false;
 		}
 	}
+	
+	// 이미지 미리보기 기능
+	const imgChg = function(e) {
+		const selectedFile = e.files[0];
+		const fileReader = new FileReader();
+		
+		fileReader.readAsDataURL(selectedFile);
+		fileReader.onload = function () {
+			$(e).prev().children("img").attr("src", fileReader.result);
+		};
+	}
 
 	$(function(){
 		// 인풋에 입력 시, 에러 메시지 삭제
@@ -106,11 +117,17 @@
 						</tr>
 						<tr>
 							<th>가게 로고</th>
-							<td><input accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeLogo__1" type="file" /></td>
+							<td>
+								<div><img id="storeLogo" src="" alt="" /></div>
+								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeLogo__1" type="file" />
+							</td>
 						</tr>
 						<tr>
 							<th>가게 이미지</th>
-							<td><input accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" /></td>
+							<td>
+								<div><img id="storeImg" src="" alt="" /></div>
+								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" />
+							</td>
 						</tr>
 						<tr>
 							<th>가게 설명</th>
