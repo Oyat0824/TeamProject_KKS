@@ -21,6 +21,7 @@ public class Member{
 	private String email;
 	private String cellphoneNum;
 	private int memberType;
+	private int storeState;
 	private String profileImg;
 	private String salt;
 	private String delStatus;

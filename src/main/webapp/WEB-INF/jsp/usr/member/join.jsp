@@ -84,6 +84,21 @@
 			return false;
 		}
 		
+		// 파일 검증
+		const maxSizeMb = 5;
+		const maxSize = maxSizeMb * 1024 * 1024;
+		
+		const profileImgFileInput = form["file__member__0__extra__profileImg__1"];
+		
+		if (profileImgFileInput.value) {
+			if (profileImgFileInput.files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				profileImgFileInput.focus();
+				
+				return;
+			}
+		}
+		
 		// 이메일 검증
 		form.email.value = form.email.value.trim();
 		if(form.email.value.length == 0) {
@@ -215,7 +230,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doJoin" onsubmit="return MemberJoin__submit(this);">
+		<form action="doJoin" method="POST" enctype="multipart/form-data" onsubmit="return MemberJoin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -260,6 +275,10 @@
 							<td><input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400"
 								id="birthday" name="birthday" placeholder="생년월일을 입력해주세요." readonly />
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+						</tr>
+						<tr>
+							<th>프로필 이미지</th>
+							<td><input accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" /></td>
 						</tr>
 						<tr>
 							<th>이메일</th>

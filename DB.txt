@@ -36,9 +36,9 @@ CREATE TABLE `member`(
 	birthday DATE NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	cellphoneNum VARCHAR(20) NOT NULL,
-	profileImg VARCHAR(40),
 	salt VARCHAR(100) NOT NULL,
 	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
+	storeState TINYINT NOT NULL DEFAULT 0 COMMENT '가게 유무 (0 = 무, 1 = 유)',
 	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
 	delDate DATETIME COMMENT '탈퇴 날짜',
 	UNIQUE `uniqueKey` (loginId)
@@ -65,8 +65,6 @@ CREATE TABLE store(
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
 	storeName VARCHAR(40) NOT NULL,
-	storeLogo VARCHAR(40),
-	storeImg VARCHAR(40),
 	storeDesc VARCHAR(100),
 	memberId INT UNSIGNED NOT NULL,
 	UNIQUE `uniqueKey` (storeName, memberId),
@@ -82,7 +80,6 @@ CREATE TABLE product(
 	productPrice VARCHAR(40) NOT NULL,
 	productCetegory VARCHAR(20),  
 	productStock VARCHAR(20) NOT NULL, # 상품재고
-	productImg VARCHAR(40),
 	productBody VARCHAR(100) NOT NULL,
 	stroeId INT UNSIGNED NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
@@ -137,3 +134,10 @@ salt = 'admin';
 
 UPDATE `member`
 SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
+
+SELECT S.*, M.name AS sellerName
+FROM store AS S
+INNER JOIN `member` AS M
+ON S.memberId = M.id
+WHERE M.memberType = 6
+ORDER BY S.id DESC;

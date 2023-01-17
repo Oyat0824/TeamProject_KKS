@@ -19,7 +19,7 @@ public class StoreService {
 	
 // 서비스 메서드
 	// 가게 등록
-	public ResultData<Integer> registerStore(String storeName, String storeLogo, String storeImg, String storeDesc, int memberId) {
+	public ResultData<Integer> registerStore(String storeName, String storeDesc, int memberId) {
 		// 가게 중복 신청 금지
 		Store existsStore = getStoreByMemberId(memberId);
 		if (existsStore != null) {
@@ -32,7 +32,8 @@ public class StoreService {
 			return ResultData.from("F-2", Utility.f("이미 사용중인 가게 이름(%s)입니다.", storeName));
 		}
 		
-		storeRepository.registerStore(storeName, storeLogo, storeImg, storeDesc, memberId);
+		storeRepository.registerStore(storeName, storeDesc, memberId);
+		storeRepository.storeStateChange(memberId);
 		
 		int id = storeRepository.getLastInsertId();
 		

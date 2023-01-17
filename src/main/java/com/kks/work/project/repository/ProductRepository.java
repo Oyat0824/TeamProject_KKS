@@ -18,12 +18,10 @@ public interface ProductRepository {
 			productPrice = #{productPrice},
 			productCetegory = #{productCetegory},
 			productStock = #{productStock},
-			productImg = #{productImg},
 			productBody = #{productBody},
 			stroeId = #{stroeId}
 			""")
-	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productImg,
-			String productBody);
+	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productBody);
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();

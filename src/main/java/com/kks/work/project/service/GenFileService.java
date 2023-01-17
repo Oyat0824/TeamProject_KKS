@@ -74,7 +74,7 @@ public class GenFileService {
 			fileExt = "html";
 		}
 
-		String fileDir = Utility.getNowYearMonthDateStr();
+		String fileDir = Utility.getNowYearMonthDateStr() + "/" + type2Code;
 
 		if (relId > 0) {
 			GenFile oldGenFile = getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
@@ -203,9 +203,16 @@ public class GenFileService {
 		}
 	}
 
-	public void deleteGenFiles(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+	public ResultData deleteGenFiles(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
 		GenFile genFile = genFileRepository.getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
+		
+		if(genFile == null) {
+			return ResultData.from("F-1", "파일이 존재하지 않습니다.");
+		}
+		
 		deleteGenFile(genFile);
+		
+		return ResultData.from("S-1", "파일 삭제 성공");
 	}
 
 	private void deleteGenFile(GenFile genFile) {
@@ -218,7 +225,7 @@ public class GenFileService {
 	public GenFile getGenFile(int id) {
 		return genFileRepository.getGenFileById(id);
 	}
-
+	
 	public Map<Integer, Map<String, GenFile>> getFilesMapKeyRelIdAndFileNo(String relTypeCode, List<Integer> relIds,
 			String typeCode, String type2Code) {
 		List<GenFile> genFiles = genFileRepository.getGenFilesRelTypeCodeAndRelIdsAndTypeCodeAndType2Code(relTypeCode,
@@ -244,7 +251,7 @@ public class GenFileService {
 			List<Integer> genFileIds = Utility.getListDividedBy(genFileIdsStr, ",");
 
 			// 파일이 먼저 생성된 후에, 관련 데이터가 생성되는 경우에는, file의 relId가 일단 0으로 저장된다.
-			// 그것을 뒤늦게라도 이렇게 고처야 한다.
+			// 그것을 뒤늦게라도 이렇게 고쳐야 한다.
 			for (int genFileId : genFileIds) {
 				changeRelId(genFileId, id);
 			}

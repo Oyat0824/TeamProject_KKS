@@ -1,12 +1,18 @@
 package com.kks.work.project.controller;
 
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import com.kks.work.project.service.GenFileService;
 import com.kks.work.project.service.MemberService;
 import com.kks.work.project.util.ResultData;
 import com.kks.work.project.util.Utility;
@@ -17,11 +23,13 @@ import com.kks.work.project.vo.Rq;
 public class UsrMemberController {
 	private MemberService memberService;
 	private Rq rq;
+	private GenFileService genFileService;
 
 	@Autowired
-	public UsrMemberController(MemberService memberService, Rq rq) {
+	public UsrMemberController(MemberService memberService, Rq rq, GenFileService genFileService) {
 		this.memberService = memberService;
 		this.rq = rq;
+		this.genFileService = genFileService;
 	}
 
 // 액션 메서드
@@ -34,7 +42,7 @@ public class UsrMemberController {
 	// 회원가입
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public String doJoin(String loginId, String loginPw, String loginPwChk, String name, String gender, String birthday, String email, String cellphoneNum) {
+	public String doJoin(String loginId, String loginPw, String loginPwChk, String name, String gender, String birthday, String email, String cellphoneNum, MultipartRequest multipartRequest) {
 		// 정규식
 		String reg_num = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$"; // 휴대폰 번호
 		String reg_email = "^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$"; // 길이까지 확실한 검증
@@ -89,8 +97,21 @@ public class UsrMemberController {
 			return Utility.jsHistoryBack(doJoinRd.getMsg());
 		}
 		
+		// 프로필 사진이 있다면 업로드
+		int memberId = (int) doJoinRd.getData1();
+
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+		
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, memberId);
+			}
+		}
+		
 		// 회원가입 후 해당 멤버 객체를 불러옴
-		Member member = memberService.getMemberById( (int) doJoinRd.getData1() );
+		Member member = memberService.getMemberById(memberId);
 		
 		return Utility.jsReplace(Utility.f("%s님 가입을 축하드립니다.", member.getName()), "/");
 	}
@@ -204,7 +225,7 @@ public class UsrMemberController {
 	// 회원정보 수정
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
-	public String doModify(String memberModifyAuthKey, String email, String cellphoneNum) {
+	public String doModify(HttpServletRequest req, String memberModifyAuthKey, String email, String cellphoneNum, MultipartRequest multipartRequest) {
 		if (Utility.isEmpty(memberModifyAuthKey)) {
 			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
 		}
@@ -221,6 +242,26 @@ public class UsrMemberController {
 		}
 		if (Utility.isEmpty(cellphoneNum)) {
 			return Utility.jsHistoryBack("전화번호를 입력해주세요!");
+		}
+		
+		// 이미지 삭제 체크 했다면 삭제
+		if (req.getParameter("deleteFile__member__0__extra__profileImg__1") != null) {
+			ResultData<?> delFileChkRd = genFileService.deleteGenFiles("member", rq.getLoginedMemberId(), "extra", "profileImg", 1);
+			
+			if (delFileChkRd.isFail()) {
+				return Utility.jsHistoryBack(delFileChkRd.getMsg());
+			}
+		}
+
+		// 이미지 파일이 있다면 업로드
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, rq.getLoginedMemberId());
+			}
 		}
 
 		memberService.doModify(rq.getLoginedMemberId(), email, cellphoneNum);

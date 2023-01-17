@@ -38,12 +38,14 @@ public class GenFileController {
 	@Autowired
 	private GenFileService genFileService;
 
+	// POST 요청을 매핑해 파일 업로드 기능을 구현
 	@RequestMapping("/common/genFile/doUpload")
 	@ResponseBody
 	public ResultData<?> doUpload(@RequestParam Map<String, Object> param, MultipartRequest multipartRequest) {
 		return genFileService.saveFiles(param, multipartRequest);
 	}
 
+	// GET 요청을 매핑해 파일 다운로드 구현
 	@GetMapping("/common/genFile/doDownload")
 	public ResponseEntity<Resource> downloadFile(int id, HttpServletRequest request) throws IOException {
 		GenFile genFile = genFileService.getGenFile(id);
@@ -68,6 +70,7 @@ public class GenFileController {
 				.contentType(MediaType.parseMediaType(contentType)).body(resource);
 	}
 
+	// GET 요청을 매핑해 파일을 보여주는 기능 구현 
 	@GetMapping("/common/genFile/file/{relTypeCode}/{relId}/{typeCode}/{type2Code}/{fileNo}")
 	public ResponseEntity<Resource> showFile(HttpServletRequest request, @PathVariable String relTypeCode,
 			@PathVariable int relId, @PathVariable String typeCode, @PathVariable String type2Code,

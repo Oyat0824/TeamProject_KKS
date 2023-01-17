@@ -41,7 +41,7 @@
 					<a class="btn" href="/usr/member/login">LOGIN</a>
 				</c:if>
 				<c:if test="${rq.getLoginedMemberId() != 0}">
-					<c:if test="${rq.getLoginedMember().getMemberType() == 6}">
+					<c:if test="${rq.getLoginedMember().getMemberType() == 6  && rq.getLoginedMember().getStoreState() == 0}">
 						<a class="btn btn-outline mr-2 " href="/usr/store/register">가게 등록</a>
 					</c:if>
 					<a class="btn btn-outline mr-2 " href="/usr/member/myPage"><i class="fa-solid fa-user-large"></i>${rq.loginedMember.name}</a>

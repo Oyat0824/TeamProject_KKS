@@ -3,6 +3,7 @@ package com.kks.work.project.repository;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Store;
 
@@ -14,12 +15,18 @@ public interface StoreRepository {
 			SET regDate = NOW(),
 			updateDate = NOW(),
 			storeName = #{storeName},
-			storeLogo = #{storeLogo},
-			storeImg = #{storeImg},
 			storeDesc = #{storeDesc},
 			memberId = #{memberId}
 			""")
-	public void registerStore(String storeName, String storeLogo, String storeImg, String storeDesc, int memberId);
+	public void registerStore(String storeName, String storeDesc, int memberId);
+	
+	// 가게 등록 상태 변경
+	@Update("""
+			UPDATE `member`
+			SET storeState = 1
+			WHERE id = #{memberId}
+			""")
+	public void storeStateChange(int memberId);
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();

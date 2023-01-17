@@ -21,6 +21,31 @@
 			
 			return false;
 		}	
+		
+		// 파일 검증
+		const maxSizeMb = 10;
+		const maxSize = maxSizeMb * 1024 * 1024;
+		
+		const storeLogoFileInput = form["file__store__0__extra__storeLogo__1"];
+		const storeImgFileInput = form["file__store__0__extra__storeImg__1"];
+		
+		if (storeLogoFileInput.value) {
+			if (storeLogoFileInput.files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				storeLogoFileInput.focus();
+				
+				return;
+			}
+		}
+		
+		if (storeImgFileInput.value) {
+			if (storeImgFileInput.files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				storeImgFileInput.focus();
+				
+				return;
+			}
+		}
 	}
 	
 	// 에러 메시지
@@ -64,7 +89,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doRegister" onsubmit="return StoreRegister__submit(this);">
+		<form action="doRegister" method="POST" enctype="multipart/form-data" onsubmit="return StoreRegister__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -81,11 +106,11 @@
 						</tr>
 						<tr>
 							<th>가게 로고</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" type="file" name="storeLogo" /></td>
+							<td><input accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeLogo__1" type="file" /></td>
 						</tr>
 						<tr>
 							<th>가게 이미지</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" type="file" name="storeImg" /></td>
+							<td><input accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" /></td>
 						</tr>
 						<tr>
 							<th>가게 설명</th>

@@ -42,7 +42,7 @@
 					</tr>
 					<tr>
 						<th>프로필 사진</th>
-						<td>${rq.loginedMember.profileImg }</td>
+						<td><img class="w-40 h-40 object-cover" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" onerror="${rq.getRemoveProfileImgIfNotExitOnErrorHtmlAttr() }" alt="" /></td>
 					</tr>
 					<tr>
 						<th>회원 등급</th>

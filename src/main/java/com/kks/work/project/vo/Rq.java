@@ -85,9 +85,17 @@ public class Rq {
 		return jsReturnOnView(msg, historyBack, "");
 	}
 	
-	// memberId 로 프로필 사진 Uri 가져오기
-	public String getProfileImgUri(int membeId) {
-		return "/common/genFile/file/member/" + membeId + "/extra/profileImg/1";
+	/**
+	 * 이미지를 가져옵니다.
+	 * 
+	 * @param relTypeCode 참조 타입 코드를 작성합니다. (member, store ...)
+	 * @param relId 참조 타입 아이디를 작성합니다.
+	 * @param type2code 유형을 작성합니다. (profileImg, StoreLogo ...)
+	 * 
+	 * @return 인자에 맞춰서 나온 이미지 경로
+	 * */
+	public String getImgUri(String relTypeCode, int relId, String type2code) {
+		return "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/1";
 	}
 
 	// 프로필 이미지가 없는 경우

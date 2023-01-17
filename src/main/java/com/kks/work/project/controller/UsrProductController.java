@@ -32,13 +32,13 @@ public class UsrProductController {
 	// 상품 등록
 	@RequestMapping("/usr/product/doRegister") // 주소
 	@ResponseBody // 실행할 몸통
-	public String doRegister(String productName, String productPrice, String productCetegory, String productStock, String productImg, String productBody) {
+	public String doRegister(String productName, String productPrice, String productCetegory, String productStock, String productBody) {
 		// 유효성 검사
 		if (Utility.isEmpty(productName)) {
 			return Utility.jsHistoryBack("상품 이름을 입력해주세요!");
 		}
 
-		ResultData<Integer> registerProductRd = productService.registerProduct(productName, productPrice, productCetegory, productStock, productImg, productBody, rq.getLoginedMemberId());
+		ResultData<Integer> registerProductRd = productService.registerProduct(productName, productPrice, productCetegory, productStock, productBody, rq.getLoginedMemberId());
 		
 		// 상품 등록 실패
 		if (registerProductRd.isFail()) {
