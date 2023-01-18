@@ -1,5 +1,7 @@
 package com.kks.work.project.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -47,4 +49,5 @@ public interface StoreRepository {
 			WHERE storeName = #{storeName}
 			""")
 	public Store getStoreByStoreName(String storeName);
+
 }

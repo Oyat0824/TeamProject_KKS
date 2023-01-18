@@ -34,6 +34,7 @@
 					<li><a href="#">Item 2</a></li>
 					<li><a href="#">Item 3</a></li>
 				</ul>
+				<a class="btn btn-outline mr-2 " href="/usr/product/list"><i class="fa-solid fa-list-ul"></i>상품 리스트</a>
 			</div>
 			<div class="navbar-end">
 				<c:if test="${rq.getLoginedMemberId() == 0}">
@@ -42,7 +43,7 @@
 				</c:if>
 				<c:if test="${rq.getLoginedMemberId() != 0}">
 					<c:if test="${rq.getLoginedMember().getMemberType() == 6}">
-						<a class="btn btn-outline mr-2 " href="/usr/store/register">가게 등록</a>
+						<a class="btn btn-outline mr-2 " href="/usr/store/register">스토어 등록</a>
 					</c:if>
 					<a class="btn btn-outline mr-2 " href="/usr/member/myPage"><i class="fa-solid fa-user-large"></i>${rq.loginedMember.name}</a>
 					<a class="btn" href="/usr/member/doLogout">LOGOUT</a>

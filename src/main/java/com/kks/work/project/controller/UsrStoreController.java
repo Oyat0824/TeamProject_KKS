@@ -67,5 +67,6 @@ public class UsrStoreController {
 		
 		return ResultData.from("S-1", "사용 가능한 가게 이름입니다.", "storeName", storeName);
 	}
+	
 }
 
