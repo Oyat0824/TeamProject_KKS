@@ -1,5 +1,7 @@
 package com.kks.work.project.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +52,18 @@ public class ProductService {
 	public Product getProductByProductName(String productName) {
 		return productRepository.getProductByProductNam(productName);
 	}
+	
+	// 페이징 처리
+	public List<Product> getProducts(String searchKeywordTypeCode, String searchKeyword, int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+
+		return productRepository.getProducts(searchKeywordTypeCode, searchKeyword, limitStart, itemsInAPage);
+	}
+
+	// 가게 수 카운트 
+	public int getProductsCount(String searchKeywordTypeCode, String searchKeyword) { 
+		return productRepository.getProductsCount(searchKeywordTypeCode, searchKeyword); 
+	}
+
 	
 }
