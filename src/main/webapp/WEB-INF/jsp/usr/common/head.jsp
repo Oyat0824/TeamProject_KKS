@@ -34,8 +34,10 @@
 					<li><a href="#">Item 2</a></li>
 					<li><a href="#">Item 3</a></li>
 				</ul>
+				
 			</div>
 			<div class="navbar-end">
+				<a class="btn btn-outline mr-2 " href="/usr/product/list"><i class="fa-solid fa-list-ul"></i>상품 리스트</a>
 				<c:if test="${rq.getLoginedMemberId() == 0}">
 					<a class="btn btn-outline mr-2" href="/usr/member/join">JOIN</a>
 					<a class="btn" href="/usr/member/login">LOGIN</a>
