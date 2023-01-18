@@ -82,7 +82,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		
 		// 판매자만 이용
 		ir = registry.addInterceptor(needSellerInterceptor);
-		// 가게 등록
+		// 스토어 등록
 		ir.addPathPatterns("/usr/store/register");
 		ir.addPathPatterns("/usr/store/doRegister");
 		ir.addPathPatterns("/usr/store/getStoreNameDup");

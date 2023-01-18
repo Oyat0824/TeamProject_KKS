@@ -1,11 +1,14 @@
 package com.kks.work.project.vo;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,9 @@ public class Rq {
 	private HttpServletRequest req;
 	private HttpServletResponse res;
 	private HttpSession session;
+	
+	@Value("${custom.siteMainUri}")
+	private String siteMainUri;
 
 	public Rq(HttpServletRequest req, HttpServletResponse res, MemberService memberService) {
 		this.req = req;
@@ -40,6 +46,10 @@ public class Rq {
 		if (session.getAttribute("loginedMemberId") != null) {
 			loginedMemberId = (int) session.getAttribute("loginedMemberId");
 			loginedMember = memberService.getMemberById(loginedMemberId);
+			
+			if (loginedMember.getMemberType() == 6 && loginedMember.getStoreState() == 1) {
+				loginedMember = memberService.getMemberAndStoreById(loginedMember.getId());
+			}
 		}
 		
 		this.loginedMemberId = loginedMemberId;
@@ -93,9 +103,24 @@ public class Rq {
 	 * @param type2code 유형을 작성합니다. (profileImg, StoreLogo ...)
 	 * 
 	 * @return 인자에 맞춰서 나온 이미지 경로
+	 * @throws IOException 
 	 * */
-	public String getImgUri(String relTypeCode, int relId, String type2code) {
-		return "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/1";
+	public String getImgUri(String relTypeCode, int relId, String type2code) throws IOException {
+		String filePath = "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/1";
+		
+		URL url = new URL(siteMainUri + filePath);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		
+		connection.setRequestMethod("GET");
+		connection.connect();
+		
+		int responseCode = connection.getResponseCode();
+		
+		if(responseCode == HttpURLConnection.HTTP_OK){
+			return "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/1";
+		} else {
+		    return getProfileFallbackImgUri();
+		}
 	}
 
 	// 프로필 이미지가 없는 경우
@@ -103,7 +128,7 @@ public class Rq {
 		return "https://via.placeholder.com/160/?text=?";
 	}
 
-	// 프로필 이미지가 에러가 난 경우
+	// 프로필 이미지가 에러가 난 경우, 폐기 처분
 	public String getProfileFallbackImgOnErrorHtml() {
 		return "this.src = '" + getProfileFallbackImgUri() + "'";
 	}

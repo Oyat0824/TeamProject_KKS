@@ -14,7 +14,6 @@ public class Product{
 	private String productName;
 	private String productCetegory;
 	private String productStock;
-	private String productImg;
 	private String productBody;
 	private int stroeId;
 }

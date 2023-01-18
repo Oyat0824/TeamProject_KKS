@@ -7,16 +7,16 @@
 	
 	// Submit 전 검증
 	const StoreRegister__submit = function(form) {
-		// 상점 이름 검증
+		// 스토어 이름 검증
 		form.storeName.value = form.storeName.value.trim();
 		if(form.storeName.value.length == 0) {
-			alert("가게 이름을 입력해주세요.");
+			alert("스토어 이름을 입력해주세요.");
 			form.storeName.focus();
 			
 			return false;
 		}
 		if(form.storeName.value == validStoreName) {
-			alert("이미 사용중인 가게이름입니다.");
+			alert("이미 사용중인 스토어이름입니다.");
 			form.storeName.focus();
 			
 			return false;
@@ -83,8 +83,9 @@
 		const fileReader = new FileReader();
 		
 		fileReader.readAsDataURL(selectedFile);
+		
 		fileReader.onload = function () {
-			$(e).prev().children("img").attr("src", fileReader.result);
+			$(e).siblings("div").children("img").attr("src", fileReader.result);
 		};
 	}
 
@@ -109,32 +110,32 @@
 
 					<tbody>
 						<tr>
-							<th>가게 이름</th>
+							<th>스토어 이름</th>
 							<td>
-								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="storeName" placeholder="상점 이름을 적어주세요." />
+								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="storeName" placeholder="스토어 이름을 적어주세요." />
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
-							<th>가게 로고</th>
+							<th>스토어 로고</th>
 							<td>
-								<div><img id="storeLogo" src="" alt="" /></div>
+								<div><img id="storeLogo" class="object-cover mx-auto" style="width: 160px; height: 50px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
 								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeLogo__1" type="file" />
 							</td>
 						</tr>
 						<tr>
-							<th>가게 이미지</th>
+							<th>스토어 이미지</th>
 							<td>
-								<div><img id="storeImg" src="" alt="" /></div>
+								<div><img id="storeImg" class="object-cover mx-auto" style="width: 100px; height: 100px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
 								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" />
 							</td>
 						</tr>
 						<tr>
-							<th>가게 설명</th>
-							<td><textarea class="input w-full text-lg border-gray-400" name="storeDesc" placeholder="가게 소개 글" /></textarea></td>
+							<th>스토어 소개</th>
+							<td><textarea style="height: 300px" class="input w-full text-lg border-gray-400" name="storeDesc" placeholder="스토어 소개"></textarea></td>
 						</tr>
 						<tr>
-							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>가게 등록</button></td>
+							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>스토어 등록</button></td>
 						</tr>
 					</tbody>
 				</table>

@@ -44,7 +44,10 @@
 				</c:if>
 				<c:if test="${rq.getLoginedMemberId() != 0}">
 					<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 0}">
-						<a class="btn btn-outline mr-2 " href="/usr/store/register">가게 등록</a>
+						<a class="btn btn-outline mr-2 " href="/usr/store/register">스토어 등록</a>
+					</c:if>
+					<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 1}">
+						<a class="btn btn-outline mr-2 " href="/usr/store/view?id=${rq.getLoginedMember().getStoreId() }">내 스토어</a>
 					</c:if>
 					<a class="btn btn-outline mr-2 " href="/usr/member/myPage"><i class="fa-solid fa-user-large"></i>${rq.loginedMember.name}</a>
 					<a class="btn" href="/usr/member/doLogout">LOGOUT</a>

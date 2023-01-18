@@ -114,6 +114,11 @@
 				$(this).val(inputVal.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, ""));
 			} 
 		});
+		
+		// 프로필 사진이 없는 경우
+		if($("#profileImg").attr("src") == "${rq.getProfileFallbackImgUri()}") {
+			$("#profileImg").parent().siblings("div.delBtn").remove();
+		}
 	})
 </script>
 
@@ -151,9 +156,8 @@
 						<tr>
 							<th>프로필 이미지</th>
 							<td>
-								<img class="w-40 h-40 object-cover" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" onerror="${rq.getRemoveProfileImgIfNotExitOnErrorHtmlAttr() }" alt="" />
-								<div><img id="profileImg" src="" alt="" /></div>
-								<div class="mt-2">
+								<div><img id="profileImg" class="w-40 h-40 mx-auto object-cover" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" /></div>
+								<div class="mt-2 delBtn">
 									<label class="cursor-pointer inline-flex">
 										<span class="label-text mr-2 mt-1">이미지 삭제</span>
 										<input class="ckeckbox" type="checkbox" name="deleteFile__member__0__extra__profileImg__1" value="Y" />

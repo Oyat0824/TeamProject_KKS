@@ -36,13 +36,13 @@ public interface ProductRepository {
 				""")
 	public Product getProductByStoreId(int storeId);
 
-	// p_Name을 통해 상품 정보 가져오기
+	// ProductName을 통해 상품 정보 가져오기
 	@Select("""
 			SELECT *
 			FROM product
 			WHERE productName = #{productName}
 			""")	
-	public Product getProductByProductNam(String productName);
+	public Product getProductByProductName(String productName);
 	
 	@Select("""
 			<script>

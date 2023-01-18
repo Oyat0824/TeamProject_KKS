@@ -27,13 +27,13 @@ public class ProductService {
 		Product existsProduct = getProductByStoreId(storeId);
 		
 			if (existsProduct != null) {
-				return ResultData.from("F-1", "가게 신청은 하나만 가능합니다.");
+				return ResultData.from("F-1", "스토어 신청은 하나만 가능합니다.");
 			}
 				
 			// 상품 이름 중복 체크
 			existsProduct = getProductByProductName(productName);
 			if (existsProduct != null) {
-				return ResultData.from("F-2", Utility.f("이미 사용중인 가게 이름(%s)입니다.", productName));
+				return ResultData.from("F-2", Utility.f("이미 사용중인 스토어 이름(%s)입니다.", productName));
 			}
 				
 		productRepository.registerProduct(productName, productPrice, productCetegory, productStock, productBody);
@@ -50,7 +50,7 @@ public class ProductService {
 	
 	// 상품 이름으로 상품 정보 가져오기
 	public Product getProductByProductName(String productName) {
-		return productRepository.getProductByProductNam(productName);
+		return productRepository.getProductByProductName(productName);
 	}
 	
 	// 페이징 처리

@@ -12,8 +12,13 @@ public class Store{
 	private String regDate;
 	private String updateDate;
 	private String storeName;
-	private String storeLogo;
-	private String storeImg;
 	private String storeDesc;
 	private int memberId;
+	
+	private boolean actorCanChangeData;
+	private String sellerName;
+	
+	public String getForPrintDesc() {
+		return this.storeDesc.replaceAll("\n", "<br />");
+	}
 }

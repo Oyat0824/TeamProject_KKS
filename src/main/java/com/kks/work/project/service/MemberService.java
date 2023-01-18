@@ -53,6 +53,11 @@ public class MemberService {
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
 	}
+	
+	// 아이디를 통해 멤버 및 스토어 정보 가져오기
+	public Member getMemberAndStoreById(int id) {
+		return memberRepository.getMemberAndStoreById(id);
+	}
 
 	// 로그인 아이디를 통해 멤버 가져오기
 	public Member getMemberByLoginId(String loginId) {

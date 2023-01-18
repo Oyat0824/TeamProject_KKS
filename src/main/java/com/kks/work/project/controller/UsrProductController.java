@@ -34,8 +34,8 @@ public class UsrProductController {
 	}
 	
 	// 상품 등록
-	@RequestMapping("/usr/product/doRegister") // 주소
-	@ResponseBody // 실행할 몸통
+	@RequestMapping("/usr/product/doRegister")
+	@ResponseBody
 	public String doRegister(String productName, String productPrice, String productCetegory, String productStock, String productBody) {
 		// 유효성 검사
 		if (Utility.isEmpty(productName)) {
@@ -52,24 +52,6 @@ public class UsrProductController {
 		int id = registerProductRd.getData1();
 
 		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("product?id=%d", id));
-	}
-	
-	// 존재하는 상품인지 체크
-	@RequestMapping("/usr/store/getProductNameDup")
-	@ResponseBody
-	public ResultData<String> getLoginIdDup(String productName) {
-		// 유효성 검사
-		if(Utility.isEmpty(productName)) {
-			return ResultData.from("F-1", "상품 이름을 입력해주세요");
-		}
-		
-		Product product = productService.getProductByProductName(productName);
-		
-		if (product != null) {
-			return ResultData.from("F-2", "이미 존재하는 상품 이름입니다.", "productName", productName);
-		}
-		
-		return ResultData.from("S-1", "사용 가능한 상품 이름입니다.", "productName", productName);
 	}
 	
 	@RequestMapping("/usr/product/list")
@@ -98,6 +80,5 @@ public class UsrProductController {
 		
 		return "usr/product/list";
 	}
-	
 }
 
