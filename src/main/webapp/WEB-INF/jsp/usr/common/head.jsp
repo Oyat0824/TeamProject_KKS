@@ -66,7 +66,7 @@
 									<a href="/usr/member/myPage">마이 페이지</a>
 								</div>
 								<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 0}">
-									<div class="border-l border-gray-900 flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 										<a href="/usr/store/register">스토어 등록</a>
 									</div>
 								</c:if>
