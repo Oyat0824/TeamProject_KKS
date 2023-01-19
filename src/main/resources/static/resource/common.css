@@ -13,67 +13,48 @@ html > body .toast-ui-viewer p {
 	font-size: 14px;
 }
 
+html > body > header::before {
+	position: absolute;
+	top: 40px;
+	right: 0;
+	left: 0;
+	background-color: rgba(0,0,0,.07);
+	height: 1px;
+	content: "";
+}
+
+.gnb > .my_lyr {
+	display: none;
+	position: absolute;
+	top: 26px;
+	right: -8px;
+	width: 320px;
+	height: 150px;
+	background-color: #fff;
+	z-index: 10;
+	box-shadow: 0px 2px 10px 1px grey;
+}
+
+.gnb > .my_lyr:after, .gnb > .my_lyr:before {
+	top: -10px;
+	right: 35px;
+	border: 5px solid transparent;
+	border-bottom-color: #fff;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.gnb > .my_lyr.open_lyr {
+	display: flex;
+	flex-direction: column;
+}
+
 .table-box-type-1 > table th,
 .table-box-type-1 > table td {
 	border-top: 1px solid #999;
 	border-bottom: 1px solid #999;
 	text-align: center;
-}
-
-.table-box-type-1 > table th.title {
-	width: 100%;
-}
-
-.comment-set:hover .comment-call {
-	opacity: 1;
-	visibility: visible;
-}
-
-.modal-exam {
-	font-size: 3rem;
-}
-
-.layer-bg {
-	display: none;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, .4);
-	position: absolute;
-	top: 0;
-	left: 0;
-	cursor: pointer;
-}
-
-.layer {
-	display: none;
-	width: 500px;
-	height: 500px;
-	background-color: #000;
-	color: #fff;
-	border: 10px solid green;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-
-.layer > h2 {
-	padding: 20px;
-}
-
-.layer > .close-btn {
-	position: absolute;
-	bottom: 20px;
-	right: 20px;
-	border: 5px solid #fff;
-	border-radius: 10px;
-	padding: 10px;
-}
-
-.close {
-	position: absolute;
-	top: 8px;
-	right: 16px;
-	font-size: 2rem;
-	cursor: pointer;
 }

@@ -49,8 +49,11 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<a class="btn btn btn-info w-6/12" href="findLoginId">아이디 찾기</a>
-								<a class="btn btn-success w-6/12" href="findLoginPw">비밀번호 찾기</a>
+								<div class="flex">
+									<a class="flex-auto mr-2 btn btn btn-info" href="findLoginId">아이디 찾기</a>
+									<a class="flex-auto mr-2 btn btn-success" href="findLoginPw">비밀번호 찾기</a>
+									<a class="flex-auto btn btn-outline mr-2" href="join">회원가입</a>
+								</div>
 							</td>
 						</tr>
 					</tbody>
