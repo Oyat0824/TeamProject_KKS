@@ -48,7 +48,7 @@
 						<div class="my_lyr">
 							<div class="flex items-center py-4 px-2 text-gray-600">
 								<div class="img_area">
-									<img class="mask mask-circle w-20 object-cover rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
+									<img class="w-20 object-cover rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
 								</div>
 								<div class="ml-3 text-area">
 									<p class="account">
