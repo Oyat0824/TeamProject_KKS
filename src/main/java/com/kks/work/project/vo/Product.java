@@ -16,4 +16,12 @@ public class Product{
 	private String productStock;
 	private String productBody;
 	private int stroeId;
+	
+	private boolean actorCanChangeData;
+	private String sellerName;
+	
+	public String setActorCanChangeData(boolean success) {
+		return this.productBody.replaceAll("\n", "<br />");	
+	}
+	
 }

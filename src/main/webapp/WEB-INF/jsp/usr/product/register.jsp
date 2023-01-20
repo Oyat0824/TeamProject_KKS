@@ -81,7 +81,7 @@
 						</tr>
 						<tr>
 							<th>상품 가격</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productPrice" /></td>
+							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productPrice" />원</td>
 						</tr>
 						<tr>
 							<th>상품 카테고리</th>
@@ -89,7 +89,7 @@
 						</tr>
 						<tr>
 							<th>상품 재고</th>
-							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productStock" /></td>
+							<td><input class="file-input file-input-bordered w-full border-gray-400" name="productStock" />개</td>
 						</tr>
 						<tr>
 							<th>상품 이미지</th>

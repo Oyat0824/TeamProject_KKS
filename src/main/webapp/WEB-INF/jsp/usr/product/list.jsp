@@ -40,7 +40,7 @@
 						<th>번호</th>
 						<th>날짜</th>
 						<th>상품이름</th>
-						<th>상품로고</th>
+						<th>상품이미지</th>
 						<th>상품설명</th>
 					</tr>
 				</thead>
@@ -51,8 +51,8 @@
 							<td>${product.id}</td>
 							<td>${product.regDate.substring(2, 16)}</td>
 							<td>${product.productName}</td>
-							<td>${product.productLogo}</td>
-							<td>${product.productDesc}</td>
+							<td>${product.productImg}</td>
+							<td>${product.productBody}</td>
 						</tr>
 					</c:forEach>
 					

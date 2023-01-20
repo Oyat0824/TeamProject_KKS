@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Product;
 
@@ -27,6 +28,14 @@ public interface ProductRepository {
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+	
+	// stroeId를 통해 상품 가져오기
+	@Select("""
+			SELECT *
+			FROM product
+			WHERE id = #{id}
+			""")
+	public Product getProductById(int id);
 	
 	// StoreId를 통해 상품 정보 가져오기
 		@Select("""
@@ -98,6 +107,24 @@ public interface ProductRepository {
 				</script>
 			""")
 	public int getProductsCount(String searchKeywordTypeCode, String searchKeyword);
+
+	// 상품 정보 수정
+	@Update("""
+			<script>
+				UPDATE product
+				<set>
+					updateDate = NOW(),
+					<if test="productBody != null">
+						productBody = #{productBody}
+					</if>
+				</set>
+				WHERE id = #{id}
+				AND memberId = #{loginedMemberId}
+			</script>
+			""")
+	public void doModify(int id, int loginedMemberId, String productBody);
+
+
 
 	
 }
