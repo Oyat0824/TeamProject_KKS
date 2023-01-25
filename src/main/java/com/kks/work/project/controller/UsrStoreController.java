@@ -1,5 +1,6 @@
 package com.kks.work.project.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import com.kks.work.project.service.GenFileService;
 import com.kks.work.project.service.StoreService;
 import com.kks.work.project.util.ResultData;
 import com.kks.work.project.util.Utility;
+import com.kks.work.project.vo.Category;
 import com.kks.work.project.vo.Rq;
 import com.kks.work.project.vo.Store;
 
@@ -94,12 +96,6 @@ public class UsrStoreController {
 	public String showView(Model model, int id) {
 	    Store store = storeService.getForPrintStoreById(rq.getLoginedMemberId(), id);
 	    
-	    ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
-
-		if (actorCanMDRd.isFail()) {
-			return rq.jsReturnOnView(actorCanMDRd.getMsg(), true);
-		}
-	    
 	    model.addAttribute("store", store);
 	    
 	    return "/usr/store/view";
@@ -140,13 +136,21 @@ public class UsrStoreController {
 	// 스토어 수정 페이지
 	@RequestMapping("/usr/store/modify")
 	public String showModify(Model model, int id, String storeModifyAuthKey) {
-		Store store = storeService.getStoreById(id);
-		
-	    ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
-	    
+		// 인증키 검사
+		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
+		    
 	    if (chkStoreModifyAuthKeyRd.isFail()) {
-			return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), true);
+	    	return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), false, "/usr/home/main");
 		}
+		
+	    // 본인 스토어 검사
+		Store store = storeService.getStoreById(id);
+	    
+	    ResultData<?> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+	    
+	    if (actorCanModifyRD.isFail()) {
+	    	return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
+	    }
 	    
 	    model.addAttribute("store", store);
 	    
@@ -157,16 +161,14 @@ public class UsrStoreController {
 	@RequestMapping("/usr/store/doModify")
 	@ResponseBody
 	public String doModify(HttpServletRequest req, int id, String storeModifyAuthKey, String storeDesc, MultipartRequest multipartRequest) {
-		if (Utility.isEmpty(storeModifyAuthKey)) {
-			return Utility.jsHistoryBack("스토어 수정 인증코드가 필요합니다.");
-		}
-		
+		// 인증키 검사
 		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
 	    
 	    if (chkStoreModifyAuthKeyRd.isFail()) {
-			return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), true);
+			return Utility.jsReplace(chkStoreModifyAuthKeyRd.getMsg(), "/usr/home/main");
 		}
 		
+	    // 본인 스토어 검사
 		Store store = storeService.getStoreById(id);
 
 		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
@@ -175,6 +177,7 @@ public class UsrStoreController {
 			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
 		
+		// 이미지 삭제 체크 되있다면 삭제
 		if (req.getParameter("deleteFile__store__0__extra__storeLogo__1") != null) {
 			genFileService.deleteGenFiles("store", id, "extra", "storeLogo", 1);
 		}
@@ -183,6 +186,7 @@ public class UsrStoreController {
 			genFileService.deleteGenFiles("store", id, "extra", "storeImg", 1);
 		}
 		
+		// 이미지 업로드
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		
 		for (String fileInputName : fileMap.keySet()) {
@@ -196,6 +200,167 @@ public class UsrStoreController {
 		storeService.doModify(id, rq.getLoginedMemberId(), storeDesc);
 
 		return Utility.jsReplace("스토어를 수정했습니다!", Utility.f("view?id=%d", id));
+	}
+	
+	// 카테고리 페이지
+	@RequestMapping("/usr/store/category")
+	public String showCategory(Model model, int id, String storeModifyAuthKey) {
+		// 인증키 검사
+		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
+		    
+		if (chkStoreModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), false, "/usr/home/main");
+		}
+		
+		// 본인 스토어 검사
+		Store store = storeService.getStoreById(id);
+		
+		ResultData<?> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+		
+		if (actorCanModifyRD.isFail()) {
+			return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
+		}
+		
+		List<Category> categorys = storeService.getCategorysByStoreId(id);
+	    
+	    model.addAttribute("categorys", categorys);
+		
+	    return "/usr/store/category";
+	}
+	
+	// 카테고리 추가
+	@RequestMapping("/usr/store/addCategory")
+	@ResponseBody
+	public String addCategory(int id, String storeModifyAuthKey, String name, int orderNo) {
+		// 인증키 검사
+		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
+	    
+	    if (chkStoreModifyAuthKeyRd.isFail()) {
+			return Utility.jsReplace(chkStoreModifyAuthKeyRd.getMsg(), "/usr/home/main");
+		}
+		
+	    // 본인 스토어 검사
+		Store store = storeService.getStoreById(id);
+
+		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+		
+		// 유효성 검사
+		int categoryCnt = storeService.getCategoryCntByStoreId(id);
+		
+		if(categoryCnt > 10) {
+			return Utility.jsHistoryBack("카테고리는 10개를 초과할 수 없습니다.");
+		}
+		if(orderNo > 10) {
+			return Utility.jsHistoryBack("순서는 10을 초과할 수 없습니다.");
+		}
+		if (Utility.isEmpty(name)) {
+			return Utility.jsHistoryBack("카테고리 이름을 입력해주세요!");
+		}
+		if (Utility.isEmpty(orderNo)) {
+			return Utility.jsHistoryBack("순서를 입력해주세요!");
+		}
+		
+		Category category = storeService.getCategoryByStoreIdAndOrderNo(orderNo, id);
+		
+		if(category != null) {
+			return Utility.jsHistoryBack("순서가 중복 됩니다, 삭제 또는 수정 후 진행해주세요!");
+		}
+		
+		storeService.registerCategory(name, orderNo, id);
+		
+		return Utility.jsReplace("카테고리를 등록했습니다.", Utility.f("category?id=%d&storeModifyAuthKey=%s", id, storeModifyAuthKey));
+	}
+	
+	// 카테고리 가져오기
+	@RequestMapping("/usr/store/getCategory")
+	@ResponseBody
+	public ResultData<Category> getCategory(int id) {
+		Category category = storeService.getCategory(id);
+
+		if (category == null) {
+			return ResultData.from("F-1", "존재하지 않는 카테고리입니다.");
+		}
+
+		return ResultData.from("S-1", "카테고리 정보 조회 성공", "category", category);
+	}
+	
+	// 카테고리 수정
+	@RequestMapping("/usr/store/doCategoryModify")
+	@ResponseBody
+	public String doCategoryModify(int id, String storeModifyAuthKey, String name, int orderNo) {
+		// 인증키 검사
+		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
+	    
+	    if (chkStoreModifyAuthKeyRd.isFail()) {
+			return Utility.jsReplace(chkStoreModifyAuthKeyRd.getMsg(), "/usr/home/main");
+		}
+	    
+	    // 카테고리 검사
+	    Category category = storeService.getCategory(id);
+
+		if (category == null) {
+			return Utility.jsHistoryBack("존재하지 않는 카테고리입니다.");
+		}
+		
+	    // 본인 스토어 검사
+		Store store = storeService.getStoreById(category.getStoreId());
+
+		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+		
+		// 유효성 검사
+		if(orderNo > 10) {
+			return Utility.jsHistoryBack("순서는 10을 초과할 수 없습니다.");
+		}
+		if (Utility.isEmpty(name)) {
+			return Utility.jsHistoryBack("카테고리 이름을 입력해주세요!");
+		}
+		if (Utility.isEmpty(orderNo)) {
+			return Utility.jsHistoryBack("순서를 입력해주세요!");
+		}
+		
+		storeService.doCategoryModify(id, name, orderNo, store.getId());
+
+		return Utility.jsReplace("", Utility.f("category?id=%d&storeModifyAuthKey=%s", category.getStoreId(), storeModifyAuthKey));
+	}
+	
+	// 카테고리 삭제
+	@RequestMapping("/usr/store/doCategoryDelete")
+	@ResponseBody
+	public String doCategoryDelete(int id, String storeModifyAuthKey) {
+		// 인증키 검사
+		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
+	    
+	    if (chkStoreModifyAuthKeyRd.isFail()) {
+			return Utility.jsReplace(chkStoreModifyAuthKeyRd.getMsg(), "/usr/home/main");
+		}
+	    
+	    // 카테고리 검사
+	    Category category = storeService.getCategory(id);
+
+		if (category == null) {
+			return Utility.jsHistoryBack("존재하지 않는 카테고리입니다.");
+		}
+		
+	    // 본인 스토어 검사
+		Store store = storeService.getStoreById(category.getStoreId());
+
+		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+
+		storeService.doCategoryDelete(id);
+
+		return Utility.jsReplace("", Utility.f("category?id=%d&storeModifyAuthKey=%s", category.getStoreId(), storeModifyAuthKey));
 	}
 }
 

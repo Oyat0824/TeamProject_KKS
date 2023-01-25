@@ -1,10 +1,14 @@
 package com.kks.work.project.repository;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kks.work.project.vo.Category;
 import com.kks.work.project.vo.Store;
 
 @Mapper
@@ -31,7 +35,7 @@ public interface StoreRepository {
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
 	
-	// memberId를 통해 스토어 가져오기
+	// id를 통해 스토어 가져오기
 	@Select("""
 			SELECT *
 			FROM store
@@ -80,4 +84,72 @@ public interface StoreRepository {
 			</script>
 			""")
 	public void doModify(int id, int loginedMemberId, String storeDesc);
+	
+	// 카테고리가져오기 (id)
+	@Select("""
+			SELECT * FROM category
+			WHERE id = #{id}
+			""")
+	public Category getCategory(int id);
+
+	// 카테고리 목록 가져오기 (StoreId)
+	@Select("""
+			SELECT * FROM category
+			WHERE storeId = #{storeId}
+			ORDER BY orderNo ASC
+			""")
+	public List<Category> getCategorysByStoreId(int storeId);
+	
+	// 카테고리 가져오기 (StoreId, orderNo)
+	@Select("""
+			SELECT * FROM category
+			WHERE storeId = #{storeId}
+			AND orderNo = #{orderNo}
+			""")
+	public Category getCategoryByStoreIdAndOrderNo(int orderNo, int storeId);
+	
+	// 카테고리 갯수 가져오기
+	@Select("""
+			SELECT COUNT(*) FROM category
+			WHERE storeId = #{storeId}
+			""")
+	public int getCategoryCntByStoreId(int storeId);
+
+	// 카테고리 등록
+	@Insert("""
+			INSERT INTO category
+			SET `name` = #{name},
+			orderNo = #{orderNo},
+			storeId = #{storeId}
+			""")
+	public void registerCategory(String name, int orderNo, int storeId);
+	
+	// 카테고리 수정
+	@Update("""
+			<script>
+				UPDATE category
+				<set>
+					<if test="name != null">
+						name = #{name},
+					</if>
+					<if test="orderNo != null">
+						orderNo = #{orderNo}
+					</if>
+				</set>
+				WHERE id = #{id}
+			</script>
+			""")
+	public void doCategoryModify(int id, String name, int orderNo);
+
+	// 카테고리 삭제
+	@Delete("""
+			DELETE FROM category
+			WHERE id = #{id}
+			""")
+	public void doCategoryDelete(int id);
+
+	
+
+	
+	
 }

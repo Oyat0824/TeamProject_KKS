@@ -20,12 +20,14 @@ public class NeedSellerInterceptor implements HandlerInterceptor {
 	}
 	
 	@Override
-	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
+	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {	
 		if(rq.getLoginedMember().getMemberType() != 6 && rq.getLoginedMember().getMemberType() != 9) {
 			rq.jsPrintHistoryBack("판매자 전용 메뉴입니다.");
 			
 			return false;
 		}
+		
+		
 		
 		return HandlerInterceptor.super.preHandle(req, res, handler);
 	}

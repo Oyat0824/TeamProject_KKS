@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.kks.work.project.service.MemberService;
+import com.kks.work.project.service.StoreService;
 import com.kks.work.project.util.Utility;
 
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class Rq {
 	@Value("${custom.siteMainUri}")
 	private String siteMainUri;
 
-	public Rq(HttpServletRequest req, HttpServletResponse res, MemberService memberService) {
+	public Rq(HttpServletRequest req, HttpServletResponse res, MemberService memberService, StoreService storeService) {
 		this.req = req;
 		this.res = res;
 		this.session = req.getSession();
@@ -54,7 +55,6 @@ public class Rq {
 		
 		this.loginedMemberId = loginedMemberId;
 		this.loginedMember = loginedMember;
-		
 	}
 	
 	// 로그인 시 Rq에 로그인 정보 등록
@@ -66,7 +66,7 @@ public class Rq {
 	public void logout() {
 		session.removeAttribute("loginedMemberId");
 	}
-
+	
 	// 메시지 출력용
 	private void print(String str) {
 		try {

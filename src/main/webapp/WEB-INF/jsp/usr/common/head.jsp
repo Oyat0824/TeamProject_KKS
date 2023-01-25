@@ -25,7 +25,7 @@
 <body>
 	<header style="background-color: #6b90dc">
 		<div class="xl:container mx-auto">
-			<div class="h-10 flex items-center justify-between text-white">
+			<div class="h-10 mx-5 flex items-center justify-between text-white">
 				<div>
 					<a class="font-bold" href="/">SB_Store</a>
 				</div>
@@ -40,9 +40,17 @@
 							const lyrOpen = function() {
 								$(".my_lyr").toggleClass("open_lyr");
 							}
+							
+							$(function(){
+								$("html").click(function(e) {   
+									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){   
+										$(".my_lyr").removeClass("open_lyr");
+									}
+								});
+							});
 						</script>
 						<div class="text-sm">
-							<a class="hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="fa-solid fa-caret-down ml-1"></i></a>
+							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
 						</div>
 						
 						<div class="my_lyr">
@@ -61,7 +69,7 @@
 								</div>
 							</div>
 							
-							<div class="flex flex-1 font-bold text-black">
+							<div class="flex flex-1 text-sm font-bold text-black">
 								<div class="flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 									<a href="/usr/member/myPage">마이 페이지</a>
 								</div>
@@ -74,6 +82,9 @@
 									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 										<a href="/usr/store/view?id=${rq.getLoginedMember().getStoreId() }">내 스토어</a>
 									</div>
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/usr/store/chkPassword?id=${rq.getLoginedMember().getStoreId() }">스토어 관리</a>
+									</div>
 								</c:if>
 							</div>
 						</div>
@@ -83,10 +94,5 @@
 			<div class="h-16"></div>
 		</div>
 	</header>
-
-	<section class="my-3 text-2xl">
-		<div class="container mx-auto px-3">
-			<h1>${pageTitle}&nbsp;Page</h1>
-		</div>
-	</section>
+	
 	<main>

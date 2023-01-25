@@ -1,11 +1,14 @@
 package com.kks.work.project.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kks.work.project.repository.StoreRepository;
 import com.kks.work.project.util.ResultData;
 import com.kks.work.project.util.Utility;
+import com.kks.work.project.vo.Category;
 import com.kks.work.project.vo.Store;
 
 @Service
@@ -49,7 +52,7 @@ public class StoreService {
 	}
 	
 	// memberId로 스토어 정보 가져오기
-	private Store getStoreByMemberId(int memberId) {
+	public Store getStoreByMemberId(int memberId) {
 		return storeRepository.getStoreByMemberId(memberId);
 	}
 	
@@ -70,9 +73,48 @@ public class StoreService {
 	// 스토어 정보 수정
 	public void doModify(int id, int loginedMemberId, String storeDesc) {
 		storeRepository.doModify(id, loginedMemberId, storeDesc);
-		attrService.remove("store", loginedMemberId, "extra", "storeModifyAuthKey");
+		attrService.remove("member", loginedMemberId, "extra", "storeModifyAuthKey");
 	}
 	
+	// 카테고리 가져오기 (id)
+	public Category getCategory(int id) {
+		return storeRepository.getCategory(id);
+	}
+	// 카테고리 목록 가져오기 (StoreId)
+	public List<Category> getCategorysByStoreId(int storeId) {
+		return storeRepository.getCategorysByStoreId(storeId);
+	}
+	// 카테고리 가져오기 (StoreId, orderNo)
+	public Category getCategoryByStoreIdAndOrderNo(int orderNo, int storeId) {
+		return storeRepository.getCategoryByStoreIdAndOrderNo(orderNo, storeId);
+	}
+	// 카테고리 갯수 가져오기
+	public int getCategoryCntByStoreId(int storeId) {
+		return storeRepository.getCategoryCntByStoreId(storeId);
+	}
+	// 카테고리 등록
+	public void registerCategory(String name, int orderNo, int storeId) {
+		storeRepository.registerCategory(name, orderNo, storeId);
+	}
+	// 카테고리 수정
+	public void doCategoryModify(int id, String name, int orderNo, int storeId) {
+		Category existCategory = storeRepository.getCategoryByStoreIdAndOrderNo(orderNo, storeId);
+		Category category = storeRepository.getCategory(id);
+		
+		if(category.getOrderNo() == orderNo || existCategory == null) {
+			storeRepository.doCategoryModify(id, name, orderNo);
+			
+			return;
+		}
+
+		storeRepository.doCategoryModify(existCategory.getId(), existCategory.getName(), 11);
+		storeRepository.doCategoryModify(id, name, orderNo);
+		storeRepository.doCategoryModify(existCategory.getId(), existCategory.getName(), category.getOrderNo());
+	}
+	// 카테고리 삭제
+	public void doCategoryDelete(int id) {
+		storeRepository.doCategoryDelete(id);
+	}
 	
 	// 검증
 	public ResultData<?> actorCanMD(int loginedMemberId, Store store) {
@@ -101,15 +143,14 @@ public class StoreService {
 	// 인증키 생성
 	public String genStoreModifyAuthKey(int loginedMemberId) {
 		String storeModifyAuthKey = Utility.getTempPassword(10);
-		attrService.setValue("store", loginedMemberId, "extra", "storeModifyAuthKey", storeModifyAuthKey,
-				Utility.getDateStrLater(60 * 5));
+		attrService.setValue("member", loginedMemberId, "extra", "storeModifyAuthKey", storeModifyAuthKey, Utility.getDateStrLater(60 * 60));
 
 		return storeModifyAuthKey;
 	}
 
 	// 인증키 확인
 	public ResultData<?> chkStoreModifyAuthKey(int loginedMemberId, String storeModifyAuthKey) {
-		String saved = attrService.getValue("store", loginedMemberId, "extra", "storeModifyAuthKey");
+		String saved = attrService.getValue("member", loginedMemberId, "extra", "storeModifyAuthKey");
 		
 		if (saved.equals(storeModifyAuthKey) == false) {
 			return ResultData.from("F-1", "일치하지 않거나 만료된 인증코드입니다.");
@@ -117,4 +158,5 @@ public class StoreService {
 
 		return ResultData.from("S-1", "정상 인증코드입니다");
 	}
+
 }
