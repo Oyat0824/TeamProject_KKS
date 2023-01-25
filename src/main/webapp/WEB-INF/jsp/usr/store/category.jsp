@@ -70,6 +70,7 @@
 		<%@ include file="sideMenu.jsp"%>
 		
 		<div class="w-full my-10">
+		
 			<form action="addCategory" method="POST" onsubmit="return CategoryWrite__submitForm(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
@@ -134,7 +135,7 @@
 						<tbody>
 							<c:forEach var="category" items="${categorys}" varStatus="status">
 								<tr id="category_${status.index}">
-									<td><div class="badge badge-lg bg-purple-600 border-transparent font-bold text-white">${category.orderNo}</div></td>
+									<td><div class="badge badge-lg font-bold text-white">${category.orderNo}</div></td>
 									<td>${category.name}</td>
 									<td><a href='javascript:void(0);' onclick="CategoryModify__getForm(${status.index}, ${category.id}, '${param.storeModifyAuthKey}');" class="hover:underline">수정</a></td>
 									<td><a href="doCategoryDelete?id=${category.id}&storeModifyAuthKey=${param.storeModifyAuthKey}" class="hover:underline" onclick="return confirm('삭제하시겠습니까?')">삭제</a></td>

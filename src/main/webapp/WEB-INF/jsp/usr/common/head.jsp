@@ -23,7 +23,7 @@
 <script src="/resource/common.js" defer="defer"></script>
 </head>
 <body>
-	<header style="background-color: #6b90dc">
+	<header>
 		<div class="xl:container mx-auto">
 			<div class="h-10 mx-5 flex items-center justify-between text-white">
 				<div>

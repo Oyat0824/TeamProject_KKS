@@ -10,20 +10,22 @@
 </script>
 
 
-<div id="sideMenu" class="flex flex-col w-80 h-screen-c text-white" style="background-color: #6b90dc;">
-	<div class="box-content text-center text-lg leading-7 h-7 py-3 border-t border-b ${menuName == 'modify' ? 'bg-indigo-500' : '' }">
-		<a class="block" href="modify?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">스토어 수정</a>
-	</div>
-	<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'category' ? 'bg-indigo-500' : '' }">
-		<a class="block" href="category?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">카테고리</a>
-	</div>
-	<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
-		<a class="block" href="#">상품 목록</a>
-	</div>
-	<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
-		<a class="block" href="#">스토어 삭제</a>
-	</div>
-	<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
-		<a class="block" href="/usr/home/main">돌아가기</a>
+<div id="sideMenu" class="flex flex-col w-80 h-screen-c border-r">
+	<div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'modify' ? 'text-indigo-600 font-bold' : '' }">
+			<a class="block" href="modify?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">스토어 수정</a>
+		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'category' ? 'text-indigo-600 font-bold' : '' }">
+			<a class="block" href="category?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">카테고리</a>
+		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
+			<a class="block" href="#">상품 목록</a>
+		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
+			<a class="block" href="#">스토어 삭제</a>
+		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
+			<a class="block" href="/usr/home/main">돌아가기</a>
+		</div>
 	</div>
 </div>

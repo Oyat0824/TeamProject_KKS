@@ -90,7 +90,7 @@ public class UsrStoreController {
 		
 		return ResultData.from("S-1", "사용 가능한 스토어 이름입니다.", "storeName", storeName);
 	}
-	
+
 	// 스토어 상세보기
 	@RequestMapping("/usr/store/view")
 	public String showView(Model model, int id) {
