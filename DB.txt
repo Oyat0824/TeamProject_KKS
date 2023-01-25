@@ -86,12 +86,22 @@ CREATE TABLE product(
 	KEY `indexKey` (stroeId, memberId)
 );
 
+##### category 테이블 생성
+CREATE TABLE category(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`name` VARCHAR(40) NOT NULL,
+	orderNo TINYINT UNSIGNED NOT NULL UNIQUE,
+	storeId INT UNSIGNED NOT NULL
+);
+
 ##### 테이블 조회
-SELECT * FROM `member`;
 SELECT * FROM attr;
+SELECT * FROM genFile;
+
+SELECT * FROM `member`;
 SELECT * FROM store;
 SELECT * FROM product;
-SELECT * FROM genFile;
+SELECT * FROM category;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`
@@ -134,10 +144,3 @@ salt = 'admin';
 
 UPDATE `member`
 SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
-
-SELECT S.*, M.name AS sellerName
-FROM store AS S
-INNER JOIN `member` AS M
-ON S.memberId = M.id
-WHERE M.memberType = 6
-ORDER BY S.id DESC;
