@@ -76,6 +76,19 @@ public class StoreService {
 		attrService.remove("member", loginedMemberId, "extra", "storeModifyAuthKey");
 	}
 	
+	// 스토어 개수
+	public int getStoresCount(String searchKeyword) {
+		return storeRepository.getStoresCount(searchKeyword);
+	}
+	
+	// 스토어 목록
+	public List<Store> getStores(String searchKeyword, int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		return storeRepository.getStores(searchKeyword, itemsInAPage, limitStart);
+	}
+	
+	
 	// 카테고리 가져오기 (id)
 	public Category getCategory(int id) {
 		return storeRepository.getCategory(id);

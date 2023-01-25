@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
@@ -200,6 +201,34 @@ public class UsrStoreController {
 		storeService.doModify(id, rq.getLoginedMemberId(), storeDesc);
 
 		return Utility.jsReplace("스토어를 수정했습니다!", Utility.f("view?id=%d", id));
+	}
+	
+	// 스토어 목록 페이지
+	@RequestMapping("/usr/store/list")
+	public String showList(Model model,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "") String searchKeyword) {
+
+		if (page <= 0) {
+			return rq.jsReturnOnView("페이지 번호가 올바르지 않습니다.", true);
+		}
+
+		// 스토어 수
+		int storesCount = storeService.getStoresCount(searchKeyword);
+		// 한 페이지에 나올 스토어 수
+		int itemsInAPage = 10;
+		// 스토어 수에 따른 페이지 수 계산
+		int pagesCount = (int) Math.ceil(storesCount / (double) itemsInAPage);
+
+		List<Store> stores = storeService.getStores(searchKeyword, itemsInAPage, page);
+
+		model.addAttribute("stores", stores);
+		model.addAttribute("storesCount", storesCount);
+		model.addAttribute("page", page);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("searchKeyword", searchKeyword);
+
+		return "usr/store/list";
 	}
 	
 	// 카테고리 페이지

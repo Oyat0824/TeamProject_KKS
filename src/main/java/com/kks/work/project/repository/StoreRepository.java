@@ -85,6 +85,36 @@ public interface StoreRepository {
 			""")
 	public void doModify(int id, int loginedMemberId, String storeDesc);
 	
+	// 스토어 목록 개수
+	@Select("""
+			<script>
+				SELECT COUNT(*)
+				FROM store
+				WHERE 1 = 1
+				<if test="searchKeyword != ''">
+					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+			</script>
+			""")
+	public int getStoresCount(String searchKeyword);
+	
+	// 스토어 목록
+	@Select("""
+			<script>
+				SELECT S.*, M.name AS sellerName
+				FROM store AS S
+				INNER JOIN `member` AS M
+				ON S.memberId = M.id
+				WHERE 1 = 1
+				<if test="searchKeyword != ''">
+					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				ORDER BY S.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
+			</script>
+			""")
+	public List<Store> getStores(String searchKeyword, int itemsInAPage, int limitStart);
+	
 	// 카테고리가져오기 (id)
 	@Select("""
 			SELECT * FROM category
@@ -147,9 +177,4 @@ public interface StoreRepository {
 			WHERE id = #{id}
 			""")
 	public void doCategoryDelete(int id);
-
-	
-
-	
-	
 }
