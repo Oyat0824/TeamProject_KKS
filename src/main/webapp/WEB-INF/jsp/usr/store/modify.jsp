@@ -68,7 +68,7 @@
 	<div class="flex container mx-auto">
 		<%@ include file="sideMenu.jsp"%>
 
-		<div class="w-full mt-10">
+		<div class="w-full my-10">
 			<form action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return StoreModify__submit(this);">
 				<input type="hidden" name="id" value="${store.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
@@ -83,7 +83,7 @@
 								<th>스토어 로고</th>
 								<td>
 									<div>
-										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 160px; height: 50px"
+										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 350px; height: 100px"
 											src="${rq.getImgUri('store', store.id, 'storeLogo')}" alt="" />
 									</div>
 									<div class="mb-1 delBtn">
@@ -98,7 +98,7 @@
 								<th>스토어 이미지</th>
 								<td>
 									<div>
-										<img id="storeImg" class="object-cover mx-auto mb-3" style="width: 100px; height: 100px"
+										<img id="storeImg" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px"
 											src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
 									</div>
 									<div class="mb-1 delBtn">
@@ -111,7 +111,7 @@
 							</tr>
 							<tr>
 								<th>스토어 소개</th>
-								<td><textarea style="height: 300px" class="input w-full text-lg border-gray-400 p-2" name="storeDesc"
+								<td><textarea style="height: 150px" class="input w-full text-lg border-gray-400 p-2" name="storeDesc"
 										placeholder="스토어 소개">${store.storeDesc}</textarea></td>
 							</tr>
 						</tbody>

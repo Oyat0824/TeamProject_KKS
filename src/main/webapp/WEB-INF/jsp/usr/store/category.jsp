@@ -68,7 +68,7 @@
 	<div class="flex container mx-auto">
 		<%@ include file="sideMenu.jsp"%>
 		
-		<div class="w-full mt-10">
+		<div class="w-full my-10">
 			<form action="addCategory" method="POST" onsubmit="return CategoryWrite__submitForm(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
@@ -91,7 +91,7 @@
 							</tr>
 							<tr>
 								<th>순서</th>
-								<td><input type="number" min="1" max="10" class="input input-bordered w-full" name="orderNo" placeholder="순서를 입력해주세요." required></td>
+								<td><input type="number" min="1" max="10" class="input input-bordered w-full" name="orderNo" value="${categorys.size() + 1}" ${categorys.size() == 10 ? 'disabled' : '' } placeholder="순서를 입력해주세요." required></td>
 							</tr>
 						</tbody>
 					</table>
