@@ -1,6 +1,9 @@
 package com.kks.work.project.controller;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,7 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import com.kks.work.project.service.GenFileService;
 import com.kks.work.project.service.ProductService;
 import com.kks.work.project.util.ResultData;
 import com.kks.work.project.util.Utility;
@@ -19,11 +25,13 @@ import com.kks.work.project.vo.Rq;
 public class UsrProductController {
 	private ProductService productService;
 	private Rq rq;
+	private GenFileService genFileService;
 
 	@Autowired
-	public UsrProductController(ProductService productService, Rq rq) {
+	public UsrProductController(ProductService productService, Rq rq, GenFileService genFileService) {
 		this.productService = productService;
 		this.rq = rq;
+		this.genFileService = genFileService;
 	}
 	
 // 액션 메서드
@@ -42,7 +50,7 @@ public class UsrProductController {
 			return Utility.jsHistoryBack("상품 이름을 입력해주세요!");
 		}
 
-		ResultData<Integer> registerProductRd = productService.registerProduct(productName, productPrice, productCetegory, productStock, productBody, rq.getLoginedMemberId());
+		ResultData<Integer> registerProductRd = productService.registerProduct(productName, productPrice, productCetegory, productStock, productBody, rq.getLoginedMemberId(), 0);
 		
 		// 상품 등록 실패
 		if (registerProductRd.isFail()) {
@@ -51,12 +59,30 @@ public class UsrProductController {
 
 		int id = registerProductRd.getData1();
 
-		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("product?id=%d", id));
+		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("view?id=%d", id));
 	}
 	
+	// 상품 상세보기
+	@RequestMapping("/usr/product/view")
+	public String showView(Model model, int id) {
+		Product product = productService.getForPrintProductById(rq.getLoginedMemberId(), id);
+//		Product product = productService.getForPrintProductById(storeId, id);
+		    
+		ResultData<?> actorCanMDRd = productService.actorCanMD(rq.getLoginedMemberId(), product);
+		
+		if (actorCanMDRd.isFail()) { 
+			return rq.jsReturnOnView(actorCanMDRd.getMsg(),true); 
+		}
+	
+		model.addAttribute("product", product);
+		    
+		return "/usr/product/view";
+	}
+	
+	// 상품 리스트
 	@RequestMapping("/usr/product/list")
 	public String showProductList(Model model, @RequestParam(defaultValue = "1") int page, 
-			@RequestParam(defaultValue = "stroeId ,productName, productCetegory") String searchKeywordTypeCode,
+			@RequestParam(defaultValue = "storeId ,productName, productCetegory") String searchKeywordTypeCode,
 			@RequestParam(defaultValue = "") String searchKeyword) {
 		
 		if(page <= 0) { // 페이징이 0보다 작을 경우
@@ -80,5 +106,62 @@ public class UsrProductController {
 		
 		return "usr/product/list";
 	}
+
+	// 상품 정보 수정 페이지
+	@RequestMapping("/usr/product/modify")
+	public String showModify(Model model, int id, String productModifyAuthKey) {
+		Product product = productService.getProductByStoreId(id);
+
+		ResultData<?> chkProductModifyAuthKeyRd = productService.chkProductModifyAuthKey(rq.getLoginedMemberId(), productModifyAuthKey);
+
+		if (chkProductModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkProductModifyAuthKeyRd.getMsg(), true);
+		}
+
+		model.addAttribute("product", product);
+
+		return "/usr/product/modify";
+	}
+
+	// 상품 정보 수정 페이지
+	@RequestMapping("/usr/product/doModify")
+	@ResponseBody
+	public String doModify(HttpServletRequest req, int id, String productModifyAuthKey, String productBody, MultipartRequest multipartRequest) {
+		if (Utility.isEmpty(productModifyAuthKey)) {
+			return Utility.jsHistoryBack("상품 수정 인증코드가 필요합니다.");
+		}
+
+		ResultData<?> chkProductModifyAuthKeyRd = productService.chkProductModifyAuthKey(rq.getLoginedMemberId(), productModifyAuthKey);
+
+		if (chkProductModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkProductModifyAuthKeyRd.getMsg(), true);
+		}
+
+		Product product = productService.getProductByStoreId(id);
+
+		ResultData<?> actorCanMDRd = productService.actorCanMD(rq.getLoginedMemberId(), product);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+
+		if (req.getParameter("deleteFile__product__0__extra__productImg__1") != null) {
+			genFileService.deleteGenFiles("product", id, "extra", "productImg", 1);
+		}
+
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, id);
+			}
+		}
+
+		productService.doModify(id, rq.getLoginedMemberId(), productBody);
+
+		return Utility.jsReplace("상품정보를 수정했습니다!", Utility.f("view?id=%d", id));
+		}
 }
 

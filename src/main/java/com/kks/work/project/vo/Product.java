@@ -15,5 +15,11 @@ public class Product{
 	private String productCetegory;
 	private String productStock;
 	private String productBody;
-	private int stroeId;
-}
+	private int storeId;
+	
+	private boolean actorCanChangeData;
+	private String storeName;
+	
+	public String setActorCanChangeData(boolean success) {
+		return this.productBody.replaceAll("\n", "<br />");	
+	}}
