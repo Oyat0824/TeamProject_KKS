@@ -46,6 +46,12 @@
 				return;
 			}
 		}
+		
+		if (chkTextByte() == false) {
+			alert("최대 100Byte까지만 입력가능합니다.");
+			
+			return false;
+		}
 	}
 	
 	// 에러 메시지
@@ -88,6 +94,50 @@
 			$(e).siblings("div").children("img").attr("src", fileReader.result);
 		};
 	}
+	
+	// 글자수(Byte) 세기 함수
+	const chkTextByte = function() {
+		const maxByte = 100; //최대 100바이트
+		const text_val = $("#textBox").val(); //입력한 문자
+		const text_len = text_val.length; //입력한 문자수
+		const rows = $("#textBox").val().split('\n').length;
+		const maxRows = 4;
+		
+		if(rows > maxRows) {
+			alert("4줄 까지만 가능합니다.");
+			modifedText = $("#textBox").val().split("\n").slice(0, maxRows);
+			$("#textBox").val(modifedText.join("\n"));
+			
+			return false;
+		}
+		
+		let totalByte = 0;
+		
+		for (let i = 0; i < text_len; i++) {
+			const each_char = text_val.charAt(i);
+			const uni_char = escape(each_char); //유니코드 형식으로 변환
+
+			if (uni_char.length > 4) {
+				// 한글 : 2Byte
+				totalByte += 2;
+			} else {
+				// 영문,숫자,특수문자 : 1Byte
+				totalByte += 1;
+			}
+		}
+
+		if (totalByte > maxByte) {
+			$("#textBoxMsg").text("최대 100Byte까지만 입력가능합니다.");
+			$('#nowByte').text(totalByte);
+			$('#nowByte').css("color", "red");
+			
+			return false;
+		} else {
+			$("#textBoxMsg").empty();
+			$('#nowByte').text(totalByte);
+			$('#nowByte').css("color", "green");
+		}
+	}
 
 	$(function(){
 		// 인풋에 입력 시, 에러 메시지 삭제
@@ -96,6 +146,17 @@
 				$(this).next(".errorMsg").empty();
 			}
 		});
+		
+		// 글자수 세기 작동
+		chkTextByte();
+		
+		$("#textBox").keydown(function (obj) {
+			chkTextByte();
+		});
+		$("#textBox").keyup(function (obj) {
+			chkTextByte();
+		});
+		
 	})
 </script>
 
@@ -119,20 +180,27 @@
 						<tr>
 							<th>스토어 로고</th>
 							<td>
-								<div><img id="storeLogo" class="object-cover mx-auto" style="width: 160px; height: 50px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
+								<div><img id="storeLogo" class="object-cover mx-auto" style="width: 350px; height: 100px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
 								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeLogo__1" type="file" />
 							</td>
 						</tr>
 						<tr>
 							<th>스토어 이미지</th>
 							<td>
-								<div><img id="storeImg" class="object-cover mx-auto" style="width: 100px; height: 100px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
+								<div><img id="storeImg" class="object-cover mx-auto" style="width: 250px; height: 250px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
 								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" />
 							</td>
 						</tr>
 						<tr>
 							<th>스토어 소개</th>
-							<td><textarea style="height: 300px" class="input w-full text-lg border-gray-400" name="storeDesc" placeholder="스토어 소개"></textarea></td>
+							<td class="relative">
+								<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
+								<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="storeDesc"
+									placeholder="스토어 소개">${store.storeDesc}</textarea>
+								<div class="textLengthWrap flex">
+									<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>스토어 등록</button></td>

@@ -207,7 +207,10 @@ public class UsrStoreController {
 	@RequestMapping("/usr/store/list")
 	public String showList(Model model,
 			@RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "") String searchKeyword) {
+			@RequestParam(defaultValue = "") String searchKeyword,
+			@RequestParam(defaultValue = "20") int itemsNum) {
+		
+		// 랭킹 순(구매 건수가 많은), 리뷰 많은 순, 리뷰 적은 순, 등록일 순으로 쿼리 짜야함
 
 		if (page <= 0) {
 			return rq.jsReturnOnView("페이지 번호가 올바르지 않습니다.", true);
@@ -216,7 +219,7 @@ public class UsrStoreController {
 		// 스토어 수
 		int storesCount = storeService.getStoresCount(searchKeyword);
 		// 한 페이지에 나올 스토어 수
-		int itemsInAPage = 10;
+		int itemsInAPage = itemsNum;
 		// 스토어 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(storesCount / (double) itemsInAPage);
 

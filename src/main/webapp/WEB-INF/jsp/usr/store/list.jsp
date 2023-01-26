@@ -4,45 +4,101 @@
 <c:set var="pageTitle" value="Store List" />
 <%@ include file="../common/head.jsp"%>
 
+<script>
+	const chgForm = function(e) {
+		if($(e).data().form == "listOrder") {
+			$("#frm").find("[name=listOrder]").val($(e).data().type);
+			
+			$("#frm").submit();
+			
+			return false;
+		}
+		
+		if($(e).data().form == "listStyle") {
+			$("#frm").find("[name=listStyle]").val($(e).data().type);
+			
+			$("#frm").submit();
+			
+			return false;
+		}
+		
+		if($(e).data().form == "itemsNum") {
+			$("#frm").submit();
+			
+			return false;
+		}
+	}
+	
+	$(function(){
+		if($("#frm").find("[name=listOrder]").val() == "${param.listOrder}") {
+			$("[data-form='listOrder']").removeClass("text-blue-500 font-bold");
+			$("[data-type='${param.listOrder}']").addClass("text-blue-500 font-bold");
+		}
+		
+		if($("#frm").find("[name=listStyle]").val() == "${param.listStyle}") {
+			$("[data-form='listStyle']").removeClass("text-blue-500");
+			$("[data-type='${param.listStyle}']").addClass("text-blue-500");
+		}
+	})
+</script>
+
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<div class="table-box-type-1">
-			<div class="headTab flex justify-between items-center mb-3">
-				<div>
-					스토어 총 개수 : <span class="font-bold">${storesCount}</span>
-				</div>
-
-				<form action="" class="form-control">
-					<input type="hidden" name="page" value="1" />
-					<div class="input-group">
-						<input class="input input-bordered focus:outline-none" type="text" name="searchKeyword" placeholder="Search…" value="${searchKeyword }" />
-						<button class="btn btn-square focus:outline-none">GO</button>
+		<form id="frm" action="">
+			<input type="hidden" name="listOrder" value="${param.listOrder == null ? 'rank' : param.listOrder}" />
+			<input type="hidden" name="listStyle" value="${param.listStyle == null ? 'list' : param.listStyle}" />
+			<div class="flex justify-between text-base items-center pb-5 mb-5 border-b">
+				<ul class="flex h-10">
+					<li class="mr-2 border"><a class="block p-2 text-blue-500 font-bold" href="#" data-form="listOrder" data-type="rank" onclick="return chgForm(this);">랭킹 순</a></li>
+					<li class="mr-2 border"><a class="block p-2" href="#" data-form="listOrder" data-type="reviewMany" onclick="return chgForm(this);">리뷰 많은순</a></li>
+					<li class="mr-2 border"><a class="block p-2" href="#" data-form="listOrder" data-type="reviewSmall" onclick="return chgForm(this);">리뷰 좋은순</a></li>
+					<li class="border"><a class="block p-2" href="#" data-form="listOrder" data-type="date" onclick="return chgForm(this);">등록일 순</a></li>
+				</ul>
+				
+				<div class="flex">
+					<div>
+						<select class="mr-2 p-2 border h-10" data-form="itemsNum" name="itemsNum" onchange="return chgForm(this);">
+							<option value="20">20개씩 보기</option>
+							<option value="40" ${param.itemsNum == 40 ? "selected" : "" }>40개씩 보기</option>
+						</select>
 					</div>
-				</form>
+					<div class="flex h-10">
+						<a class="block mr-1 p-2 border w-10 text-center text-blue-500" href="#" data-form="listStyle" data-type="list" onclick="return chgForm(this);"><i class="fa-sharp fa-solid fa-list"></i></a>
+						<a class="block p-2 border w-10 text-center" href="#" data-form="listStyle" data-type="gallery" onclick="return chgForm(this);"><i class="fa-solid fa-border-all"></i></a>
+					</div>
+				</div>
 			</div>
-			<table class="table table-zebra w-full">
-				<thead>
-					<tr>
-						<th class="text-sm">번호</th>
-						<th class="text-sm title">제목</th>
-						<th class="text-sm">작성자</th>
-						<th class="text-sm">날짜</th>
-					</tr>
-				</thead>
-
-				<tbody>
-					<c:forEach var="store" items="${stores}">
-						<tr class="hover">
-							<td><div class="badge badge-lg bg-purple-600 border-transparent font-bold text-white">${store.id}</div></td>
-							<td><a class="hover:text-yellow-500" href="view?id=${store.id}">${store.storeName}</a></td>
-							<td>${store.sellerName}</td>
-							<td>${store.regDate.substring(2, 16)}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-		</div>
+		</form>
 		
+		<div class="list">
+			<c:forEach var="store" items="${stores}">
+				<div class="flex items-center p-5 hover:bg-gray-50 border-b">
+					<div class="img_area mr-10">
+						<a href="view?id=${store.id}">
+							<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
+						</a>
+					</div>
+					
+					<div class="info_area">
+						<div class="storeName text-base">
+							<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
+						</div>
+						<div class="storeDesc text-sm my-3 h-20 overflow-hidden">
+							<p>${store.getForPrintDesc() }</p>
+						</div>
+						<div class="storeEtc text-sm">
+							<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
+							<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
+							<span class="dot">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
+							<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
+						</div>
+					</div>
+					
+					<div></div>
+				</div>
+			</c:forEach>
+		</div>
+	
 		<div class="pageNav flex justify-center mt-5">
 			<div class="btn-group">
 				<c:set var="maxPageNum" value="5" />

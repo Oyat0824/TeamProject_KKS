@@ -99,3 +99,28 @@ html > body > header::after {
 .h-screen-c {
 	height: calc(100vh - 6.5rem);
 }
+
+.dot::before {
+	display: inline-block;
+	width: 2px;
+	height: 2px;
+	margin: 5px 10px 5px 5px;
+	background-color: #aaa;
+	content: "";
+}
+
+.textLengthWrap {
+	position: absolute;
+	bottom: 27px;
+	right: 25px;
+	color: gray;
+	user-select: none;
+}
+
+.list > div > div.img_area > a > img {
+	transition: .3s;
+}
+
+.list > div:hover > div.img_area > a > img {
+	border-color: rgba(55, 48, 163);
+}
