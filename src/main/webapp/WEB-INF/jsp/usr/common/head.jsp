@@ -85,6 +85,9 @@
 									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 										<a href="/usr/store/chkPassword?id=${rq.getLoginedMember().getStoreId() }">스토어 관리</a>
 									</div>
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/usr/product/register">상품 등록</a>
+									</div>	
 								</c:if>
 							</div>
 						</div>

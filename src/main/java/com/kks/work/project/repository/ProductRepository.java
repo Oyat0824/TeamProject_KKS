@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Product;
 
@@ -21,9 +22,18 @@ public interface ProductRepository {
 			productCetegory = #{productCetegory},
 			productStock = #{productStock},
 			productBody = #{productBody},
-			stroeId = #{stroeId}
+			memberId = #{memberId},
+			storeId = #{storeId}
 			""")
-	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productBody);
+	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productBody, int storeId, int memberId);
+	
+	// 스토어 등록 상태 변경
+	@Update("""
+			UPDATE store
+			SET productState = 1
+			WHERE id = #{storeId}
+			""")
+	public void productStateChange(int storeId);
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -43,6 +53,16 @@ public interface ProductRepository {
 			WHERE productName = #{productName}
 			""")	
 	public Product getProductByProductName(String productName);
+	
+	// storeId를 통해 상품 가져오기, 상점명도 함께
+	@Select("""
+			SELECT P.*, S.storeName AS storeName
+			FROM product AS P
+			INNER JOIN store AS S
+			ON P.storeId = S.id
+			WHERE p.id = #{id}
+			""")
+	public Product getForPrintProductById(int id);
 	
 	@Select("""
 			<script>
@@ -77,7 +97,7 @@ public interface ProductRepository {
 					WHERE 1 = 1
 					<if test="searchKeyword != ''">
 						<choose>
-							<when test="searchKeywordTypeCode == 'stroeId'">
+							<when test="searchKeywordTypeCode == 'storeId'">
 								AND stroeId LIKE CONCAT('%', #{searchKeyword}, '%')
 							</when>
 							<when test="searchKeywordTypeCode == 'productName'">
@@ -98,6 +118,22 @@ public interface ProductRepository {
 				</script>
 			""")
 	public int getProductsCount(String searchKeywordTypeCode, String searchKeyword);
+
+	// 상품 정보 수정
+	@Update("""
+			<script>
+				UPDATE product
+				<set>
+					updateDate = NOW(),
+					<if test="productBody != null">
+						productBody = #{productBody}
+					</if>
+				</set>
+				WHERE id = #{id}
+				AND memberId = #{loginedMemberId}
+			</script>
+			""")
+	public void doModify(int id, int loginedMemberId, String productBody);
 
 	
 }
