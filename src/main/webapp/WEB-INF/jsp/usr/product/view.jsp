@@ -60,11 +60,9 @@
 		</div>
 		<div class="btns flex justify-between mt-5">
 			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
-			<c:if test="${product.actorCanChangeData}">
-				<div>
-					<a class="btn btn-secondary" href="chkPassword?id=${product.id}">수정</a>
-				</div>
-			</c:if>
+			<div>
+				<a class="btn btn-secondary" href="chkPassword?id=${product.id}">수정</a>
+			</div>
 		</div>
 	</div>
 </section>

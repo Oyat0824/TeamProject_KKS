@@ -12,6 +12,7 @@ public class Product{
 	private String regDate;
 	private String updateDate;
 	private String productName;
+	private String productPrice;
 	private String productCetegory;
 	private String productStock;
 	private String productBody;
@@ -20,6 +21,8 @@ public class Product{
 	private boolean actorCanChangeData;
 	private String storeName;
 	
-	public String setActorCanChangeData(boolean success) {
-		return this.productBody.replaceAll("\n", "<br />");	
-	}}
+	public String getForPrintDesc() {
+		return this.productStock.replaceAll("\n", "<br />");
+	}
+	
+}

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Product;
+import com.kks.work.project.vo.Store;
 
 @Mapper
 public interface ProductRepository {
@@ -25,7 +26,7 @@ public interface ProductRepository {
 			memberId = #{memberId},
 			storeId = #{storeId}
 			""")
-	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productBody, int storeId, int memberId);
+	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productBody, int memberId, int storeId);
 	
 	// 스토어 등록 상태 변경
 	@Update("""
@@ -37,6 +38,14 @@ public interface ProductRepository {
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+	
+	// id를 통해 상품 가져오기
+	@Select("""
+			SELECT *
+			FROM product
+			WHERE id = #{id}
+			""")
+	public Store getProductById(int id);
 	
 	// StoreId를 통해 상품 정보 가져오기
 		@Select("""
@@ -66,58 +75,32 @@ public interface ProductRepository {
 	
 	@Select("""
 			<script>
-				SELECT COUNT(*) 
-					FROM product 
-					WHERE 1 = 1
-					<if test="searchKeyword != ''">
-						<choose> <!-- 다중조건 -->
-							<when test="searchKeywordTypeCode == 'productName'">
-								AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-							</when>
-							<when test="searchKeywordTypeCode == 'productCetegory'">
-								AND body LIKE CONCAT('%', #{searchKeyword}, '%')
-							</when>
-							<otherwise>
-								AND (
-									storeName LIKE CONCAT('%', #{searchKeyword}, '%')
-									OR body LIKE CONCAT('%', #{searchKeyword}, '%')
-									)
-							</otherwise>
-						</choose>
-					</if>
+				SELECT P.*, S.storeName AS storeName
+				FROM product AS P
+				INNER JOIN store AS S
+				ON P.storeId = S.id
+				WHERE 1 = 1
+				<if test="searchKeyword != ''">
+					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				ORDER BY S.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
 			</script>
 			""")
-	public List<Product> getProducts(String searchKeywordTypeCode, String searchKeyword, int limitStart,
+	public List<Product> getProducts(String searchKeyword, int limitStart,
 			int itemsInAPage);
 
 	@Select("""
 			<script>
 				SELECT COUNT(*)
-					FROM product
-					WHERE 1 = 1
-					<if test="searchKeyword != ''">
-						<choose>
-							<when test="searchKeywordTypeCode == 'storeId'">
-								AND stroeId LIKE CONCAT('%', #{searchKeyword}, '%')
-							</when>
-							<when test="searchKeywordTypeCode == 'productName'">
-								AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
-							</when>
-							<when test="searchKeywordTypeCode == 'productCetegory'">
-								AND productCetegory LIKE CONCAT('%', #{searchKeyword}, '%')
-							</when>
-							<otherwise>
-								AND (
-										stroeId LIKE CONCAT('%', #{searchKeyword}, '%')
-										OR productName LIKE CONCAT('%', #{searchKeyword}, '%')
-										OR productCetegory LIKE CONCAT('%', #{searchKeyword}, '%')
-									)
-							</otherwise>
-						</choose>
-					</if>
-				</script>
+				FROM product
+				WHERE 1 = 1
+				<if test="searchKeyword != ''">
+					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+			</script>
 			""")
-	public int getProductsCount(String searchKeywordTypeCode, String searchKeyword);
+	public int getProductsCount(String searchKeyword);
 
 	// 상품 정보 수정
 	@Update("""
@@ -125,6 +108,15 @@ public interface ProductRepository {
 				UPDATE product
 				<set>
 					updateDate = NOW(),
+					<if test="productPrice != null">
+						productPrice = #{productPrice}
+					</if>
+					<if test="productCetegory != null">
+						productCetegory = #{productCetegory}
+					</if>
+					<if test="productStock != null">
+						productStock = #{productStock}
+					</if>
 					<if test="productBody != null">
 						productBody = #{productBody}
 					</if>
@@ -133,7 +125,7 @@ public interface ProductRepository {
 				AND memberId = #{loginedMemberId}
 			</script>
 			""")
-	public void doModify(int id, int loginedMemberId, String productBody);
+	public void doModify(int id, int loginedMemberId, int storeId, String productPrice, String productCetegory, String productStock, String productBody);
 
 	
 }

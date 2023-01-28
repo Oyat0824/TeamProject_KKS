@@ -19,7 +19,10 @@
 			<a class="block" href="category?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">카테고리</a>
 		</div>
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
-			<a class="block" href="#">상품 목록</a>
+			<a href="/usr/product/register">상품 등록</a>
+		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
+			<a class="block" href="/usr/product/list">상품 목록</a>
 		</div>
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
 			<a class="block" href="#">스토어 삭제</a>
