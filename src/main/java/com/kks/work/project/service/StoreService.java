@@ -172,4 +172,9 @@ public class StoreService {
 		return ResultData.from("S-1", "정상 인증코드입니다");
 	}
 
+	// 상품 등록시 상점 아이디 공유
+	public int getStoreId() {
+		return storeRepository.getStoreId();
+	}
+
 }

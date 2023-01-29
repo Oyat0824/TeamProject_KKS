@@ -177,4 +177,9 @@ public interface StoreRepository {
 			WHERE id = #{id}
 			""")
 	public void doCategoryDelete(int id);
+
+	@Select("""
+			SELECT * FROM store
+			""")
+	public int getStoreId();
 }
