@@ -311,29 +311,28 @@ function getUriParams(uri) {
 	  ToastEditor__init();
 	  ToastEditorView__init();
 	});
-
-
-	 const submitForm = function(form) {
-	  form.title.value = form.title.value.trim();
-	  
-	  if(form.title.value.length == 0) {
-	    alert("제목을 입력해주세요")
-	    form.title.value.focus();
-	    return false;
-	  }
-	  
-	  const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
-	  const markdown = editor.getMarkdown().trim();
-	  const html = editor.getHTML().trim();
 	
-	  if(markdown.length == 0) {
-	    alert("내용을 입력해주세요");
-	    editor.focus();
-	    return false;
-	  }
+	const submitForm = function(form) {
+		form.title.value = form.title.value.trim();
 	  
-	  form.body.value = html;
-	  
-	  form.submit();
+		if(form.title.value.length == 0) {
+		  alert("제목을 입력해주세요")
+		  form.title.value.focus();
+		  return false;
+		}
+		  
+		const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
+		const markdown = editor.getMarkdown().trim();
+		const html = editor.getHTML().trim();
+		
+		if(markdown.length == 0) {
+		  alert("내용을 입력해주세요");
+		  editor.focus();
+		  return false;
+		}
+		  
+		form.body.value = html;
+		  
+		form.submit();
 	}
 </script>

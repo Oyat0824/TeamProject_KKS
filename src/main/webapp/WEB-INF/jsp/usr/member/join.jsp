@@ -66,6 +66,39 @@
 			return false;
 		}
 		
+		// 성별 검증
+		form.gender.value = form.gender.value.trim();
+		if(form.gender.value.length == 0  || (!form.gender.value == "male" && !form.gender.value == "female")) {
+			alert("성별을 선택해주세요.");
+			form.gender.focus();
+			
+			return false;
+		}
+		
+		// 생년월일 검증
+		form.birthday.value = form.birthday.value.trim();
+		if(form.birthday.value.length == 0) {
+			alert("생년월일을 선택해주세요.");
+			form.birthday.focus();
+			
+			return false;
+		}
+		
+		// 파일 검증
+		const maxSizeMb = 5;
+		const maxSize = maxSizeMb * 1024 * 1024;
+		
+		const profileImgFileInput = form["file__member__0__extra__profileImg__1"];
+		
+		if (profileImgFileInput.value) {
+			if (profileImgFileInput.files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				profileImgFileInput.focus();
+				
+				return;
+			}
+		}
+		
 		// 이메일 검증
 		form.email.value = form.email.value.trim();
 		if(form.email.value.length == 0) {
@@ -117,14 +150,7 @@
 				
 				return false;
 			}
-		}
-		
-		if(el.val().length == 0) {
-			el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html("필수 정보입니다.");
-			return false;
-		}
-		
-		if(el[0].name == "loginId") {
+			
 			$.get('getLoginIdDup', {
 				loginId : el.val(),
 				ajaxMode : 'Y'
@@ -141,11 +167,27 @@
 			return false;
 		}
 		
+		if(el.val().length == 0) {
+			el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html("필수 정보입니다.");
+			return false;
+		}
+		
 		if(el[0].name == "loginPwChk") {
 			if(form.loginPw.value != el.val()) {
 				el.next(".errorMsg").html("비밀번호가 일치하지 않습니다.");
 			}
 		}
+	}
+	
+	// 이미지 미리보기 기능
+	const imgChg = function(e) {
+		const selectedFile = e.files[0];
+		const fileReader = new FileReader();
+		
+		fileReader.readAsDataURL(selectedFile);
+		fileReader.onload = function () {
+			$(e).prev().children("img").attr("src", fileReader.result);
+		};
 	}
 
 	$(function(){
@@ -175,10 +217,10 @@
 		});
 		
 		// 생년월일 달력 표기
-		$("#birthDay").datepicker({
-			showOn: "both", // 버튼과 텍스트 필드 모두 캘린더를 보여준다.
+		$("#birthday").datepicker({
+			// showOn: "both", // 버튼과 텍스트 필드 모두 캘린더를 보여준다.
 			// buttonImage: "", // 버튼 이미지
-			buttonImageOnly: false, // 버튼에 있는 이미지만 표시한다.
+			// buttonImageOnly: false, // 버튼에 있는 이미지만 표시한다.
 			changeMonth: true, // 월을 바꿀수 있는 셀렉트 박스를 표시한다.
 			changeYear: true, // 년을 바꿀 수 있는 셀렉트 박스를 표시한다.
 			minDate: '-100y', // 현재날짜로부터 100년이전까지 년을 표시한다.
@@ -199,7 +241,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doJoin" onsubmit="return MemberJoin__submit(this);">
+		<form action="doJoin" method="POST" enctype="multipart/form-data" onsubmit="return MemberJoin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -242,8 +284,15 @@
 						<tr>
 							<th>생년월일</th>
 							<td><input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400"
-								id="birthDay" name="birthday" readonly />
+								id="birthday" name="birthday" placeholder="생년월일을 입력해주세요." readonly />
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+						</tr>
+						<tr>
+							<th>프로필 이미지</th>
+							<td>
+								<div><img id="profileImg" src="" alt="" /></div>
+								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" />
+							</td>
 						</tr>
 						<tr>
 							<th>이메일</th>
@@ -267,7 +316,7 @@
 			</div>
 		</form>
 		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
 		</div>
 	</div>
 </section>

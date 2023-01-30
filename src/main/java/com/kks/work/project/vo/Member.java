@@ -21,8 +21,10 @@ public class Member{
 	private String email;
 	private String cellphoneNum;
 	private int memberType;
-	private String profileImg;
+	private int storeState;
 	private String salt;
 	private String delStatus;
 	private LocalDateTime delDate;
+	
+	private int storeId;
 }

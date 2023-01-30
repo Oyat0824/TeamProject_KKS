@@ -26,7 +26,8 @@ public class MemberService {
 		this.attrService = attrService;
 		this.mailService = mailService;
 	}
-	
+
+// 서비스 메서드
 	// 회원가입
 	public ResultData<Integer> doJoin(String loginId, String loginPw, String name, String gender, String birthday, String email , String cellphoneNum, String salt) {
 		// 로그인 아이디 중복체크
@@ -51,6 +52,11 @@ public class MemberService {
 	// 아이디를 통해 멤버 가져오기
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
+	}
+	
+	// 아이디를 통해 멤버 및 스토어 정보 가져오기
+	public Member getMemberAndStoreById(int id) {
+		return memberRepository.getMemberAndStoreById(id);
 	}
 
 	// 로그인 아이디를 통해 멤버 가져오기
@@ -86,11 +92,13 @@ public class MemberService {
 	// 회원정보 수정
 	public void doModify(int loginedMemberId, String email, String cellphoneNum) {
 		memberRepository.doModify(loginedMemberId, email, cellphoneNum);
+		attrService.remove("member", loginedMemberId, "extra", "memberModifyAuthKey");
 	}
 	
 	// 비밀번호 수정
 	public void doPasswordModify(int loginedMemberId, String loginPw, String salt) {
 		memberRepository.doPasswordModify(loginedMemberId, loginPw, salt);
+		attrService.remove("member", loginedMemberId, "extra", "memberModifyAuthKey");
 	}
 	
 	// 임시 비밀번호 보내기

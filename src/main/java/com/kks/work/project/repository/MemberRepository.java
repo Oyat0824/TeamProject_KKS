@@ -36,6 +36,18 @@ public interface MemberRepository {
 			""")
 	public Member getMemberById(int id);
 
+	// 아이디를 통해 멤버 및 스토어 정보 가져오기
+	@Select("""
+			SELECT M.*, S.id AS storeId
+			FROM `member` AS M
+			INNER JOIN store AS S
+			ON M.id = S.memberId
+			WHERE M.id = #{id}
+			AND M.memberType = 6
+			AND M.storeState = 1
+			""")
+	public Member getMemberAndStoreById(int id);
+		
 	// 로그인 아이디를 통해 멤버 가져오기
 	@Select("""
 			SELECT *
@@ -43,7 +55,7 @@ public interface MemberRepository {
 			WHERE loginId = #{loginId}
 			""")
 	public Member getMemberByLoginId(String loginId);
-
+	
 	// 이름과 이메일이 같은 멤버 가져오기
 	@Select("""
 			SELECT *
@@ -57,16 +69,16 @@ public interface MemberRepository {
 	@Update("""
 			<script>
 				UPDATE `member`
-					<set>
-						updateDate = NOW(),
-						<if test="cellphoneNum != null">
-							cellphoneNum = #{cellphoneNum},
-						</if>
-						<if test="email != null">
-							email = #{email}
-						</if>
-					</set>
-					WHERE id = #{loginedMemberId}
+				<set>
+					updateDate = NOW(),
+					<if test="cellphoneNum != null">
+						cellphoneNum = #{cellphoneNum},
+					</if>
+					<if test="email != null">
+						email = #{email}
+					</if>
+				</set>
+				WHERE id = #{loginedMemberId}
 			</script>
 			""")
 	public void doModify(int loginedMemberId, String email, String cellphoneNum);

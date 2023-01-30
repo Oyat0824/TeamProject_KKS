@@ -35,7 +35,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doPasswordModify" onsubmit="return MemberModify__submit(this);">
+		<form action="doPasswordModify" method="POST" onsubmit="return MemberModify__submit(this);">
 			<input type="hidden" name="memberModifyAuthKey" value="${param.memberModifyAuthKey}" />
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
@@ -62,7 +62,7 @@
 			</div>
 		</form>
 		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
 		</div>
 	</div>
 </section>

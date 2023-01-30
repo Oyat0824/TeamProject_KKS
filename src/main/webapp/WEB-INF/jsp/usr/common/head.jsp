@@ -24,34 +24,77 @@
 </head>
 <body>
 	<header>
-		<div class="container mx-auto mt-2 navbar bg-base-300 rounded-box text-xl relative z-50">
-			<div class="navbar-start">
-				<a class="btn btn-ghost normal-case text-xl" href="/">Logo</a>
+		<div class="xl:container mx-auto">
+			<div class="h-10 mx-5 flex items-center justify-between text-white">
+				<div>
+					<a class="font-bold" href="/">SB_Store</a>
+				</div>
+				<div class="gnb relative">
+					<c:if test="${rq.getLoginedMemberId() == 0}">
+						<div class="w-14 h-6 bg-white bg-opacity-5 border border-black border-opacity-10 text-center text-sm">
+							<a href="/usr/member/login">로그인</a>
+						</div>
+					</c:if>
+					<c:if test="${rq.getLoginedMemberId() != 0}">
+						<script>
+							const lyrOpen = function() {
+								$(".my_lyr").toggleClass("open_lyr");
+							}
+							
+							$(function(){
+								$("html").click(function(e) {   
+									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){   
+										$(".my_lyr").removeClass("open_lyr");
+									}
+								});
+							});
+						</script>
+						<div class="text-sm">
+							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
+						</div>
+						
+						<div class="my_lyr">
+							<div class="flex items-center py-4 px-2 text-gray-600">
+								<div class="img_area">
+									<img class="w-20 object-cover rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
+								</div>
+								<div class="ml-3 text-area">
+									<p class="account">
+										<span class="align-middle"><a class="font-bold text-black hover:underline" href="/usr/member/myPage">${rq.loginedMember.name}</a>님</span>
+										<span class="inline-block w-16 h-6 bg-white bg-opacity-5 border border-black border-opacity-10 text-center text-sm">
+											<a href="/usr/member/doLogout">로그아웃</a>
+										</span>
+									</p>
+									<p class="text-sm">${rq.loginedMember.email}</p>
+								</div>
+							</div>
+							
+							<div class="flex flex-1 text-sm font-bold text-black">
+								<div class="flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+									<a href="/usr/member/myPage">마이 페이지</a>
+								</div>
+								<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 0}">
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/usr/store/register">스토어 등록</a>
+									</div>
+								</c:if>
+								<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 1}">
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/usr/store/view?id=${rq.getLoginedMember().getStoreId() }">내 스토어</a>
+									</div>
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/usr/store/chkPassword?id=${rq.getLoginedMember().getStoreId() }">스토어 관리</a>
+									</div>
+								</c:if>
+							</div>
+						</div>
+					</c:if>
+				</div>
 			</div>
-			<div class="navbar-center hidden lg:flex">
-				<ul class="menu menu-horizontal px-1">
-					<li><a href="#">Item 1</a></li>
-					<li><a href="#">Item 2</a></li>
-					<li><a href="#">Item 3</a></li>
-				</ul>
-			</div>
-			<div class="navbar-end">
-				<c:if test="${rq.getLoginedMemberId() == 0}">
-					<a class="btn btn-outline mr-2" href="/usr/member/join">JOIN</a>
-					<a class="btn" href="/usr/member/login">LOGIN</a>
-				</c:if>
-				<c:if test="${rq.getLoginedMemberId() != 0}">
-					<a class="btn btn-outline mr-2 " href="/usr/member/myPage">${rq.loginedMember.name}</a>
-					<a class="btn" href="/usr/member/doLogout">LOGOUT</a>
-				</c:if>
+			<div class="h-16 mx-5 flex items-center justify-between text-white">
+				<div><a href="/usr/store/list">스토어 목록</a></div>
 			</div>
 		</div>
 	</header>
-
-
-	<section class="my-3 text-2xl">
-		<div class="container mx-auto px-3">
-			<h1>${pageTitle}&nbsp;Page</h1>
-		</div>
-	</section>
+	
 	<main>

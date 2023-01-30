@@ -56,7 +56,7 @@
 </script>
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doFindLoginPw" method="POST" onsubmit="return FindLoginPw__submit(this);">
+		<form action="doFindLoginPw" method="POST" method="POST" onsubmit="return FindLoginPw__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -87,7 +87,7 @@
 			</div>
 		</form>
 		<div class="btns flex justify-between mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
 			<div>
 				<a class="btn btn-info" href="findLoginId">아이디 찾기</a>
 				<a class="btn btn-active" href="login">로그인</a>
