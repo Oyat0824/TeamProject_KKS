@@ -43,7 +43,7 @@
 </script>
 
 <section class="mt-8 text-xl">
-	<div class="container mx-auto px-3">
+	<div class="container mx-auto px-3 con">
 		<form id="frm" action="">
 			<input type="hidden" name="listOrder" value="${param.listOrder == null ? 'rank' : param.listOrder}" />
 			<input type="hidden" name="listStyle" value="${param.listStyle == null ? 'list' : param.listStyle}" />
@@ -100,28 +100,29 @@
 		</c:if>
 		
 		<c:if test="${param.listStyle == 'gallery'}">
-			<div class="gallery">
+			<div class="gallery row">
 				<c:forEach var="store" items="${stores}">
-					<div class="flex items-center p-5 hover:bg-gray-50 border-b">
-						<div class="img_area mr-10">
+					<div class="gallery-container hover:bg-gray-50 border-b cell">
+						<div class="img_area">
 							<a href="view?id=${store.id}">
 								<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
 							</a>
 						</div>
 						
-						<div class="info_area">
+						<div class="info_area justify-start cell">
 							<div class="storeName text-base">
 								<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
 							</div>
-							<div class="flex items-center storeDesc text-sm my-3 h-20 overflow-hidden">
-								<p>${store.getForPrintDesc() }</p>
-							</div>
 							<div class="storeEtc text-sm">
-								<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
-								<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
-								<span class="dot">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
-								<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
-							</div>
+								<div class="up">
+									<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
+									<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
+								</div>
+								<div class="down">
+									<span class="">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
+									<a class="pick" href="">찜하기 <span class="text-indigo-600">567</span></a>
+								</div>
+							</div>	
 						</div>
 					</div>
 				</c:forEach>
