@@ -124,3 +124,65 @@ html > body > header::after {
 .list > div:hover > div.img_area > a > img {
 	border-color: rgba(55, 48, 163);
 }
+
+/* 노말라이즈 */
+body, ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color:inherit;
+  text-decoration: none;
+}
+
+/* 라이브러리 */
+.con {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.img-box > img {
+  display: block;
+  width: 100%;
+}
+
+.row::after {
+  content:"";
+  display: block;
+  clear:both;
+}
+
+.cell {
+  float: left;
+}
+
+.gallery {
+	overflow-x:hidden;
+}
+
+.gallery > .container {
+	width: 250px;
+	height: 250px;	
+}
+
+.gallery > .container > .img_area {
+  	box-sizing:border-box;
+  	margin-left: 50px;
+  	margin-right: 50px;
+}
+
+.gallery > .container > .info_area {
+  	box-sizing:border-box;
+	text-align: center;
+}
+
+.gallery > .container > .info_area > .storeEtc > .up {
+	margin-left: 30px
+}
+
+.gallery > .container > .info_area > .storeEtc > .down {
+	margin-left: 30px
+}
+
