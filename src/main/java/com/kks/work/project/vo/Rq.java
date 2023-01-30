@@ -101,12 +101,13 @@ public class Rq {
 	 * @param relTypeCode 참조 타입 코드를 작성합니다. (member, store ...)
 	 * @param relId 참조 타입 아이디를 작성합니다.
 	 * @param type2code 유형을 작성합니다. (profileImg, StoreLogo ...)
+	 * @param fileNo 파일 번호를 작성합니다.
 	 * 
 	 * @return 인자에 맞춰서 나온 이미지 경로
 	 * @throws IOException 
 	 * */
-	public String getImgUri(String relTypeCode, int relId, String type2code) throws IOException {
-		String filePath = "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/1";
+	public String getImgUri(String relTypeCode, int relId, String type2code, int fileNo) throws IOException {
+		String filePath = "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/" + fileNo;
 		
 		URL url = new URL(siteMainUri + filePath);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -117,10 +118,13 @@ public class Rq {
 		int responseCode = connection.getResponseCode();
 		
 		if(responseCode == HttpURLConnection.HTTP_OK){
-			return "/common/genFile/file/"+ relTypeCode + "/" + relId + "/extra/" + type2code + "/1";
+			return filePath;
 		} else {
 		    return getProfileFallbackImgUri();
 		}
+	}
+	public String getImgUri(String relTypeCode, int relId, String type2code) throws IOException {
+		return getImgUri(relTypeCode, relId, type2code, 1);
 	}
 
 	// 프로필 이미지가 없는 경우

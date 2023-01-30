@@ -127,7 +127,7 @@
 
 <section>
 	<div class="flex container mx-auto">
-		<%@ include file="sideMenu.jsp"%>
+		<%@ include file="../common/sideMenu.jsp"%>
 
 		<div class="w-full my-10">
 			<form action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return StoreModify__submit(this);">

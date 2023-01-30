@@ -67,7 +67,7 @@
 
 <section>
 	<div class="flex container mx-auto">
-		<%@ include file="sideMenu.jsp"%>
+		<%@ include file="../common/sideMenu.jsp"%>
 		
 		<div class="w-full my-10">
 		

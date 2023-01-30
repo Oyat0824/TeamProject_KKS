@@ -54,6 +54,11 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
 		// 로그인 후 이용
 		ir = registry.addInterceptor(needLoginInterceptor);
+		// 스토어
+		ir.addPathPatterns("/usr/store/**");
+		ir.addPathPatterns("/usr/product/register");
+		ir.excludePathPatterns("/usr/store/view");
+		ir.excludePathPatterns("/usr/store/list");
 		// 로그아웃
 		ir.addPathPatterns("/usr/member/doLogout");
 		// 회원정보 관련
@@ -84,6 +89,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir = registry.addInterceptor(needSellerInterceptor);
 		// 스토어 관련
 		ir.addPathPatterns("/usr/store/**");
+		ir.addPathPatterns("/usr/product/register");
 		ir.excludePathPatterns("/usr/store/view");
 		ir.excludePathPatterns("/usr/store/list");
 	}

@@ -1,123 +1,104 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="pageTitle" value="Product Modify" />
-<c:set var="menuName" value="modify" />
 <%@ include file="../common/head.jsp"%>
+<%@ include file="../common/toastUiEditorLib.jsp" %>
+
 <script>
 	// Submit 전 검증
-	const ProductModify__submit = function(form) {
-		// 파일 검증
-		const deleteProductImgFileInput = form["deleteFile__store__0__extra__productImg__1"];
-
-		if (deleteProductImgFileInput.checked) {
-			form["file__store__0__extra__storeImg__1"].value = '';
+	const ProductRegister__submit = function(form) {
+		// 상품 이름 검증
+		form.productName.value = form.productName.value.trim();
+		if(form.productName.value.length == 0) {
+			alert("상품 이름을 입력해주세요.");
+			form.productName.focus();
+			
+			return false;
 		}
-
+		// 상품 가격 검증
+		form.productPrice.value = form.productPrice.value.trim();
+		if(form.productPrice.value.length == 0) {
+			alert("상품 가격을 입력해주세요.");
+			form.productPrice.focus();
+			
+			return false;
+		}
+		// 상품 재고 검증
+		form.productStock.value = form.productStock.value.trim();
+		if(form.productStock.value.length == 0) {
+			alert("상품 재고를 입력해주세요.");
+			form.productStock.focus();
+			
+			return false;
+		}
+		
+		// 파일 검증
 		const maxSizeMb = 10;
 		const maxSize = maxSizeMb * 1024 * 1024;
-
-		const ProductImgFileInput = form["file__store__0__extra__productImg__1"];
-
-		if (ProductImgFileInput.value) {
-			if (ProductImgFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				ProductImgFileInput.focus();
-
-				return false;
-			}
-		}
 		
-		if (chkTextByte() == false) {
-			alert("최대 100Byte까지만 입력가능합니다.");
-			
-			return false;
-		}
-	}
-
-	// 이미지 미리보기 기능
-	const imgChg = function(e) {
-		const selectedFile = e.files[0];
-		const fileReader = new FileReader();
-
-		fileReader.readAsDataURL(selectedFile);
-
-		fileReader.onload = function() {
-			$(e).siblings("div").children("img").attr("src", fileReader.result);
-		};
-	}
-	
-	// 글자수(Byte) 세기 함수
-	const chkTextByte = function() {
-		const maxByte = 100; //최대 100바이트
-		const text_val = $("#textBox").val(); //입력한 문자
-		const text_len = text_val.length; //입력한 문자수
-		const rows = $("#textBox").val().split('\n').length;
-		const maxRows = 4;
+		const productImgFileInput = [];
 		
-		if(rows > maxRows) {
-			alert("4줄 까지만 가능합니다.");
-			modifedText = $("#textBox").val().split("\n").slice(0, maxRows);
-			$("#textBox").val(modifedText.join("\n"));
-			
-			return false;
-		}
-		
-		let totalByte = 0;
-		
-		for (let i = 0; i < text_len; i++) {
-			const each_char = text_val.charAt(i);
-			const uni_char = escape(each_char); //유니코드 형식으로 변환
+		productImgFileInput.push(form["file__product__0__extra__productImg__1"]);
+		productImgFileInput.push(form["file__product__0__extra__productImg__2"]);
+		productImgFileInput.push(form["file__product__0__extra__productImg__3"]);
 
-			if (uni_char.length > 4) {
-				// 한글 : 2Byte
-				totalByte += 2;
-			} else {
-				// 영문,숫자,특수문자 : 1Byte
-				totalByte += 1;
+		
+		const deleteProductImgFileInput = [];
+		
+		deleteProductImgFileInput.push(form["file__product__0__extra__productImg__1"]);
+		deleteProductImgFileInput.push(form["file__product__0__extra__productImg__2"]);
+		deleteProductImgFileInput.push(form["file__product__0__extra__productImg__3"]);
+		
+		for(i = 0; i < productImgFileInput.length; i++) {
+			if(deleteProductImgFileInput[i].checked) {
+				productImgFileInput[i].value = '';
 			}
 		}
 
-		if (totalByte > maxByte) {
-			$("#textBoxMsg").text("최대 100Byte까지만 입력가능합니다.");
-			$('#nowByte').text(totalByte);
-			$('#nowByte').css("color", "red");
-			
-			return false;
-		} else {
-			$("#textBoxMsg").empty();
-			$('#nowByte').text(totalByte);
-			$('#nowByte').css("color", "green");
+		for(i = 0; i < productImgFileInput.length; i++) {
+			if(productImgFileInput[i].value) {
+				if (productImgFileInput[i].files[0].size > maxSize) {
+					alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+					productImgFileInput[i].focus();
+					
+					return false;
+				}
+			}
 		}
+		
+		const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
+		const markdown = editor.getMarkdown().trim();
+		const html = editor.getHTML().trim();
+		
+		if(markdown.length == 0) {
+		  alert("내용을 입력해주세요");
+		  editor.focus();
+		  return false;
+		}
+		  
+		form.productBody.value = html;
 	}
 
-	$(function() {
-		if ($("#storeLogo").attr("src") == "${rq.getProfileFallbackImgUri()}") {
-			$("#storeLogo").parent().siblings("div.delBtn").remove();
+	$(function(){
+		if ($("#productImg_1").attr("src") == "${rq.getProfileFallbackImgUri()}") {
+			$("#productImg_1").parent().remove();
 		}
-
-		if ($("#storeImg").attr("src") == "${rq.getProfileFallbackImgUri()}") {
-			$("#storeImg").parent().siblings("div.delBtn").remove();
+		if ($("#productImg_2").attr("src") == "${rq.getProfileFallbackImgUri()}") {
+			$("#productImg_2").parent().remove();
 		}
-		
-		// 글자수 세기 작동
-		chkTextByte();
-		
-		$("#textBox").keydown(function (obj) {
-			chkTextByte();
-		});
-		$("#textBox").keyup(function (obj) {
-			chkTextByte();
-		});
+		if ($("#productImg_3").attr("src") == "${rq.getProfileFallbackImgUri()}") {
+			$("#productImg_3").parent().remove();
+		}
 	})
 </script>
 
 <section>
 	<div class="flex container mx-auto">
-
 		<div class="w-full my-10">
-			<form action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return ProductModify__submit(this);">
+			<form id="frm" action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return ProductRegister__submit(this);">
+				<input type="hidden" name="storeId" value="${param.storeId}" />
 				<input type="hidden" name="id" value="${product.id}" />
-				<input type="hidden" name="productModifyAuthKey" value="${param.productModifyAuthKey}" />
+				<input type="hidden" name="productBody" />
 				<div class="table-box-type-2">
 					<table class="table w-11/12 mx-auto">
 						<colgroup>
@@ -125,63 +106,78 @@
 						</colgroup>
 
 						<tbody>
-
 							<tr>
-								<th>상품 이미지</th>
+								<th>상품 이름</th>
 								<td>
-									<div>
-										<img id="productImg" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px"
-											src="${rq.getImgUri('product', product.id, 'productImg')}" alt="" />
-									</div>
-									<div class="mb-1 delBtn">
-										<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
-											class="ckeckbox" type="checkbox" name="deleteFile__product__0__extra__productImg__1" value="Y" />
-										</label>
-									</div> <input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
-									class="file-input file-input-bordered border-gray-400" name="file__product__0__extra__productImg__1" type="file" />
+									<input class="input input-bordered w-full text-lg" type="text" name="productName" placeholder="상품 이름을 입력해주세요." value="${product.productName }" />
 								</td>
 							</tr>
 							<tr>
 								<th>상품 가격</th>
-								<td class="relative">
-									<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
-									<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="productPrice"
-										placeholder="상품 가격">${product.productPrice}</textarea>
-									<div class="textLengthWrap flex">
-										<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>
-									</div>
+								<td>
+									<input class="input input-bordered w-full text-lg" name="productPrice" placeholder="상품 가격을 입력해주세요." value="${product.productPrice }" />
 								</td>
 							</tr>
 							<tr>
 								<th>상품 카테고리</th>
-								<td class="relative">
-									<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
-									<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="productCetegory"
-										placeholder="상품 카테고리">${product.productCetegory}</textarea>
-									<div class="textLengthWrap flex">
-										<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>
-									</div>
+								<td>
+									<select class="select select-bordered w-full" data-form="itemsNum" name="productCategory" onchange="return chgForm(this);">
+										<option value="">없음</option>
+										<c:forEach var="category" items="${categorys}">
+											<option value="${category.id }">${category.name }</option>	
+										</c:forEach>
+									</select>
 								</td>
 							</tr>
 							<tr>
 								<th>상품 재고</th>
-								<td class="relative">
-									<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
-									<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="productStock"
-										placeholder="상품 재고">${product.productStock}</textarea>
-									<div class="textLengthWrap flex">
-										<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>
+								<td>
+									<input class="input input-bordered w-full text-lg" name="productStock" placeholder="상품 재고를 입력해주세요." value="${product.productStock }" />
+								</td>
+							</tr>
+							<tr>
+								<th>상품 이미지</th>
+								<td>
+									<div class="flex justify-around mb-3">
+										<div class="mb-1 delBtn">
+											<img id="productImg_1" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px" src="${rq.getImgUri('product', product.id, 'productImg', 1)}" alt="" />
+											<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
+												class="ckeckbox" type="checkbox" name="deleteFile__product__0__extra__productImg__1" value="Y" />
+											</label>
+										</div>
+										<div class="mb-1 delBtn">
+											<img id="productImg_2" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px" src="${rq.getImgUri('product', product.id, 'productImg', 2)}" alt="" />
+											<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
+												class="ckeckbox" type="checkbox" name="deleteFile__product__0__extra__productImg__2" value="Y" />
+											</label>
+										</div>
+										<div class="mb-1 delBtn">
+											<img id="productImg_3" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px" src="${rq.getImgUri('product', product.id, 'productImg', 3)}" alt="" />
+											<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
+												class="ckeckbox" type="checkbox" name="deleteFile__product__0__extra__productImg__3" value="Y" />
+											</label>
+										</div>
+									</div>
+								
+									<div class="flex items-center">
+										<span class="badge p-3 mr-3">첨부파일 #1</span>
+										<input accept="image/gif, image/jpeg, image/png" class="w-full inline-block mb-2 file-input file-input-bordered" name="file__product__0__extra__productImg__1" type="file" />
+									</div>
+									<div class="flex items-center">
+										<span class="badge p-3 mr-3">첨부파일 #2</span>
+										<input accept="image/gif, image/jpeg, image/png" class="w-full inline-block mb-2 file-input file-input-bordered" name="file__product__0__extra__productImg__2" type="file" />
+									</div>
+									<div class="flex items-center">
+										<span class="badge p-3 mr-3">첨부파일 #3</span>
+										<input accept="image/gif, image/jpeg, image/png" class="w-full inline-block mb-2 file-input file-input-bordered" name="file__product__0__extra__productImg__3" type="file" />
 									</div>
 								</td>
 							</tr>
 							<tr>
-								<th>상품 소개</th>
-								<td class="relative">
-									<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
-									<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="productBody"
-										placeholder="상품 소개">${product.productBody}</textarea>
-									<div class="textLengthWrap flex">
-										<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>
+								<th>상품 설명</th>
+								<td>
+									<div class="toast-ui-editor text-left">
+										${product.getForPrintBody()}
 									</div>
 								</td>
 							</tr>

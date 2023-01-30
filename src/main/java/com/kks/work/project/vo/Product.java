@@ -13,16 +13,18 @@ public class Product{
 	private String updateDate;
 	private String productName;
 	private String productPrice;
-	private String productCetegory;
+	private String productCategory;
 	private String productStock;
 	private String productBody;
 	private int storeId;
 	
+	private int ROWNUM;
 	private boolean actorCanChangeData;
 	private String storeName;
+	private String categoryName;
 	
-	public String getForPrintDesc() {
-		return this.productStock.replaceAll("\n", "<br />");
+	public String getForPrintBody() {
+		return this.productBody.replaceAll("\n", "<br />");
 	}
 	
 }

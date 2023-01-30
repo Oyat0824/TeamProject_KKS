@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Product;
-import com.kks.work.project.vo.Store;
 
 @Mapper
 public interface ProductRepository {
@@ -20,112 +19,94 @@ public interface ProductRepository {
 			updateDate = NOW(),
 			productName = #{productName},
 			productPrice = #{productPrice},
-			productCetegory = #{productCetegory},
+			productCategory = #{productCategory},
 			productStock = #{productStock},
 			productBody = #{productBody},
-			memberId = #{memberId},
 			storeId = #{storeId}
 			""")
-	public void registerProduct(String productName, String productPrice, String productCetegory, String productStock, String productBody, int memberId, int storeId);
-	
-	// 스토어 등록 상태 변경
-	@Update("""
-			UPDATE store
-			SET productState = 1
-			WHERE id = #{storeId}
-			""")
-	public void productStateChange(int storeId);
-	
+	public void registerProduct(String productName, String productPrice, String productCategory, String productStock, String productBody, int storeId);
+
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
 	
-	// id를 통해 상품 가져오기
+	// storeId 와 id를 통해 상품 상세 정보 가져오기
 	@Select("""
-			SELECT *
-			FROM product
-			WHERE id = #{id}
-			""")
-	public Store getProductById(int id);
-	
-	// StoreId를 통해 상품 정보 가져오기
-		@Select("""
-				SELECT *
-				FROM product
-				WHERE storeId = #{storeId}
-				""")
-	public Product getProductByStoreId(int storeId);
-
-	// ProductName을 통해 상품 정보 가져오기
-	@Select("""
-			SELECT *
-			FROM product
-			WHERE productName = #{productName}
-			""")	
-	public Product getProductByProductName(String productName);
-	
-	// storeId를 통해 상품 가져오기, 상점명도 함께
-	@Select("""
-			SELECT P.*, S.storeName AS storeName
+			SELECT P.*, C.name AS categoryName
 			FROM product AS P
-			INNER JOIN store AS S
-			ON P.storeId = S.id
-			WHERE p.id = #{id}
+			LEFT JOIN category AS C
+			ON C.id = P.productCategory
+			WHERE P.storeId = #{storeId}
+			AND P.id = #{id};
 			""")
-	public Product getForPrintProductById(int id);
+	public Product getProductByStoreIdAndId(int storeId, int id);
 	
-	@Select("""
-			<script>
-				SELECT P.*, S.storeName AS storeName
-				FROM product AS P
-				INNER JOIN store AS S
-				ON P.storeId = S.id
-				WHERE 1 = 1
-				<if test="searchKeyword != ''">
-					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
-				</if>
-				ORDER BY S.id DESC
-				LIMIT #{limitStart}, #{itemsInAPage}
-			</script>
-			""")
-	public List<Product> getProducts(String searchKeyword, int limitStart,
-			int itemsInAPage);
-
+	// 상품 목록 개수
 	@Select("""
 			<script>
 				SELECT COUNT(*)
 				FROM product
 				WHERE 1 = 1
 				<if test="searchKeyword != ''">
-					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
 			</script>
 			""")
 	public int getProductsCount(String searchKeyword);
+	
+	// 상품 목록
+	@Select("""
+			<script>
+				SELECT SUB.*, C.name AS categoryName
+				FROM(
+					SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, P.*
+					FROM product AS P, (SELECT @ROWNUM := 0 ) AS TEMP
+					WHERE P.storeId = #{id}
+					) SUB
+				LEFT JOIN category AS C
+				ON C.id = SUB.productCategory	
+				<if test="searchKeyword != ''">
+					WHERE productName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				ORDER BY SUB.ROWNUM DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
+			</script>
+			""")
+	public List<Product> getProducts(int id, String searchKeyword, int itemsInAPage, int limitStart);
 
-	// 상품 정보 수정
+	// 상품 가져오기
+	@Select("""
+			SELECT *
+			FROM product
+			WHERE id = #{id}
+			""")
+	public Product getProduct(int id);
+
+	// 상품 수정
 	@Update("""
 			<script>
 				UPDATE product
 				<set>
 					updateDate = NOW(),
-					<if test="productPrice != null">
-						productPrice = #{productPrice}
+					<if test="productName != null">
+						productName = #{productName},
 					</if>
-					<if test="productCetegory != null">
-						productCetegory = #{productCetegory}
+					<if test="productPrice != null">
+						productPrice = #{productPrice},
+					</if>
+					<if test="productCategory != null">
+						productCategory = #{productCategory},
 					</if>
 					<if test="productStock != null">
-						productStock = #{productStock}
+						productStock = #{productStock},
 					</if>
 					<if test="productBody != null">
 						productBody = #{productBody}
 					</if>
 				</set>
 				WHERE id = #{id}
-				AND memberId = #{loginedMemberId}
 			</script>
 			""")
-	public void doModify(int id, int loginedMemberId, int storeId, String productPrice, String productCetegory, String productStock, String productBody);
+	public void doModify(int id, String productName, String productPrice, String productCategory, String productStock,
+			String productBody);
 
-	
 }

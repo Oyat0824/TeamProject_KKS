@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <c:set var="pageTitle" value="Product List" /> 
+<c:set var="menuName" value="productList" />
 <%@ include file="../common/head.jsp" %>
 
 <script>
@@ -41,95 +43,87 @@
 	})
 </script>
 
-<section class="mt-8 text-xl">
-	<div class="container mx-auto px-3">
-		<form id="frm" action="">
-			<input type="hidden" name="listOrder" value="${param.listOrder == null ? 'rank' : param.listOrder}" />
-			<input type="hidden" name="listStyle" value="${param.listStyle == null ? 'list' : param.listStyle}" />
-			<div class="flex justify-between text-base items-center pb-5 mb-5 border-b">
-				<ul class="flex h-10">
-					<li class="mr-2 border"><a class="block p-2 text-blue-500 font-bold" href="#" data-form="listOrder" data-type="rank" onclick="return chgForm(this);">랭킹 순</a></li>
-					<li class="mr-2 border"><a class="block p-2" href="#" data-form="listOrder" data-type="reviewMany" onclick="return chgForm(this);">리뷰 많은순</a></li>
-					<li class="mr-2 border"><a class="block p-2" href="#" data-form="listOrder" data-type="reviewSmall" onclick="return chgForm(this);">리뷰 좋은순</a></li>
-					<li class="border"><a class="block p-2" href="#" data-form="listOrder" data-type="date" onclick="return chgForm(this);">등록일 순</a></li>
-				</ul>
-				
-				<div class="flex">
+<section>
+	<div class="flex container mx-auto">
+		<%@ include file="../common/sideMenu.jsp"%>
+	
+		<div class="w-full my-10 mx-5">
+			<form id="frm" action="">
+				<div class="flex justify-end text-base items-center pb-5 mb-5 border-b">
 					<div>
 						<select class="mr-2 p-2 border h-10" data-form="itemsNum" name="itemsNum" onchange="return chgForm(this);">
 							<option value="20">20개씩 보기</option>
 							<option value="40" ${param.itemsNum == 40 ? "selected" : "" }>40개씩 보기</option>
 						</select>
 					</div>
-					<div class="flex h-10">
-						<a class="block mr-1 p-2 border w-10 text-center text-blue-500" href="#" data-form="listStyle" data-type="list" onclick="return chgForm(this);"><i class="fa-sharp fa-solid fa-list"></i></a>
-						<a class="block p-2 border w-10 text-center" href="#" data-form="listStyle" data-type="gallery" onclick="return chgForm(this);"><i class="fa-solid fa-border-all"></i></a>
-					</div>
 				</div>
-			</div>
-		</form>
-		
-		<div class="list">
-			<c:forEach var="product" items="${products}">
-				<div class="flex items-center p-5 hover:bg-gray-50 border-b">
-					<div class="img_area mr-10">
-						<a href="view?id=${product.id}">
-							<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('product', product.id, 'productImg')}" alt="" />
-						</a>
-					</div>
-					
-					<div class="info_area">
-						<div class="productName text-base">
-							<a class="font-bold" href="view?id=${product.id}">${product.productName}</a>
-						</div>
-						<div class="productBody text-sm my-3 h-20 overflow-hidden">
-							<p>${product.getForPrintDesc() }</p>
-						</div>
-						<div class="productEtc text-sm">
-							<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
-							<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
-							<span class="dot">등록일 ${product.regDate.substring(0, 8).replace("-", ".") }</span>
-							<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
-						</div>
-					</div>
-					
-					<div></div>
-				</div>
-			</c:forEach>
-		</div>
+			</form>
+			
+			<div>
+				<table class="table w-11/12 mx-auto">
+					<thead>
+						<tr>
+							<th class="text-sm">번호</th>
+							<th class="text-sm">상품 분류</th>
+							<th class="text-sm">상품 이름</th>
+							<th class="text-sm">상품 가격</th>
+							<th class="text-sm">상품 재고</th>
+							<th class="text-sm">등록일</th>
+							<th class="text-sm">수정</th>
+							<th class="text-sm">삭제</th>
+						</tr>
+					</thead>
 	
-		<div class="pageNav flex justify-center mt-5">
-			<div class="btn-group">
-				<c:set var="maxPageNum" value="5" />
-				<fmt:parseNumber var="pageBlock" integerOnly="true" value="${page / maxPageNum}" />
-				<c:if test="${page % maxPageNum > 0}"><c:set var="pageBlock" value="${pageBlock + 1}" /></c:if>
-				<c:set var="endPage" value="${pageBlock * maxPageNum}" />
-				<c:set var="startPage" value="${endPage - (maxPageNum - 1)}" />
-				<c:set var="endPage" value="${pagesCount < endPage ? pagesCount : endPage }" />
-
-				<c:set var="pageBaseUri" value="&searchKeyword=${searchKeyword }" />
-
-				<c:if test="${page == 1}">
-					<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
-					<a class="btn btn-sm w-12 btn-disabled">&lt;</a>
-				</c:if>
-				<c:if test="${page > 1}">
-					<a class="btn btn-sm w-12" href="?page=1${pageBaseUri}">&lt;&lt;</a>
-					<a class="btn btn-sm w-12" href="?page=${page-1}${pageBaseUri}">&lt;</a>
-				</c:if>
-					
-				<c:forEach begin="${startPage }" end="${endPage }" var="i">
-					<a class="btn btn-sm w-12 ${page == i ? 'btn-active' : ''}" href="?page=${i}${pageBaseUri}">${i}</a>
-				</c:forEach>
-
-				<c:if test="${page == pagesCount}">
-					<a class="btn btn-sm w-12 btn-disabled">&gt;</a>
-					<a class="btn btn-sm w-12 btn-disabled">&gt;&gt;</a>
-				</c:if>
-				<c:if test="${page < pagesCount}">
-					<a class="btn btn-sm w-12" href="?page=${page+1}${pageBaseUri}">&gt;</a>
-					<a class="btn btn-sm w-12" href="?page=${pagesCount}${pageBaseUri}">&gt;&gt;</a>
-				</c:if>
+					<tbody>
+						<c:forEach var="product" items="${products}">
+							<tr class="hover">
+								<td><div class="badge badge-lg border-transparent font-bold text-white">${product.ROWNUM}</div></td>
+								<td>${product.productCategory == "" ? "없음" : product.categoryName}</td>
+								<td><a class="hover:text-indigo-700" href="view?storeId=${product.storeId}&id=${product.id}">${product.productName}</a></td>
+								<td>${product.productPrice}</td>
+								<td>${product.productStock}</td>
+								<td>${product.regDate.substring(0, 16) }</td>
+								<td><a class="hover:text-indigo-700" href="modify?storeId=${product.storeId}&id=${product.id}">수정</a></td>
+								<td>삭제</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="pageNav flex justify-center mt-5">
+				<div class="btn-group">
+					<c:set var="maxPageNum" value="5" />
+					<fmt:parseNumber var="pageBlock" integerOnly="true" value="${page / maxPageNum}" />
+					<c:if test="${page % maxPageNum > 0}"><c:set var="pageBlock" value="${pageBlock + 1}" /></c:if>
+					<c:set var="endPage" value="${pageBlock * maxPageNum}" />
+					<c:set var="startPage" value="${endPage - (maxPageNum - 1)}" />
+					<c:set var="endPage" value="${pagesCount < endPage ? pagesCount : endPage }" />
+	
+					<c:set var="pageBaseUri" value="&id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey }&searchKeyword=${searchKeyword }" />
+	
+					<c:if test="${page == 1}">
+						<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
+						<a class="btn btn-sm w-12 btn-disabled">&lt;</a>
+					</c:if>
+					<c:if test="${page > 1}">
+						<a class="btn btn-sm w-12" href="?page=1${pageBaseUri}">&lt;&lt;</a>
+						<a class="btn btn-sm w-12" href="?page=${page-1}${pageBaseUri}">&lt;</a>
+					</c:if>
+						
+					<c:forEach begin="${startPage }" end="${endPage }" var="i">
+						<a class="btn btn-sm w-12 ${page == i ? 'btn-active' : ''}" href="?page=${i}${pageBaseUri}">${i}</a>
+					</c:forEach>
+	
+					<c:if test="${page == pagesCount}">
+						<a class="btn btn-sm w-12 btn-disabled">&gt;</a>
+						<a class="btn btn-sm w-12 btn-disabled">&gt;&gt;</a>
+					</c:if>
+					<c:if test="${page < pagesCount}">
+						<a class="btn btn-sm w-12" href="?page=${page+1}${pageBaseUri}">&gt;</a>
+						<a class="btn btn-sm w-12" href="?page=${pagesCount}${pageBaseUri}">&gt;&gt;</a>
+					</c:if>
+				</div>
 			</div>
 		</div>
 	</div>
