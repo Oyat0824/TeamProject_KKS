@@ -78,12 +78,12 @@ CREATE TABLE product(
 	updateDate DATETIME NOT NULL,
 	productName VARCHAR(40) NOT NULL,
 	productPrice VARCHAR(40) NOT NULL,
-	productCetegory VARCHAR(20),  
+	productCategory VARCHAR(20),  
 	productStock VARCHAR(20) NOT NULL, # 상품재고
 	productBody VARCHAR(100) NOT NULL,
-	stroeId INT UNSIGNED NOT NULL,
+	storeId INT UNSIGNED NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
-	KEY `indexKey` (stroeId, memberId)
+	KEY `indexKey` (storeId, memberId)
 );
 
 ##### category 테이블 생성
@@ -111,7 +111,7 @@ loginId = 'test1',
 loginPw = 'test1',
 `name` = '유저',
 gender = 'female',
-birthday = NOW(),
+birthday = '1995-08-24',
 email = 'test@naver.com',
 cellphoneNum = '010-1234-5678',
 salt = 'test1';

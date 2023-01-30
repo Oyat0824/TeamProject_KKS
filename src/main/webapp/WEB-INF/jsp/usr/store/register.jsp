@@ -180,14 +180,14 @@
 						<tr>
 							<th>스토어 로고</th>
 							<td>
-								<div><img id="storeLogo" class="object-cover mx-auto" style="width: 350px; height: 100px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
+								<div><img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 350px; height: 100px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
 								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeLogo__1" type="file" />
 							</td>
 						</tr>
 						<tr>
 							<th>스토어 이미지</th>
 							<td>
-								<div><img id="storeImg" class="object-cover mx-auto" style="width: 250px; height: 250px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
+								<div><img id="storeImg" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px" src="${rq.getProfileFallbackImgUri() }" alt="" /></div>
 								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" />
 							</td>
 						</tr>

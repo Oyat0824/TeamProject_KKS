@@ -69,36 +69,65 @@
 				</div>
 			</div>
 		</form>
+			
+		<c:if test="${param.listStyle == 'list' || param.listStyle == null}">
+			<div class="list">
+				<c:forEach var="store" items="${stores}">
+					<div class="flex items-center p-5 hover:bg-gray-50 border-b">
+						<div class="img_area mr-10">
+							<a href="view?id=${store.id}">
+								<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
+							</a>
+						</div>
+						
+						<div class="info_area">
+							<div class="storeName text-base">
+								<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
+							</div>
+							<div class="flex items-center storeDesc text-sm my-3 h-20 overflow-hidden">
+								<p>${store.getForPrintDesc() }</p>
+							</div>
+							<div class="storeEtc text-sm">
+								<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
+								<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
+								<span class="dot">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
+								<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
+							</div>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+		</c:if>
 		
-		<div class="list">
-			<c:forEach var="store" items="${stores}">
-				<div class="flex items-center p-5 hover:bg-gray-50 border-b">
-					<div class="img_area mr-10">
-						<a href="view?id=${store.id}">
-							<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
-						</a>
+		<c:if test="${param.listStyle == 'gallery'}">
+			<div class="gallery">
+				<c:forEach var="store" items="${stores}">
+					<div class="flex items-center p-5 hover:bg-gray-50 border-b">
+						<div class="img_area mr-10">
+							<a href="view?id=${store.id}">
+								<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
+							</a>
+						</div>
+						
+						<div class="info_area">
+							<div class="storeName text-base">
+								<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
+							</div>
+							<div class="flex items-center storeDesc text-sm my-3 h-20 overflow-hidden">
+								<p>${store.getForPrintDesc() }</p>
+							</div>
+							<div class="storeEtc text-sm">
+								<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
+								<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
+								<span class="dot">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
+								<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
+							</div>
+						</div>
 					</div>
-					
-					<div class="info_area">
-						<div class="storeName text-base">
-							<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
-						</div>
-						<div class="storeDesc text-sm my-3 h-20 overflow-hidden">
-							<p>${store.getForPrintDesc() }</p>
-						</div>
-						<div class="storeEtc text-sm">
-							<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
-							<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
-							<span class="dot">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
-							<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
-						</div>
-					</div>
-					
-					<div></div>
-				</div>
-			</c:forEach>
-		</div>
-	
+				</c:forEach>
+			</div>
+		</c:if>
+		
 		<div class="pageNav flex justify-center mt-5">
 			<div class="btn-group">
 				<c:set var="maxPageNum" value="5" />
