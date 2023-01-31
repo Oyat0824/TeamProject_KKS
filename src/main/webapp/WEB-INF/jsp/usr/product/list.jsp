@@ -84,7 +84,7 @@
 								<td>${product.productStock}</td>
 								<td>${product.regDate.substring(0, 16) }</td>
 								<td><a class="hover:text-indigo-700" href="modify?storeId=${product.storeId}&id=${product.id}">수정</a></td>
-								<td>삭제</td>
+								<td><a class="hover:text-indigo-700" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;" href="doDelete?storeId=${product.storeId}&id=${product.id}&storeModifyAuthKey=${param.storeModifyAuthKey}">삭제</a></td>
 							</tr>
 						</c:forEach>
 					</tbody>
