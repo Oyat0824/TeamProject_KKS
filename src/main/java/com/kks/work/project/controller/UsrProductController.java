@@ -217,6 +217,37 @@ public class UsrProductController {
 
 		return Utility.jsReplace("상품정보를 수정했습니다!", Utility.f("view?storeId=%d&id=%d", storeId, id));
 	}
+	
+	// 등록 상품 삭제
+	@RequestMapping("/usr/product/doDelete")
+	@ResponseBody 
+	public String doDelete(int id, int storeId, String storeModifyAuthKey) {
+		
+		// 인증키 검사
+		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
+				    
+		if (chkStoreModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), false, "/usr/home/main");
+		}
+		
+		// 본인 스토어 검사
+		Store store = storeService.getStoreById(storeId);
+
+		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+		
+		if(actorCanMDRd.isFail()) {  // 실패시에 
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+
+		genFileService.deleteGenFiles("product", id, "extra", "productImg", 1);
+		genFileService.deleteGenFiles("product", id, "extra", "productImg", 2);
+		genFileService.deleteGenFiles("product", id, "extra", "productImg", 3);
+		
+		productService.deleteProduct(id);														
+		
+		return Utility.jsReplace("등록된 상품을 삭제했습니다!", Utility.f("list?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
+
+	} 
 		
 }
 

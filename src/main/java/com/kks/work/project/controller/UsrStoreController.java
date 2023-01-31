@@ -112,8 +112,8 @@ public class UsrStoreController {
 	    if (actorCanModifyRD.isFail()) {
 	    	return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
 	    }
-		
-		return "usr/store/chkPassword";
+	    
+		return "/usr/store/chkPassword";
 	}
 
 	// 패스워드 확인
@@ -128,7 +128,7 @@ public class UsrStoreController {
 		if (rq.getLoginedMember().getLoginPw().equals(Utility.getEncrypt(loginPw, rq.getLoginedMember().getSalt())) == false) {
 			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다!");
 		}
-
+		
 		String storeModifyAuthKey = storeService.genStoreModifyAuthKey(rq.getLoginedMemberId());
 
 		return Utility.jsReplace("", Utility.f("modify?id=%d&storeModifyAuthKey=%s", id, storeModifyAuthKey));
@@ -231,7 +231,7 @@ public class UsrStoreController {
 		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("searchKeyword", searchKeyword);
 
-		return "usr/store/list";
+		return "/usr/store/list";
 	}
 	
 	// 카테고리 페이지

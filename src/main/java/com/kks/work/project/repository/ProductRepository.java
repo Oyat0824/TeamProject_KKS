@@ -2,6 +2,7 @@ package com.kks.work.project.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -108,5 +109,12 @@ public interface ProductRepository {
 			""")
 	public void doModify(int id, String productName, String productPrice, String productCategory, String productStock,
 			String productBody);
+	
+	// 등록된 상품 삭제
+	@Delete("""
+				DELETE FROM product
+				WHERE id = #{id}
+			""")
+	public void deleteProduct(int id);
 
 }

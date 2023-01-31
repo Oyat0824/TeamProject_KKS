@@ -56,5 +56,10 @@ public class ProductService {
 			String productBody) {
 		productRepository.doModify(id, productName, productPrice, productCategory, productStock, productBody);
 	}
+	
+	// 등록된 상품 삭제
+	public void deleteProduct(int id) {
+		productRepository.deleteProduct(id);	
+	}
 
 }
