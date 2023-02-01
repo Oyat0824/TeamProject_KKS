@@ -222,7 +222,6 @@ public class UsrProductController {
 	@RequestMapping("/usr/product/doDelete")
 	@ResponseBody 
 	public String doDelete(int id, int storeId, String storeModifyAuthKey) {
-		
 		// 인증키 검사
 		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
 				    

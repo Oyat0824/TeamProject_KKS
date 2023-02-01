@@ -117,71 +117,12 @@ html > body > header::after {
 	user-select: none;
 }
 
-.list > div > div.img_area > a > img {
+.list > div > div.img_area > a > img,
+.gallery > div > div > div > div.img_area > a > img {
 	transition: .3s;
 }
 
-.list > div:hover > div.img_area > a > img {
+.list > div:hover > div.img_area > a > img,
+.gallery > div > div > div:hover > div.img_area > a > img {
 	border-color: rgba(55, 48, 163);
-}
-
-/* 노말라이즈 */
-body, ul, li {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-a {
-  color:inherit;
-  text-decoration: none;
-}
-
-/* 라이브러리 */
-.con {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.img-box > img {
-  display: block;
-  width: 100%;
-}
-
-.row::after {
-  content:"";
-  display: block;
-  clear:both;
-}
-
-.cell {
-  float: left;
-}
-
-.gallery {
-	overflow-x:hidden;
-}
-
-.gallery > .gallery-container{
-	width: 250px;
-	height: 250px;	
-}
-
-.gallery > .gallery-container > .img_area {
-  	box-sizing:border-box;
-  	margin-left: 50px;
-  	margin-right: 50px;
-}
-
-.gallery > .gallery-container > .info_area {
-  	box-sizing:border-box;
-	text-align: center;
-}
-
-.gallery > .gallery-container > .info_area > .storeName {
-	margin-left: 35px
-}
-
-.gallery > .gallery-container > .info_area > .storeEtc {
-	margin-left: 35px
 }
