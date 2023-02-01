@@ -105,11 +105,11 @@
 			<div class="gallery">
 				<div class="flex flex-wrap">
 					<c:forEach var="store" items="${stores}" varStatus="status">
-						<c:if test="${status.index % 4 == 0 }">
+						<c:if test="${status.index % 5 == 0 }">
 							<div class="flex w-full my-3 pb-5 border-b">
-								<c:forEach var="i" begin="${status.index}" end="${status.index + (4 - 1)}" step="1">
+								<c:forEach var="i" begin="${status.index}" end="${status.index + (5 - 1)}" step="1">
 									<c:if test="${ stores[i] != null }">
-										<div class="flex flex-col items-center w-3/12 overflow-hidden">
+										<div class="flex flex-col items-center w-1/5 overflow-hidden">
 											<div class="img_area">
 												<a href="view?id=${stores[i].id}">
 													<img class="w-40 h-40 border-2 border-gray-400" src="${rq.getImgUri('store', stores[i].id, 'storeImg')}" alt="" />

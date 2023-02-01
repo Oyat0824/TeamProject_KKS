@@ -3,6 +3,12 @@
 <c:set var="pageTitle" value="MAIN" />
 <%@ include file="../common/head.jsp"%>
 
+<section>
+	<div class="w-full">
+		
+	</div>
+</section>
+
 <section class="mt-8">
 	<div class="container mx-auto">
 		<h1>안녕하세요</h1>
