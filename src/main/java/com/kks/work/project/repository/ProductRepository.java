@@ -41,7 +41,21 @@ public interface ProductRepository {
 			""")
 	public Product getProductByStoreIdAndId(int storeId, int id);
 	
-	// 상품 목록 개수
+	// 자신의 스토어 상품 목록, 개수 구하기
+	@Select("""
+			<script>
+				SELECT COUNT(*)
+				FROM product
+				WHERE 1 = 1
+				AND storeId = #{id}
+				<if test="searchKeyword != ''">
+					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+			</script>
+			""")
+	public int getMyStoreProductsCount(int id, String searchKeyword);
+	
+	// 상품 목록, 개수 구하기
 	@Select("""
 			<script>
 				SELECT COUNT(*)
@@ -74,7 +88,7 @@ public interface ProductRepository {
 			""")
 	public List<Product> getProducts(int id, String searchKeyword, int itemsInAPage, int limitStart);
 	
-	// 유저입장에서 보는 상품 리스트
+	// 유저 입장에서 보는 상품 리스트
 	@Select("""
 			<script>
 				SELECT * FROM product

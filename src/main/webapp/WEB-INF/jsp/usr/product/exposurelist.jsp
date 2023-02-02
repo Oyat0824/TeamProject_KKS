@@ -41,6 +41,7 @@
 			$("[data-type='${param.listStyle}']").addClass("text-blue-500");
 		}
 	})
+
 </script>
 
 <section class="mt-8 text-xl">

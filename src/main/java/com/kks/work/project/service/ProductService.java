@@ -34,6 +34,11 @@ public class ProductService {
 		return product;
 	}
 	
+	// 자신의 스토어 상품 목록, 개수 구하기
+	public int getMyStoreProductsCount(int id, String searchKeyword) {
+		return productRepository.getMyStoreProductsCount(id, searchKeyword);
+	}
+	
 	// 상품 목록, 개수 구하기
 	public int getProductsCount(String searchKeyword) {
 		return productRepository.getProductsCount(searchKeyword);

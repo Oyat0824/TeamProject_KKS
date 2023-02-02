@@ -19,6 +19,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 <!-- 커스텀 공통 CSS -->
 <link rel="stylesheet" href="/resource/common.css" />
+<!-- 슬릭 슬라이더 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" />
 <!-- 공통 JS -->
 <script src="/resource/common.js" defer="defer"></script>
 </head>
@@ -92,8 +96,10 @@
 				</div>
 			</div>
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
-				<div><a href="/usr/store/list">스토어 목록</a></div>
-				<div><a href="/usr/product/exposurelist">상품 목록</a></div>
+				<div class="flex">
+					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
+					<div class="mr-5"><a href="/usr/product/exposurelist">상품 목록</a></div>
+				</div>
 			</div>
 		</div>
 	</header>

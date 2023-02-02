@@ -140,7 +140,7 @@ public class UsrProductController {
 		}
 		
 		// 현재 등록된 상품 수
-		int productsCount = productService.getProductsCount(searchKeyword);
+		int productsCount = productService.getMyStoreProductsCount(id, searchKeyword);
 		// 한 페이지에 나올 스토어 수
 		int itemsInAPage = itemsNum;
 		// 상품 수에 따른 페이지 수 계산
