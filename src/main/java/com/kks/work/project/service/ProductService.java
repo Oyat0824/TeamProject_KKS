@@ -39,11 +39,18 @@ public class ProductService {
 		return productRepository.getProductsCount(searchKeyword);
 	}
 
-	// 상품 목록
+	// 판매자 입장에서의 상품관리를 위한 상품 리스트 
 	public List<Product> getProducts(int id, String searchKeyword, int itemsInAPage, int page) {
 		int limitStart = (page - 1) * itemsInAPage;
 		
 		return productRepository.getProducts(id, searchKeyword, itemsInAPage, limitStart);
+	}
+	
+	// 유저입장에서 보는 상품 리스트
+	public List<Product> getExposureProducts(int storeId, int id, String searchKeyword, int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		return productRepository.getExposureProducts(storeId, id, searchKeyword, itemsInAPage, limitStart);
 	}
 
 	// 상품 가져오기

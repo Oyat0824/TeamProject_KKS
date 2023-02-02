@@ -93,6 +93,7 @@
 			</div>
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
 				<div><a href="/usr/store/list">스토어 목록</a></div>
+				<div><a href="/usr/product/exposurelist">상품 목록</a></div>
 			</div>
 		</div>
 	</header>

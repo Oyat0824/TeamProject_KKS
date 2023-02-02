@@ -54,7 +54,7 @@ public interface ProductRepository {
 			""")
 	public int getProductsCount(String searchKeyword);
 	
-	// 상품 목록
+	// 판매자 입장에서의 상품관리를 위한 상품 리스트
 	@Select("""
 			<script>
 				SELECT SUB.*, C.name AS categoryName
@@ -73,6 +73,20 @@ public interface ProductRepository {
 			</script>
 			""")
 	public List<Product> getProducts(int id, String searchKeyword, int itemsInAPage, int limitStart);
+	
+	// 유저입장에서 보는 상품 리스트
+	@Select("""
+			<script>
+				SELECT * FROM product
+				WHERE 1 = 1
+				<if test="searchKeyword != ''">
+					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				ORDER BY S.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
+			</script>
+			""")
+	public List<Product> getExposureProducts(int storeId, int id, String searchKeyword, int itemsInAPage, int limitStart);
 
 	// 상품 가져오기
 	@Select("""
