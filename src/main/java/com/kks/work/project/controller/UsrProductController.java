@@ -159,7 +159,7 @@ public class UsrProductController {
 	
 	// 유저입장에서 보는 상품 리스트
 	@RequestMapping("/usr/product/exposurelist")
-	public String showProductExposureList(Model model, int storeId, int id,
+	public String showProductExposureList(Model model, 
 			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "") String searchKeyword,
 			@RequestParam(defaultValue = "20") int itemsNum) {
@@ -168,7 +168,6 @@ public class UsrProductController {
 			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
 		}
 		
-		Product product = productService.getProductByStoreIdAndId(storeId, id);
 		// 현재 등록된 상품 수
 		int productsCount = productService.getProductsCount(searchKeyword);
 		// 한 페이지에 나올 스토어 수
@@ -176,13 +175,10 @@ public class UsrProductController {
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(productsCount / (double) itemsInAPage);
 
-		List<Product> products = productService.getExposureProducts(storeId, id, searchKeyword, itemsInAPage, page);
+		List<Product> products = productService.getExposureProducts(searchKeyword, itemsInAPage, page);
 
 		model.addAttribute("products", products);
-		model.addAttribute("product", product);
 		model.addAttribute("productsCount", productsCount);
-		model.addAttribute("storeId", storeId);
-		model.addAttribute("id", id);
 		model.addAttribute("page", page);
 		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("searchKeyword", searchKeyword);

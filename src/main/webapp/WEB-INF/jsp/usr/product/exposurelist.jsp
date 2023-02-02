@@ -77,14 +77,14 @@
 				<c:forEach var="product" items="${products}">
 					<div class="flex items-center p-5 hover:bg-gray-50 border-b">
 						<div class="img_area mr-10">
-							<a href="view?id=${product.id}">
+							<a href="view?storeId=${product.storeId}&id=${product.id}">
 								<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('product', product.id, 'productImg')}" alt="" />
 							</a>
 						</div>
 						
 						<div class="info_area">
 							<div class="productName text-base">
-								<a class="font-bold" href="view?id=${product.id}">${product.productName}</a>
+								<a class="font-bold" href="view?storeId=${product.storeId}&id=${product.id}">${product.productName}</a>
 							</div>
 							<div class="flex items-center productBody text-sm my-3 h-20 overflow-hidden">
 								<p>${product.getForPrintBody() }</p>
@@ -111,14 +111,14 @@
 									<c:if test="${ products[i] != null }">
 										<div class="flex flex-col items-center w-1/5 overflow-hidden">
 											<div class="img_area">
-												<a href="view?id=${products[i].id}">
+												<a href="view?storeId=${storeId.id}&id=${products[i].id}">
 													<img class="w-40 h-40 border-2 border-gray-400" src="${rq.getImgUri('product', products[i].id, 'productImg')}" alt="" />
 												</a>
 											</div>
 											
 											<div class="info_area flex flex-col items-center mt-2 pl-2">
 												<div class="productName text-base">
-													<a class="font-bold" href="view?id=${products[i].id}">
+													<a class="font-bold" href="view?storeId=${storeId.id}&id=${products[i].id}">
 														<c:choose>
 															<c:when test="${fn:length(products[i].productName) > 15}">
 																<c:out value="${fn:substring(products[i].productName, 0, 15)}.." />

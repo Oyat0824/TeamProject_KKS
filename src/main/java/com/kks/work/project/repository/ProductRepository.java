@@ -82,11 +82,11 @@ public interface ProductRepository {
 				<if test="searchKeyword != ''">
 					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
-				ORDER BY S.id DESC
+				ORDER BY id DESC
 				LIMIT #{limitStart}, #{itemsInAPage}
 			</script>
 			""")
-	public List<Product> getExposureProducts(int storeId, int id, String searchKeyword, int itemsInAPage, int limitStart);
+	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int limitStart);
 
 	// 상품 가져오기
 	@Select("""

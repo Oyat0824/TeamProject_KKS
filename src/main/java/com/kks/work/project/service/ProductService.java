@@ -47,10 +47,10 @@ public class ProductService {
 	}
 	
 	// 유저입장에서 보는 상품 리스트
-	public List<Product> getExposureProducts(int storeId, int id, String searchKeyword, int itemsInAPage, int page) {
+	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int page) {
 		int limitStart = (page - 1) * itemsInAPage;
 		
-		return productRepository.getExposureProducts(storeId, id, searchKeyword, itemsInAPage, limitStart);
+		return productRepository.getExposureProducts(searchKeyword, itemsInAPage, limitStart);
 	}
 
 	// 상품 가져오기
