@@ -19,8 +19,9 @@ public class ProductService {
 	
 // 서비스 메서드
 	// 상품 등록	
-	public int registerProduct(String productName, String productPrice, String productCategory, String productStock, String productBody, int storeId) {
-		productRepository.registerProduct(productName, productPrice, productCategory, productStock, productBody, storeId);
+	public int registerProduct(String productName, String productPrice, String productCategory,
+			String productStock, int productDlvy, String productCourier, String productDlvyPrice, String productBody, int storeId) {
+		productRepository.registerProduct(productName, productPrice, productCategory, productStock, productDlvy, productCourier, productDlvyPrice, productBody, storeId);
 		
 		int id = productRepository.getLastInsertId();
 				
@@ -65,8 +66,8 @@ public class ProductService {
 
 	// 상품 수정
 	public void doModify(int id, String productName, String productPrice, String productCategory, String productStock,
-			String productBody) {
-		productRepository.doModify(id, productName, productPrice, productCategory, productStock, productBody);
+			int productDlvy, String productCourier, String productDlvyPrice, String productBody) {
+		productRepository.doModify(id, productName, productPrice, productCategory, productStock, productDlvy, productCourier, productDlvyPrice, productBody);
 	}
 	
 	// 등록된 상품 삭제

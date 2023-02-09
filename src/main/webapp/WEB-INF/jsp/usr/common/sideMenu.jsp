@@ -18,6 +18,9 @@
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'category' ? 'text-indigo-600 font-bold' : '' }">
 			<a class="block" href="/usr/store/category?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">카테고리</a>
 		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'banner' ? 'text-indigo-600 font-bold' : '' }">
+			<a class="block" href="/usr/store/banner?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">배너 등록</a>
+		</div>
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'productReg' ? 'text-indigo-600 font-bold' : '' }">
 			<a class="block" href="/usr/product/register?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">상품 등록</a>
 		</div>

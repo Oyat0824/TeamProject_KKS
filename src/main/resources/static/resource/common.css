@@ -126,3 +126,105 @@ html > body > header::after {
 .gallery > div > div > div:hover > div.img_area > a > img {
 	border-color: rgba(55, 48, 163);
 }
+
+.dots > div {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #fff;
+	border: 2px solid #000;
+	margin: 10px;
+	opacity: .5;
+}
+
+.dots > div.active {
+	opacity: 1;
+}
+
+.slider > .slider-btn {
+	transition: .5s;
+}
+
+.slider:hover > .slider-btn {
+	visibility: visible;
+	opacity: 1;
+}
+
+.photo-container::before {
+	position: absolute;
+	top: 0;
+	right: -1px;
+	content: "";
+	width: 1px;
+	height: 100%;
+	background-color: rgba(229, 231, 235);
+}
+
+.photo-box::after {
+  display: block;
+  content: "";
+  padding-bottom: 100%;
+}
+
+.photos > div.active {
+	border: 2px solid #000;
+}
+
+.text-outline {
+	text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;
+}
+
+.productBtn .numBtn {
+	position: relative;
+	width: 10%;
+	height: 100%;
+	background-color: #f1f2f4;
+}
+
+.productBtn .numBtn > span {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	clear: rect(0 0 0 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+}
+
+.productBtn .numBtn.minus::before,
+.productBtn .numBtn.plus::before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 10px;
+	height: 2px;
+	margin: -1px 0 0 -5px;
+	background-color: #000;
+	content: "";
+}
+.productBtn .numBtn.plus::after {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 2px;
+	height: 10px;
+	margin: -5px 0 0 -1px;
+	background-color: #000;
+	content: "";
+}
+
+.productBtn .numInput {
+	height: 50px;
+	outline: none;
+	padding: 5px 20px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.productBtn .numInput::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+    margin: 0;
+}

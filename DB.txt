@@ -76,10 +76,13 @@ CREATE TABLE product(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
-	productName VARCHAR(40) NOT NULL,
+	productName VARCHAR(100) NOT NULL,
 	productPrice VARCHAR(40) NOT NULL,
-	productCategory VARCHAR(20),  
+	productCategory VARCHAR(20),
 	productStock VARCHAR(20) NOT NULL, # 상품재고
+	productDlvy TINYINT NOT NULL, # 배송방법 (0 = 무료, 1 = 유료)
+	productCourier VARCHAR(100) NOT NULL, # 택배사
+	productDlvyPrice VARCHAR(40) NOT NULL, # 배송 비용
 	productBody TEXT NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
 	KEY `indexKey` (storeId)
@@ -89,7 +92,7 @@ CREATE TABLE product(
 CREATE TABLE category(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`name` VARCHAR(40) NOT NULL,
-	orderNo TINYINT UNSIGNED NOT NULL UNIQUE,
+	orderNo TINYINT UNSIGNED NOT NULL,
 	storeId INT UNSIGNED NOT NULL
 );
 

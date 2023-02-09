@@ -15,7 +15,6 @@ public class Store{
 	private String storeDesc;
 	private int memberId;
 	
-	private boolean actorCanChangeData;
 	private String sellerName;
 	
 	public String getForPrintDesc() {

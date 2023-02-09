@@ -143,13 +143,11 @@
 							<tr>
 								<th>스토어 로고</th>
 								<td>
-									<div>
-										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 350px; height: 100px"
-											src="${rq.getImgUri('store', store.id, 'storeLogo')}" alt="" />
-									</div>
-									<div class="mb-1 delBtn">
-										<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
-											class="ckeckbox" type="checkbox" name="deleteFile__store__0__extra__storeLogo__1" value="Y" />
+									<div class="delBtn form-control mx-auto">
+										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 350px; height: 100px" src="${rq.getImgUri('store', store.id, 'storeLogo')}" alt="" />							
+										<label class="label cursor-pointer w-28 mx-auto">
+											<input class="checkbox" type="checkbox" name="deleteFile__store__0__extra__storeLogo__1" value="Y" />
+											<span class="label-text">이미지 삭제</span>
 										</label>
 									</div>
 									<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
@@ -159,15 +157,14 @@
 							<tr>
 								<th>스토어 이미지</th>
 								<td>
-									<div>
-										<img id="storeImg" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px"
-											src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
-									</div>
-									<div class="mb-1 delBtn">
-										<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
-											class="ckeckbox" type="checkbox" name="deleteFile__store__0__extra__storeImg__1" value="Y" />
+									<div class="delBtn form-control mx-auto">
+										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />							
+										<label class="label cursor-pointer w-28 mx-auto">
+											<input class="checkbox" type="checkbox" name="deleteFile__store__0__extra__storeImg__1" value="Y" />
+											<span class="label-text">이미지 삭제</span>
 										</label>
-									</div> <input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
+									</div>
+									<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
 									class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" />
 								</td>
 							</tr>

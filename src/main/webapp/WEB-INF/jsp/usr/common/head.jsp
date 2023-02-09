@@ -26,6 +26,7 @@
 <!-- 공통 JS -->
 <script src="/resource/common.js" defer="defer"></script>
 </head>
+
 <body>
 	<header>
 		<div class="xl:container mx-auto">

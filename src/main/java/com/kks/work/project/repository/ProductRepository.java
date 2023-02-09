@@ -22,10 +22,14 @@ public interface ProductRepository {
 			productPrice = #{productPrice},
 			productCategory = #{productCategory},
 			productStock = #{productStock},
+			productDlvy = #{productDlvy},
+			productCourier = #{productCourier},
+			productDlvyPrice = #{productDlvyPrice},
 			productBody = #{productBody},
 			storeId = #{storeId}
 			""")
-	public void registerProduct(String productName, String productPrice, String productCategory, String productStock, String productBody, int storeId);
+	public void registerProduct(String productName, String productPrice, String productCategory,
+			String productStock, int productDlvy, String productCourier, String productDlvyPrice, String productBody, int storeId);
 
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -128,6 +132,15 @@ public interface ProductRepository {
 					<if test="productStock != null">
 						productStock = #{productStock},
 					</if>
+					<if test="productDlvy != null">
+						productDlvy = #{productDlvy},
+					</if>
+					<if test="productCourier != null">
+						productCourier = #{productCourier},
+					</if>
+					<if test="productDlvyPrice != null">
+						productDlvyPrice = #{productDlvyPrice},
+					</if>
 					<if test="productBody != null">
 						productBody = #{productBody}
 					</if>
@@ -136,7 +149,7 @@ public interface ProductRepository {
 			</script>
 			""")
 	public void doModify(int id, String productName, String productPrice, String productCategory, String productStock,
-			String productBody);
+			int productDlvy, String productCourier, String productDlvyPrice, String productBody);
 	
 	// 등록된 상품 삭제
 	@Delete("""

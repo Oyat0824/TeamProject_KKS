@@ -44,6 +44,13 @@ public class UsrProductController {
 	// 상품 등록 페이지
 	@RequestMapping("/usr/product/register")
 	public String showRegister(Model model, int id) {
+		// 본인 스토어 검사
+		ResultData<Store> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), id);
+	    
+	    if (actorCanModifyRD.isFail()) {
+	    	return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
+	    }
+		
 		List<Category> categorys = storeService.getCategorysByStoreId(id);
 		
 		model.addAttribute("categorys", categorys);
@@ -54,22 +61,15 @@ public class UsrProductController {
 	// 상품 등록
 	@RequestMapping("/usr/product/doRegister")
 	@ResponseBody
-	public String doRegister(int id, String storeModifyAuthKey, String productName, String productPrice, String productCategory, String productStock, String productBody, MultipartRequest multipartRequest) {
-		// 인증키 검사
-		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
-	    
-	    if (chkStoreModifyAuthKeyRd.isFail()) {
-			return Utility.jsReplace(chkStoreModifyAuthKeyRd.getMsg(), "/usr/home/main");
-		}
-		
-	    // 본인 스토어 검사
-		Store store = storeService.getStoreById(id);
+	public String doRegister(int id, String storeModifyAuthKey,
+			String productName, String productPrice, String productCategory, String productStock, int productDlvy, String productCourier, String productDlvyPrice, String productBody,
+			MultipartRequest multipartRequest) {
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), id, storeModifyAuthKey);
 
-		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
-
-		if (actorCanMDRd.isFail()) {
-			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
-		}
+	    if (storeVerifyTestRD.isFail()) {
+	    	return Utility.jsReplace(storeVerifyTestRD.getMsg(), "/usr/home/main");
+	    }
 		
 		// 유효성 검사
 		if (Utility.isEmpty(productName)) {
@@ -81,15 +81,41 @@ public class UsrProductController {
 		if (Utility.isEmpty(productStock)) {
 			return Utility.jsHistoryBack("상품 재고를 입력해주세요!");
 		}
+		if (Utility.isEmpty(productDlvy)) {
+			return Utility.jsHistoryBack("배송 방식을 선택해주세요!");
+		}
+		if (Utility.isEmpty(productCourier)) {
+			return Utility.jsHistoryBack("배송사를 선택해주세요!");
+		}
+		if (productDlvy == 1 && Utility.isEmpty(productDlvyPrice)) {
+			return Utility.jsHistoryBack("배송비용을 적어주세요!");
+		}
 		if (Utility.isEmpty(productBody)) {
 			return Utility.jsHistoryBack("상품 내용을 입력해주세요!");
 		}
 		
-		int productId = productService.registerProduct(productName, productPrice, productCategory, productStock, productBody, id);
-		
-		// 스토어 이미지가 있다면 업로드
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		
+		int chkFileCnt = 0;
+		int fileNum = 0;
+		// 이미지가 하나라도 없다면 반환	
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+			
+			fileNum += 1;
+			
+			if (multipartFile.isEmpty()) {
+				chkFileCnt += 1;
+			}
+		}
+		
+		if(chkFileCnt >= fileNum) {
+			return Utility.jsHistoryBack("상품 이미지를 하나라도 등록해야합니다.");
+		}
+		
+		int productId = productService.registerProduct(productName, productPrice, productCategory, productStock, productDlvy, productCourier, productDlvyPrice, productBody, id);
+		
+		// 이미지가 있다면 업로드
 		for (String fileInputName : fileMap.keySet()) {
 			MultipartFile multipartFile = fileMap.get(fileInputName);
 
@@ -97,43 +123,38 @@ public class UsrProductController {
 				genFileService.save(multipartFile, productId);
 			}
 		}
-		
+
 		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("view?storeId=%d&id=%d", id, productId));
 	}
 
 	// 상품 상세보기
 	@RequestMapping("/usr/product/view")
 	public String showView(Model model, int storeId, int id) {
+		Store store = storeService.getStoreById(storeId);
+		List<Category> categorys = storeService.getCategorysByStoreId(storeId);
 		Product product = productService.getProductByStoreIdAndId(storeId, id);
 		List<GenFile> fileList = genFileService.getGenFiles("product", id, "extra", "productImg");
 		
+		model.addAttribute("store", store);
+		model.addAttribute("categorys", categorys);
 		model.addAttribute("product", product);
 		model.addAttribute("fileList", fileList);
 		  
 		return "/usr/product/view";
 	}
 	
-	// 판매자 입장에서의 상품관리를 위한 리스트 
+	// 상품 목록 페이지 | 판매자 전용
 	@RequestMapping("/usr/product/list")
 	public String showProductList(Model model, int id, String storeModifyAuthKey,
 			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "") String searchKeyword,
 			@RequestParam(defaultValue = "20") int itemsNum) {
-		// 인증키 검사
-		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
-		    
-		if (chkStoreModifyAuthKeyRd.isFail()) {
-			return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), false, "/usr/home/main");
-		}
-		
-		// 본인 스토어 검사
-		Store store = storeService.getStoreById(id);
-		
-		ResultData<?> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), store);
-		
-		if (actorCanModifyRD.isFail()) {
-			return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
-		}
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), id, storeModifyAuthKey);
+
+	    if (storeVerifyTestRD.isFail()) {
+	    	return rq.jsReturnOnView(storeVerifyTestRD.getMsg(), false, "/usr/home/main");
+	    }
 		
 		if(page <= 0) {
 			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
@@ -148,16 +169,16 @@ public class UsrProductController {
 
 		List<Product> products = productService.getProducts(id, searchKeyword, itemsInAPage, page);
 
-		model.addAttribute("products", products);
-		model.addAttribute("productsCount", productsCount);
-		model.addAttribute("page", page);
-		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("productsCount", productsCount);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("products", products);
+		model.addAttribute("page", page);
 		
 		return "/usr/product/list";
 	}
 	
-	// 유저입장에서 보는 상품 리스트
+	// 상품 목록 페이지 | 사용자
 	@RequestMapping("/usr/product/exposurelist")
 	public String showProductExposureList(Model model, 
 			@RequestParam(defaultValue = "1") int page,
@@ -177,22 +198,20 @@ public class UsrProductController {
 
 		List<Product> products = productService.getExposureProducts(searchKeyword, itemsInAPage, page);
 
-		model.addAttribute("products", products);
-		model.addAttribute("productsCount", productsCount);
-		model.addAttribute("page", page);
-		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("productsCount", productsCount);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("products", products);
+		model.addAttribute("page", page);
 			
 		return "/usr/product/exposurelist";
-		}
+	}
 
 	// 상품 수정 페이지 
 	@RequestMapping("/usr/product/modify")
 	public String showModify(Model model, int id, int storeId) {
 		// 본인 스토어 검사
-		Store store = storeService.getStoreById(storeId);
-	    
-	    ResultData<?> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), store);
+		ResultData<Store> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), storeId);
 	    
 	    if (actorCanModifyRD.isFail()) {
 	    	return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
@@ -210,17 +229,17 @@ public class UsrProductController {
 	// 상품 수정
 	@RequestMapping("/usr/product/doModify")
 	@ResponseBody
-	public String doModify(HttpServletRequest req, int storeId, int id, String productName, String productPrice, String productCategory, String productStock, String productBody, MultipartRequest multipartRequest) {
+	public String doModify(HttpServletRequest req, int storeId, int id,
+			String productName, String productPrice, String productCategory, String productStock, int productDlvy, String productCourier, String productDlvyPrice, String productBody,
+			MultipartRequest multipartRequest) {
 		// 본인 스토어 검사
-		Store store = storeService.getStoreById(storeId);
-
-		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
-
-		if (actorCanMDRd.isFail()) {
-			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		ResultData<Store> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), storeId);
+		
+		if (actorCanModifyRD.isFail()) {
+			return Utility.jsHistoryBack(actorCanModifyRD.getMsg());
 		}
 		
-		// 이미지 삭제 체크 되있다면 삭제
+		// 이미지 삭제가 체크 되있다면 이미지 삭제
 		if (req.getParameter("deleteFile__product__0__extra__productImg__1") != null) {
 			genFileService.deleteGenFiles("product", id, "extra", "productImg", 1);
 		}
@@ -241,8 +260,7 @@ public class UsrProductController {
 				genFileService.save(multipartFile, id);
 			}
 		}
-
-		productService.doModify(id, productName, productPrice, productCategory, productStock, productBody);
+		productService.doModify(id, productName, productPrice, productCategory, productStock, productDlvy, productCourier, productDlvyPrice, productBody);
 
 		return Utility.jsReplace("상품정보를 수정했습니다!", Utility.f("view?storeId=%d&id=%d", storeId, id));
 	}
@@ -251,30 +269,20 @@ public class UsrProductController {
 	@RequestMapping("/usr/product/doDelete")
 	@ResponseBody 
 	public String doDelete(int id, int storeId, String storeModifyAuthKey) {
-		// 인증키 검사
-		ResultData<?> chkStoreModifyAuthKeyRd = storeService.chkStoreModifyAuthKey(rq.getLoginedMemberId(), storeModifyAuthKey);
-				    
-		if (chkStoreModifyAuthKeyRd.isFail()) {
-			return rq.jsReturnOnView(chkStoreModifyAuthKeyRd.getMsg(), false, "/usr/home/main");
-		}
-		
-		// 본인 스토어 검사
-		Store store = storeService.getStoreById(storeId);
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), storeId, storeModifyAuthKey);
 
-		ResultData<?> actorCanMDRd = storeService.actorCanMD(rq.getLoginedMemberId(), store);
-		
-		if(actorCanMDRd.isFail()) {  // 실패시에 
-			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
-		}
+	    if (storeVerifyTestRD.isFail()) {
+	    	return Utility.jsReplace(storeVerifyTestRD.getMsg(), "/usr/home/main");
+	    }
 
 		genFileService.deleteGenFiles("product", id, "extra", "productImg", 1);
 		genFileService.deleteGenFiles("product", id, "extra", "productImg", 2);
 		genFileService.deleteGenFiles("product", id, "extra", "productImg", 3);
 		
-		productService.deleteProduct(id);														
+		productService.deleteProduct(id);												
 		
 		return Utility.jsReplace("등록된 상품을 삭제했습니다!", Utility.f("list?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
-
 	} 
 		
 }

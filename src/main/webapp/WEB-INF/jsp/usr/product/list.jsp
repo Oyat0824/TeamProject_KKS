@@ -80,8 +80,8 @@
 								<td><div class="badge badge-lg border-transparent font-bold text-white">${product.ROWNUM}</div></td>
 								<td>${product.productCategory == "" ? "없음" : product.categoryName}</td>
 								<td><a class="hover:text-indigo-700" href="view?storeId=${product.storeId}&id=${product.id}">${product.productName}</a></td>
-								<td>${product.productPrice}</td>
-								<td>${product.productStock}</td>
+								<td><fmt:formatNumber value="${product.productPrice}" pattern="#,###" /></td>
+								<td><fmt:formatNumber value="${product.productStock }" pattern="#,###" /></td>
 								<td>${product.regDate.substring(0, 16) }</td>
 								<td><a class="hover:text-indigo-700" href="modify?storeId=${product.storeId}&id=${product.id}">수정</a></td>
 								<td><a class="hover:text-indigo-700" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;" href="doDelete?storeId=${product.storeId}&id=${product.id}&storeModifyAuthKey=${param.storeModifyAuthKey}">삭제</a></td>

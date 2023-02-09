@@ -65,8 +65,6 @@ public class StoreService {
 	public Store getForPrintStoreById(int loginedMemberId, int id) {
 		Store store = storeRepository.getForPrintStoreById(id);
 		
-		actorCanChangeData(loginedMemberId, store);
-		
 		return store;
 	}
 	
@@ -129,28 +127,18 @@ public class StoreService {
 		storeRepository.doCategoryDelete(id);
 	}
 	
-	// 검증
-	public ResultData<?> actorCanMD(int loginedMemberId, Store store) {
+	// 스토어 검증
+	public ResultData<Store> actorCanMD(int loginedMemberId, int storeId) {
+		Store store = getStoreById(storeId);
+		
 		if (store == null) {
 			return ResultData.from("F-1", "해당 스토어는 존재하지 않습니다.");
 		}
-		
 		if (store.getMemberId() != loginedMemberId) {
 			return ResultData.from("F-A", "해당 스토어에 대한 권한이 없습니다.");
 		}
 		
-		return ResultData.from("S-1", "가능");
-	}
-	
-	private void actorCanChangeData(int loginedMemberId, Store store) {
-		if(store == null) {
-			return;
-		}
-		
-		ResultData<?> actorCanChangeDataRd = actorCanMD(loginedMemberId, store);
-		
-		store.setActorCanChangeData(actorCanChangeDataRd.isSuccess());
-		
+		return ResultData.from("S-1", "가능", "store", store);
 	}
 
 	// 인증키 생성
@@ -170,5 +158,17 @@ public class StoreService {
 		}
 
 		return ResultData.from("S-1", "정상 인증코드입니다");
+	}
+	
+	// 스토어 검사
+	public ResultData<Store> StoreVerifyTest(int loginedMemberId, int storeId, String storeModifyAuthKey) {
+		// 통합 검사 (인증키가 있는지, 본인 스토어가 맞는지)
+		ResultData<?> chkStoreAuthKeyVerifyRd = chkStoreModifyAuthKey(loginedMemberId, storeModifyAuthKey);
+		if (chkStoreAuthKeyVerifyRd.isFail()) return ResultData.from("F-1", chkStoreAuthKeyVerifyRd.getMsg());
+
+		ResultData<Store> chkMyStoreVerifyRD = actorCanMD(loginedMemberId, storeId);
+		if (chkMyStoreVerifyRD.isFail()) return ResultData.from("F-1", chkMyStoreVerifyRD.getMsg());
+
+		return ResultData.from("S-1", "인증 성공", chkMyStoreVerifyRD.getData1Name(), chkMyStoreVerifyRD.getData1());
 	}
 }
