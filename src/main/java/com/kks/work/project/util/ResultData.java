@@ -1,6 +1,9 @@
 package com.kks.work.project.util;
 
+import java.util.List;
 import java.util.Map;
+
+import com.kks.work.project.vo.ShoppingCart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +20,7 @@ public class ResultData<DT> {
 	private String msg;
 	private DT data1;
 	private String data1Name;
+	private int totalPriceSum;
 	private Map<String, Object> body;
 	
 	// 생성자 메서드
@@ -45,6 +49,31 @@ public class ResultData<DT> {
 		return rd;
 	}
 	
+	public static ResultData<List<ShoppingCart>> from(String resultCode, String msg, String data1Name,
+			List<ShoppingCart> showCart, int totalPriceSum) {
+		
+		ResultData<List<ShoppingCart>> rd = new ResultData<>();
+		rd.resultCode = resultCode;
+		rd.msg = msg;
+		rd.data1Name = data1Name;
+		rd.data1 = showCart;
+		rd.totalPriceSum = totalPriceSum;
+		return rd;
+	}
+	
+	public static ResultData<ShoppingCart> from(String resultCode, String msg, String data1Name,
+			ShoppingCart newCart, int totalPriceSum) {
+		
+		ResultData<ShoppingCart> rd = new ResultData<>();
+		rd.resultCode = resultCode;
+		rd.msg = msg;
+		rd.data1Name = data1Name;
+		rd.data1 = newCart;
+		rd.totalPriceSum = totalPriceSum;
+		return rd;
+		
+	}
+	
 	public static <DT> ResultData<DT> from(String resultCode, String msg) {
 		return from(resultCode, msg, null, null);
 	}
@@ -62,4 +91,6 @@ public class ResultData<DT> {
 	public boolean isFail() {
 		return isSuccess() == false;
 	}
+
+
 }

@@ -228,3 +228,50 @@ html > body > header::after {
 	-webkit-appearance: none;
     margin: 0;
 }
+
+main > .shopWrap {
+	height : 100%;
+	background: white;
+	padding-top : 60px;
+}
+
+table-box-shopCart {
+	height : 100%;
+	
+	border : 8px solid pink;
+}
+
+.cartTable {
+	
+	margin-left : auto;
+	margin-right : auto;
+	border : 1px solid black;
+	text-align: center;
+}
+
+.basketHead {
+	background-color: white;
+	padding-top : 60px;
+}
+
+
+
+/*
+.table-box-shopCart table, .table-box-shopCart table td, 
+.table-box-shopCart table tr, .table-box-shopCart table th {
+
+ border : 1px solid black;
+  border-collapse : collapse;
+	}
+ */   
+
+html, html>body, html>body main {
+	width: 100%;
+    height: 100%;
+	
+}
+
+body {
+	border : 1px solid gold;
+}
+

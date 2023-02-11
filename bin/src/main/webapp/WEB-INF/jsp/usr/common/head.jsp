@@ -19,14 +19,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 <!-- 커스텀 공통 CSS -->
 <link rel="stylesheet" href="/resource/common.css" />
-<!-- 슬릭 슬라이더 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" />
 <!-- 공통 JS -->
 <script src="/resource/common.js" defer="defer"></script>
 </head>
-
 <body>
 	<header>
 		<div class="xl:container mx-auto">
@@ -34,7 +29,7 @@
 				<div>
 					<a class="font-bold" href="/">SB_Store</a>
 				</div>
-				<div class="gnb relative flex">
+				<div class="gnb relative">
 					<c:if test="${rq.getLoginedMemberId() == 0}">
 						<div class="w-14 h-6 bg-white bg-opacity-5 border border-black border-opacity-10 text-center text-sm">
 							<a href="/usr/member/login">로그인</a>
@@ -54,12 +49,6 @@
 								});
 							});
 						</script>
-						<div class="text-sm">
-							<a  href="/usr/ShoppingCart/ShowCart" >장바구니<i class="fa-solid ml-1 pr-6"></i></a>
-						</div>
-						
-						
-						
 						<div class="text-sm">
 							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
 						</div>
@@ -103,10 +92,7 @@
 				</div>
 			</div>
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
-				<div class="flex">
-					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
-					<div class="mr-5"><a href="/usr/product/exposurelist">상품 목록</a></div>
-				</div>
+				<div><a href="/usr/store/list">스토어 목록</a></div>
 			</div>
 		</div>
 	</header>
