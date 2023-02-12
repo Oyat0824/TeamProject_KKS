@@ -99,7 +99,7 @@ function updateQuantity(str, cartId) {
 							<td>
 								<div class="quant sm:min-w-0">
 									<input  type="hidden" value="${showCart.cartId}"   style="text-align:center; width:50px; background-color: white;"/>
-									<input class = "${showCart.cartId}" type="text" value="${showCart.productCount}"   style="text-align:center; width:50px; background-color: white;"/>
+									<input class = "${showCart.cartId}" type="text" value="${showCart.productCnt}"   style="text-align:center; width:50px; background-color: white;"/>
 									<button type="button" class = 'quantityBtn plusBtn' onclick= "updateQuantity('incr',${showCart.cartId});" style = 'vertical-align: middle'>+</button>
 									<button type="button" class = 'quantityBtn minusBtn' onclick= "updateQuantity('decr',${showCart.cartId});" style = 'vertical-align: middle' >-</button>
 								</div>

@@ -21,8 +21,8 @@ public class ShoppingCartService {
 		this.attrService = attrService;
 	}
 
-	public void insertShoppingCart(int productId, int productPrice, String productCategory, int productCount, int memberid) {
-		ShoppingCartRepository.insertShoppingCart(productId,productPrice,productCategory,productCount,memberid);
+	public void insertShoppingCart(int productId, int productCnt, int memberId) {
+		ShoppingCartRepository.insertShoppingCart(productId,productCnt,memberId);
 		
 	}
 

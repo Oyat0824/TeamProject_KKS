@@ -17,22 +17,22 @@ public interface ShoppingCartRepository {
 	@Insert("""
 			INSERT INTO shopCart
 			SET productId = #{productId},
-			productPrice = #{productPrice},
-			productCategory = #{productCategory},
-			productCount = #{productCount},
-			memberId = #{memberid}
+			productCnt = #{productCnt},
+			memberId = #{memberId}
 			
 			""")
 	
-	public void insertShoppingCart(int productId, int productPrice, String productCategory, int productCount, int memberid);
+	public void insertShoppingCart(int productId, int productCnt, int memberId);
 
 	
 	
 	//loginedMemberId로 장바구니 불러오기
 	
 	@Select("""
-			SELECT *
-			FROM `shopCart`
+			SELECT S.* , P.productName , P.productPrice , P.productCategory
+			FROM `shopCart` AS S
+			INNER JOIN `product` AS P
+			on S.productId = P.id
 			WHERE memberId = #{loginedid}
 			""")
 	

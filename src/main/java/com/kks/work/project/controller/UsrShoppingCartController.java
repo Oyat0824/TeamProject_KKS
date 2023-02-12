@@ -35,32 +35,27 @@ public class UsrShoppingCartController {
 
 //액션 메서드
 	//장바구니 페이지
-	@RequestMapping("/usr/ShoppingCart/AddCart")
+	@RequestMapping("/usr/ShoppingCart/InsertShoppingCart")
 	@ResponseBody
-	public String AddCart(int productId,int productPrice,String productCategory,int productCount,int memberid) {
+	public String InsertShoppingCart(int productId,int productCnt) {
 		
 		//유효성 검사
 		if (Utility.isEmpty(productId)) {
-			 return Utility.jsHistoryBack("아이디를 입력해주세요!");
+			 return Utility.jsHistoryBack("상품번호를 입력해주세요!");
 		}
 		
-		if (Utility.isEmpty(productPrice)) {
-			 return Utility.jsHistoryBack("아이디를 입력해주세요!");
+		
+		
+		
+		if (Utility.isEmpty(productCnt)) {
+			 return Utility.jsHistoryBack("제품수량을 입력해주세요!");
 		}
 		
-		if (Utility.isEmpty(productCategory)) {
-			 return Utility.jsHistoryBack("아이디를 입력해주세요!");
+		if (Utility.isEmpty(rq.getLoginedMember())) {
+			 return Utility.jsHistoryBack("로그인후 이용해주세요!");
 		}
 		
-		if (Utility.isEmpty(productCount)) {
-			 return Utility.jsHistoryBack("아이디를 입력해주세요!");
-		}
-		
-		if (Utility.isEmpty(memberid)) {
-			 return Utility.jsHistoryBack("아이디를 입력해주세요!");
-		}
-		
-		 ShoppingCartService.insertShoppingCart(productId,productPrice,productCategory,productCount,memberid);
+		 ShoppingCartService.insertShoppingCart(productId,productCnt,rq.getLoginedMemberId());
 		
 		 return Utility.jsReplace("장바구니에 상품을 담았습니다" , "ShowCart");
 	} 	
@@ -78,7 +73,7 @@ public class UsrShoppingCartController {
 		//장바구니 가격*수량 
 		for (ShoppingCart cart : showCart) {
 			int productPrice = cart.getProductPrice();
-			int productCount = cart.getProductCount();
+			int productCount = cart.getProductCnt();
 			
 			int totalPrice = productPrice * productCount;
 			
@@ -118,7 +113,7 @@ public class UsrShoppingCartController {
 		//장바구니 가격*수량 
 		for (ShoppingCart cart : showCart) {
 			int productPrice = cart.getProductPrice();
-			int productCount = cart.getProductCount();
+			int productCount = cart.getProductCnt();
 			
 			int totalPrice = productPrice * productCount;
 			
@@ -154,7 +149,7 @@ public class UsrShoppingCartController {
 		//장바구니 가격*수량 
 		for (ShoppingCart cart : showCart) {
 			int productPrice = cart.getProductPrice();
-			int productCount = cart.getProductCount();
+			int productCount = cart.getProductCnt();
 			
 			int totalPrice = productPrice * productCount;
 			

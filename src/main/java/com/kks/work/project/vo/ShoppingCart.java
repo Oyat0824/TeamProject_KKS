@@ -15,7 +15,7 @@ public class ShoppingCart {
 	private String productName;
 	private int productPrice; 
 	private String productCategory; 
-	private int productCount; 
+	private int productCnt; 
 	private int memberId;  
 	
 }
