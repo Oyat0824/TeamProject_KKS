@@ -21,13 +21,11 @@
 		const maxSize = maxSizeMb * 1024 * 1024;
 		
 		const profileImgFileInput = form["file__member__0__extra__profileImg__1"];
-		if (profileImgFileInput.value) {
-			if (profileImgFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				profileImgFileInput.focus();
-				
-				return;
-			}
+		if (profileImgFileInput.value && profileImgFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			profileImgFileInput.focus();
+			
+			return;
 		}
 		
 		// 이메일 검증
@@ -77,6 +75,20 @@
 		}
 	}
 	
+	// 도로명 주소 API
+	document.domain = "localhost";
+	
+	function goPopup() {
+	    var pop = window.open("jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+	}
+	
+	function jusoCallBack(zipNo, roadAddrPart1, addrDetail) {
+		// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
+		document.forms[0].zipNo.value = zipNo;
+		document.forms[0].roadAddr.value = roadAddrPart1;
+		document.forms[0].addrDetail.value = addrDetail;
+	}
+	
 	// 이미지 미리보기 기능
 	const imgChg = function(e) {
 		const selectedFile = e.files[0];
@@ -124,6 +136,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
+		<h1 class="font-bold text-xl select-none mb-5">회원정보 수정</h1>
 		<form action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return MemberModify__submit(this);">
 			<input type="hidden" name="memberModifyAuthKey" value="${param.memberModifyAuthKey}" />
 			<div class="table-box-type-1">
@@ -138,6 +151,14 @@
 							<td>${rq.loginedMember.regDate }</td>
 						</tr>
 						<tr>
+							<th>회원 등급</th>
+							<td>
+								<c:if test="${rq.loginedMember.memberType == 3}">일반 회원</c:if>
+								<c:if test="${rq.loginedMember.memberType == 6}">판매자</c:if>
+								<c:if test="${rq.loginedMember.memberType == 9}">관리자</c:if>
+							</td>
+						</tr>
+						<tr>
 							<th>아이디</th>
 							<td>${rq.loginedMember.loginId }</td>
 						</tr>
@@ -146,24 +167,18 @@
 							<td>${rq.loginedMember.name }</td>
 						</tr>
 						<tr>
-							<th>성별</th>
-							<td>${rq.loginedMember.gender == "male" ? "남자" : "여자" }</td>
-						</tr>
-						<tr>
-							<th>생년월일</th>
-							<td>${rq.loginedMember.birthday }</td>
-						</tr>
-						<tr>
-							<th>프로필 이미지</th>
-							<td>
-								<div><img id="profileImg" class="w-40 h-40 mx-auto object-cover" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" /></div>
-								<div class="mt-2 delBtn">
-									<label class="cursor-pointer inline-flex">
-										<span class="label-text mr-2 mt-1">이미지 삭제</span>
-										<input class="ckeckbox" type="checkbox" name="deleteFile__member__0__extra__profileImg__1" value="Y" />
-									</label>
+							<th>주소</th>
+							<td style="text-align: left;">
+								<input type="hidden" id="confmKey" name="confmKey" value=""  >
+								<div class="flex items-center">
+									<input class="bg-white input input-ghost text-lg border-gray-400" type="text" id="zipNo" name="zipNo" placeholder="우편번호" style="width:200px" readonly="readonly" value="${rq.loginedMember.zipNo}">
+									<a class="ml-2 btn" onclick="goPopup();">주소검색</a>
 								</div>
-								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" />
+								
+								<div class="flex items-center mt-2">
+									<input class="bg-white input input-ghost text-lg border-gray-400" type="text" id="roadAddr" name="roadAddr" placeholder="도로명 주소" style="width:50%" readonly="readonly" value="${rq.loginedMember.roadAddr}">	
+									<input class="bg-white input input-ghost text-lg border-gray-400 ml-2" type="text" id="addrDetail" name="addrDetail" placeholder="상세 주소" style="width:50%"  value="${rq.loginedMember.addrDetail}">
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -179,26 +194,38 @@
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
 						</tr>
 						<tr>
-							<th>회원 등급</th>
+							<th>성별</th>
+							<td>${rq.loginedMember.gender == "male" ? "남자" : "여자" }</td>
+						</tr>
+						<tr>
+							<th>생년월일</th>
+							<td>${rq.loginedMember.birthday }</td>
+						</tr>
+						<tr>
+							<th>프로필 이미지</th>
 							<td>
-								<c:if test="${rq.loginedMember.memberType == 3}">일반 회원</c:if>
-								<c:if test="${rq.loginedMember.memberType == 6}">판매자</c:if>
-								<c:if test="${rq.loginedMember.memberType == 9}">관리자</c:if>
+								<div><img id="profileImg" class="w-40 h-40 mx-auto mb-5 border" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" /></div>
+								<div class="mt-2 delBtn">
+									<label class="cursor-pointer inline-flex">
+										<span class="label-text mr-2 mt-1">이미지 삭제</span>
+										<input class="ckeckbox" type="checkbox" name="deleteFile__member__0__extra__profileImg__1" value="Y" />
+									</label>
+								</div>
+								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" />
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-
-			<div class="btns flex justify-between mt-5">
-				<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
-				<div>
-					<a class="btn btn-outline btn-info" href="passwordModify?memberModifyAuthKey=${param.memberModifyAuthKey }" >비밀번호 변경</a>
-					<button class="btn btn-outline btn-success">회원정보 수정</button>
-				</div>
+			
+			<div class="flex mt-5">
+				<button class="flex-auto mr-2 btn btn-success">회원정보 수정</button>
+				<a class="flex-auto btn btn-primary" href="passwordModify?memberModifyAuthKey=${param.memberModifyAuthKey }" >비밀번호 변경</a>
 			</div>
 		</form>
-
+		<div class="flex justify-end mt-5">
+			<button class="btn" onclick="history.back();"><i class="fa-solid fa-right-from-bracket mr-2"></i> 뒤로가기</button>
+		</div>
 	</div>
 </section>
 <%@ include file="../common/foot.jsp"%>

@@ -58,29 +58,26 @@
 		const maxSizeMb = 10;
 		const maxSize = maxSizeMb * 1024 * 1024;
 		
-		const productImgFileInput = [];
+		const pImgFileList = [];
 		
-		productImgFileInput.push(form["file__product__0__extra__productImg__1"]);
-		productImgFileInput.push(form["file__product__0__extra__productImg__2"]);
-		productImgFileInput.push(form["file__product__0__extra__productImg__3"]);
+		pImgFileList.push(form["file__product__0__extra__productImg__1"]);
+		pImgFileList.push(form["file__product__0__extra__productImg__2"]);
+		pImgFileList.push(form["file__product__0__extra__productImg__3"]);
 		
 		let chkFileCnt = 0;
-		for(i = 0; i < productImgFileInput.length; i++) {	
-			if(productImgFileInput[i].value) {
-				if (productImgFileInput[i].files[0].size > maxSize) {
-					alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-					productImgFileInput[i].focus();
-					
-					return false;
-				}
+		
+		for(i = 0; i < pImgFileList.length; i++) {
+			if(pImgFileList[i].value && pImgFileList[i].files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				pImgFileList[i].focus();
+				
+				return false;
 			} else {
 				chkFileCnt += 1;
 			}
-			
-			
 		}
 		
-		if(chkFileCnt >= productImgFileInput.length) {
+		if(chkFileCnt >= pImgFileList.length) {
 			alert("상품 이미지를 하나라도 등록해야합니다.");
 			return false;
 		}
@@ -224,10 +221,13 @@
 										<a class="btn flex-1 mr-1" href="javascript:(0)" data-dlvy="0">무료 배송</a>
 										<a class="btn flex-1 ml-1" href="javascript:(0)" data-dlvy="1">유료 배송</a>
 									</div>
-									<select class="select select-bordered w-full mt-3" name="productCourier">
-										<option value="">없음</option>
-										<option value="테스트">테스트</option>
-									</select>
+									<label class="input-group mt-3">
+										<span>택배사</span>
+										<select class="select select-bordered flex-1" name="productCourier">
+											<option value="">없음</option>
+											<option value="테스트">테스트</option>
+										</select>
+									</label>
 									<label class="input-group mt-3">
 										<span>배송비용</span>
 										<input class="price input input-bordered w-full text-lg" name="productDlvyPrice" type="text" placeholder="배송 비용"/>

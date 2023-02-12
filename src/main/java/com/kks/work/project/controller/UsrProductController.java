@@ -284,6 +284,21 @@ public class UsrProductController {
 		
 		return Utility.jsReplace("등록된 상품을 삭제했습니다!", Utility.f("list?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
 	} 
+	
+	// 상품 구매 페이지
+	@RequestMapping("/usr/product/orderSheet")
+	public String showOrderSheet(Model model, int id, int storeId, String productPrice, int productCnt) {   
+		Store store = storeService.getStoreById(storeId);
+	    Product product = productService.getProduct(id);
+	    
+	    if(store.getId() != product.getStoreId()) {
+	    	return rq.jsReturnOnView("잘못된 정보입니다, 다시 시도해주세요.", true);
+	    }
 		
+	    model.addAttribute("store", store);
+	    model.addAttribute("product", product);
+	    
+	    return "/usr/product/orderSheet";
+	}
 }
 

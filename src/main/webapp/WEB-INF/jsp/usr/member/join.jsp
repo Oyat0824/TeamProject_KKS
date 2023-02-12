@@ -3,6 +3,7 @@
 <c:set var="pageTitle" value="Member Join" />
 <%@ include file="../common/head.jsp"%>
 
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script>
 	// 정규식
 	const reg_num = /^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$/; // 휴대폰 번호
@@ -66,36 +67,20 @@
 			return false;
 		}
 		
-		// 성별 검증
-		form.gender.value = form.gender.value.trim();
-		if(form.gender.value.length == 0  || (!form.gender.value == "male" && !form.gender.value == "female")) {
-			alert("성별을 선택해주세요.");
-			form.gender.focus();
-			
-			return false;
-		}
+		// 주소 검증
+		form.zipNo.value = form.zipNo.value.trim();
+		form.roadAddr.value = form.roadAddr.value.trim();
 		
-		// 생년월일 검증
-		form.birthday.value = form.birthday.value.trim();
-		if(form.birthday.value.length == 0) {
-			alert("생년월일을 선택해주세요.");
-			form.birthday.focus();
-			
-			return false;
-		}
+		let addrList = [];
+		addrList.push(form.zipNo.value);
+		addrList.push(form.roadAddr.value);
 		
-		// 파일 검증
-		const maxSizeMb = 5;
-		const maxSize = maxSizeMb * 1024 * 1024;
-		
-		const profileImgFileInput = form["file__member__0__extra__profileImg__1"];
-		
-		if (profileImgFileInput.value) {
-			if (profileImgFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				profileImgFileInput.focus();
+		for(i = 0; i < addrList.length; i++) {
+			if(addrList[i].length == 0) {
+				alert("주소를 입력해주세요!");
+				form.zipNo.focus();
 				
-				return;
+				return false;
 			}
 		}
 		
@@ -132,7 +117,35 @@
 			
 			return false;
 		}
+		// 성별 검증
+		form.gender.value = form.gender.value.trim();
+		if(form.gender.value.length == 0  || (!form.gender.value == "male" && !form.gender.value == "female")) {
+			alert("성별을 선택해주세요.");
+			form.gender.focus();
+			
+			return false;
+		}
+		// 생년월일 검증
+		form.birthday.value = form.birthday.value.trim();
+		if(form.birthday.value.length == 0) {
+			alert("생년월일을 선택해주세요.");
+			form.birthday.focus();
+			
+			return false;
+		}
+
+		// 파일 검증
+		const maxSizeMb = 5;
+		const maxSize = maxSizeMb * 1024 * 1024;
 		
+		const profileImgFileInput = form["file__member__0__extra__profileImg__1"];
+		
+		if (profileImgFileInput.value && profileImgFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			profileImgFileInput.focus();
+			
+			return false;
+		}
 	}
 	
 	// 에러 메시지
@@ -142,7 +155,7 @@
 		
 		if(el[0].name == "loginId") {
 			if(!reg_id.test(el.val())) {
-				el.next(".errorMsg")
+				el.siblings(".errorMsg")
 				.addClass("text-red-500")
 				.removeClass("text-green-400")
 				.html("4글자 이상으로 영문 + 숫자 조합으로 입력해주세요.<br />"
@@ -157,10 +170,10 @@
 			}, function(data){
 				if(data.fail) {
 					validLoginId = data.data1;
-					el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html(`\${data.data1}은(는) \${data.msg}`);
+					el.siblings(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html(`\${data.data1}은(는) \${data.msg}`);
 				} else {
 					validLoginId = null;
-					el.next(".errorMsg").addClass("text-green-400").removeClass("text-red-500").html(`\${data.msg}`);
+					el.siblings(".errorMsg").addClass("text-green-400").removeClass("text-red-500").html(`\${data.msg}`);
 				}
 			}, 'json');
 			
@@ -168,13 +181,13 @@
 		}
 		
 		if(el.val().length == 0) {
-			el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html("필수 정보입니다.");
+			el.siblings(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html("필수 정보입니다.");
 			return false;
 		}
 		
 		if(el[0].name == "loginPwChk") {
 			if(form.loginPw.value != el.val()) {
-				el.next(".errorMsg").html("비밀번호가 일치하지 않습니다.");
+				el.siblings(".errorMsg").html("비밀번호가 일치하지 않습니다.");
 			}
 		}
 	}
@@ -189,12 +202,48 @@
 			$(e).prev().children("img").attr("src", fileReader.result);
 		};
 	}
+	
+	// 휴대폰 인증 API
+	var IMP = window.IMP; // 생략가능
+	IMP.init("imp10391932");
+	
+	function testPopup() {
+		// IMP.certification(param, callback) 호출
+		IMP.certification({ // param
+			merchant_uid: "ORD20180131-0000011",
+			popup : true
+		}, function (rsp) { // callback
+			/* 정보 확인은 불가, 결제 확인 및 신청을 따로 해야함, 개발용이기에 휴대폰 인증 화면만 출력하게 설정
+				만약 성공한다면
+				IAMPORT REST API : https://api.iamport.kr/
+				를 사용하여 토큰을 받아온 후 certifications 의 GET 과정을 AJAX를 통해 받아온 후
+				해당 데이터에 대한 정보를 이름, 성별, 생년월일, 휴대폰 번호를 받아와서 자동으로 입력
+			*/
+			if (rsp.success) {
+				console.log(rsp);
+			}
+		});
+	}
+	
+	// 도로명 주소 API
+	document.domain = "localhost";
+	
+	function goPopup() {
+	    var pop = window.open("jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+	}
+	
+	function jusoCallBack(zipNo, roadAddrPart1, addrDetail) {
+		// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
+		document.forms[0].zipNo.value = zipNo;
+		document.forms[0].roadAddr.value = roadAddrPart1;
+		document.forms[0].addrDetail.value = addrDetail;
+	}
 
 	$(function(){
 		// 인풋에 입력 시, 에러 메시지 삭제
 		$(".input").on("propertychange change paste input", function() {
-			if(!$(this).next(".errorMsg").html() == "") {
-				$(this).next(".errorMsg").empty();
+			if(!$(this).siblings(".errorMsg").html() == "") {
+				$(this).siblings(".errorMsg").empty();
 			}
 		});
 		
@@ -241,6 +290,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
+		<h1 class="font-bold text-xl select-none mb-5">회원가입</h1>
 		<form action="doJoin" method="POST" enctype="multipart/form-data" onsubmit="return MemberJoin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
@@ -251,72 +301,101 @@
 					<tbody>
 						<tr>
 							<th>아이디</th>
-							<td><input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400"
-								type="text" name="loginId" placeholder="아이디를 입력해주세요." />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="text" name="loginId" placeholder="아이디를 입력해주세요." />
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>비밀번호</th>
-							<td><input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400"
-								type="password" name="loginPw" placeholder="비밀번호를 입력해주세요." />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요." />
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>비밀번호 확인</th>
-							<td><input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400"
-								type="password" name="loginPwChk" placeholder="비밀번호 확인을 위해 입력해주세요." value="" />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="password" name="loginPwChk" placeholder="비밀번호 확인을 위해 입력해주세요." value="" />
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>이름</th>
-							<td><input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400"
-								type="text" name="name" placeholder="이름을 입력해주세요." />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
-						</tr>
-						<tr>
-							<th>성별</th>
-							<td><label class="label cursor-pointer" for="male"> <span class="label-text">남성</span> <input
-									id="male" type="radio" name="gender" class="radio checked:bg-blue-500" value="male" checked />
-							</label> <label class="label cursor-pointer" for="female"> <span class="label-text">여성</span> <input id="female"
-									type="radio" name="gender" class="radio checked:bg-red-500" value="female" />
-							</label></td>
-						</tr>
-						<tr>
-							<th>생년월일</th>
-							<td><input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400"
-								id="birthday" name="birthday" placeholder="생년월일을 입력해주세요." readonly />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
-						</tr>
-						<tr>
-							<th>프로필 이미지</th>
 							<td>
-								<div><img id="profileImg" src="" alt="" /></div>
-								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400" type="file" name="file__member__0__extra__profileImg__1" />
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="text" name="name" placeholder="이름을 입력해주세요." />
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
+							</td>
+						</tr>
+						<tr>
+							<th>주소</th>
+							<td style="text-align: left;">
+								<input type="hidden" id="confmKey" name="confmKey" value=""  >
+								<div class="flex items-center">
+									<input class="bg-white input input-ghost text-lg border-gray-400" type="text" id="zipNo" name="zipNo" placeholder="우편번호" style="width:200px" readonly="readonly">
+									<a class="ml-2 btn" onclick="goPopup();">주소검색</a>
+								</div>
+								
+								<div class="flex items-center mt-2">
+									<input class="bg-white input input-ghost text-lg border-gray-400" type="text" id="roadAddr" name="roadAddr" placeholder="도로명 주소" style="width:50%" value="" readonly="readonly">	
+									<input class="bg-white input input-ghost text-lg border-gray-400 ml-2" type="text" id="addrDetail" name="addrDetail" placeholder="상세 주소" style="width:50%" value="">
+								</div>
 							</td>
 						</tr>
 						<tr>
 							<th>이메일</th>
-							<td><input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400"
-								type="email" name="email" placeholder="이메일을 입력해주세요." />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="email" name="email" placeholder="이메일을 입력해주세요." />
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>전화번호</th>
-							<td><input onblur="return errorMsg(this);" maxlength="13"
-								class="bg-white input input-ghost w-full text-lg border-gray-400" type="tel" name=cellphoneNum
-								placeholder="전화번호를 입력해주세요." />
-								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div></td>
+							<td>
+								<div class="flex">
+									<input onblur="return errorMsg(this);" maxlength="13" class="bg-white input input-ghost w-full text-lg border-gray-400" type="tel" name=cellphoneNum placeholder="전화번호를 입력해주세요." />
+									<a class="btn ml-2" onclick="testPopup()">본인 인증</a>
+								</div>
+							</td>
 						</tr>
-
 						<tr>
-							<td colspan="2"><button class="btn btn-outline btn-accent w-full">회원가입</button></td>
+							<th>성별</th>
+							<td>
+								<label class="label cursor-pointer" for="male">
+									<span class="label-text">남성</span>
+									<input id="male" type="radio" name="gender" class="radio checked:bg-blue-500" value="male" checked />
+								</label>
+								<label class="label cursor-pointer" for="female">
+									<span class="label-text">여성</span>
+									<input id="female" type="radio" name="gender" class="radio checked:bg-red-500" value="female" />
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<th>생년월일</th>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" id="birthday" name="birthday" placeholder="생년월일을 입력해주세요." readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<th>프로필 이미지</th>
+							<td>
+								<div><img id="profileImg" class="w-40 h-40 mx-auto mb-5 border" src="${rq.getProfileFallbackImgUri()}" alt="" /></div>
+								<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png" class="file-input file-input-bordered border-gray-400 w-full" type="file" name="file__member__0__extra__profileImg__1" />
+							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
+			
+			<div class="mt-5">
+				<div>
+					<button class="btn btn-active btn-accent w-full text-white text-base">회원가입</button>
+				</div>
+			</div>
 		</form>
-		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
+		<div class="flex justify-end mt-5">
+			<button class="btn" onclick="history.back();"><i class="fa-solid fa-right-from-bracket mr-2"></i> 뒤로가기</button>
 		</div>
 	</div>
 </section>

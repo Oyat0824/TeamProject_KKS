@@ -48,6 +48,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
+		<h1 class="font-bold text-xl select-none mb-5">아이디 찾기</h1>
 		<form action="doFindLoginId" method="POST" onsubmit="return FindLoginId__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
@@ -66,18 +67,24 @@
 							<td><input class="input input-ghost w-full text-lg border-gray-400" type="email" name="email"
 								placeholder="이메일을 입력해주세요" /></td>
 						</tr>
-						<tr>
-							<td colspan="2"><button class="btn btn btn-info w-6/12">아이디 찾기</button></td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
-		</form>
-		<div class="btns flex justify-between mt-5">
-			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
-			<div>
-				<a class="btn btn-success" href="findLoginPw">비밀번호 찾기</a> <a class="btn btn-active" href="login">로그인</a>
+			
+			<div class="flex flex-col mt-5">
+				<div>
+					<button class="btn btn btn-info w-full">아이디 찾기</button>
+				</div>
+				
+				<div class="flex mt-2">
+					<a class="flex-auto mr-2 btn btn-primary" href="join">회원가입</a>
+					<a class="flex-auto mr-2 btn btn-active" href="login">로그인</a>
+					<a class="flex-auto btn btn-success" href="findLoginPw">비밀번호 찾기</a>
+				</div>
 			</div>
+		</form>
+		<div class="flex justify-end mt-5">
+			<button class="btn" onclick="history.back();"><i class="fa-solid fa-right-from-bracket mr-2"></i>뒤로가기</button>
 		</div>
 	</div>
 </section>

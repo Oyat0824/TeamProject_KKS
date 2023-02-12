@@ -23,22 +23,17 @@
 		const storeLogoFileInput = form["file__store__0__extra__storeLogo__1"];
 		const storeImgFileInput = form["file__store__0__extra__storeImg__1"];
 
-		if (storeLogoFileInput.value) {
-			if (storeLogoFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				storeLogoFileInput.focus();
+		if (storeLogoFileInput.value && storeLogoFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			storeLogoFileInput.focus();
 
-				return false;
-			}
+			return false;
 		}
+		if (storeImgFileInput.value && storeImgFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			storeImgFileInput.focus();
 
-		if (storeImgFileInput.value) {
-			if (storeImgFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				storeImgFileInput.focus();
-
-				return false;
-			}
+			return false;
 		}
 		
 		if (chkTextByte() == false) {
