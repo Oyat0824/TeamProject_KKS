@@ -3,7 +3,7 @@
 
 <section>
 	<div class="container flex justify-center mx-auto my-10">
-		<div class="logo text-6xl">
+		<div class="logo text-6xl select-none">
 			<c:choose>
 				<c:when test="${rq.getImgUri('store', store.id, 'storeLogo') == rq.getProfileFallbackImgUri()}">
 					<c:out value="${store.storeName}" />

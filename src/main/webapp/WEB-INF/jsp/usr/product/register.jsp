@@ -72,7 +72,7 @@
 				pImgFileList[i].focus();
 				
 				return false;
-			} else {
+			} else if(!pImgFileList[i].value) {
 				chkFileCnt += 1;
 			}
 		}

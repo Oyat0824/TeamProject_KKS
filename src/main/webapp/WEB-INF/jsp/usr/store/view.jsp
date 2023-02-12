@@ -63,7 +63,7 @@ $(function() {
 		<!-- 스토어에 배너 등록하기 하고 갯수에 따라서 이미지 출력 -->
 		<div class="slicks h-96">
 			<c:forEach var="file" items="${fileList}">
-				<div><img class="block w-full h-96 object-fill" src="${rq.getImgUri('store', store.id, 'bannerImg', file.fileNo)}" alt=""></div>
+				<div><img class="block w-full h-96" src="${rq.getImgUri('store', store.id, 'bannerImg', file.fileNo)}" alt=""></div>
 			</c:forEach>
 		</div>
 		

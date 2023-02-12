@@ -190,7 +190,7 @@
 							<th>스토어 소개</th>
 							<td class="relative">
 								<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
-								<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="storeDesc"
+								<textarea id="textBox" class="input w-full text-lg border-gray-400 p-3 text-base" style="height: 150px; resize: none;" name="storeDesc"
 									placeholder="스토어 소개">${store.storeDesc}</textarea>
 								<div class="textLengthWrap flex">
 									<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>

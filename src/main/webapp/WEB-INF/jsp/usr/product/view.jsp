@@ -140,7 +140,7 @@ $(function() {
 		<div class="photo-container slider relative w-2/4">
 			<div class="slicks">
 				<c:forEach var="file" items="${fileList}">
-					<div class="photo-box relative w-1/2"><img class="absolute inset-0 w-full h-full p-10 object-fill" src="${rq.getImgUri('product', product.id, 'productImg', file.fileNo)}" alt=""></div>
+					<div class="photo-box relative w-1/2"><img class="absolute inset-0 w-full h-full p-10" src="${rq.getImgUri('product', product.id, 'productImg', file.fileNo)}" alt=""></div>
 				</c:forEach>
 			</div>
 			
