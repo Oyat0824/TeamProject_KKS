@@ -48,11 +48,11 @@ public class ShoppingCartService {
 	public void updateQuantity(String str,int cartId) {
 		
 		if(str.equals("incr")) {
-			 ShoppingCartRepository.incrQuantity(str,cartId);
+			 ShoppingCartRepository.incrQuantity(cartId);
 		}
 		
 		if(str.equals("decr")) {
-			 ShoppingCartRepository.decrQuantity(str,cartId);
+			 ShoppingCartRepository.decrQuantity(cartId);
 		}
 		
 		

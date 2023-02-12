@@ -46,17 +46,10 @@ function updateQuantity(str, cartId) {
 		cartId : cartId,
 		ajaxMode : 'Y'
 	}, function(data){
-// 	let quantity = data.data1.productCount;
-		//console.log(data);
-		let addHtml = '';
-		$('.' + data.data1.cartId).val(data.data1.productCount);
-// 	$('${showCart.cartId}'').next().empty().html(quantity);
-	/*	addHtml += `<tr style = "border-top : 1px solid  black">
-						<th>총 결제금액</th>						
-						<td>\${data.totalPriceSum}</td>
-					</tr>`
-		
-		$(.totalPrice).empty().html(addHtml);	*/
+	
+	$('.' + data.data1.cartId).val(data.data1.productCnt);
+	document.getElementById('totalPrice').innerText=data.totalPriceSum;				
+					
 	}, 'json');
 }
 
@@ -109,9 +102,9 @@ function updateQuantity(str, cartId) {
 					
  				
 				</c:forEach>
-					<tr class="totalPrice" style = "border-top : 1px solid  black">
+					<tr  style = "border-top : 1px solid  black">
 						<th>총 결제금액</th>						
-						<td>${totalPriceSum}</td>
+						<td id="totalPrice">${totalPriceSum}</td>
 					</tr>	
 			</tbody>
 		</table>

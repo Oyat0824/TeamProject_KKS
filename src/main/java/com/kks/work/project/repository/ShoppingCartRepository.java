@@ -57,20 +57,20 @@ public interface ShoppingCartRepository {
 
 	@Update ("""
 			UPDATE shopCart 
-				SET productCount = productCount+1
-				WHERE cartID = #{cartId}
+				SET productCnt = productCnt+1
+				WHERE cartId = #{cartId}
 			
 			""")
-	public int incrQuantity(String str,int cartId);
+	public int incrQuantity(int cartId);
 
 
 	@Update ("""
 			UPDATE shopCart 
-				SET productCount = productCount-1
-				WHERE cartID = #{cartId}
+				SET productCnt = productCnt-1
+				WHERE cartId = #{cartId}
 			
 			""")
-	public int decrQuantity(String str,int cartId);
+	public int decrQuantity(int cartId);
 
 
 	@Select ("""
