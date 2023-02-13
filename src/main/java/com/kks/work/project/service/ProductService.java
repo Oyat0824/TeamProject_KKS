@@ -76,8 +76,10 @@ public class ProductService {
 	}
 
 	// 상품 구매
-	public void buyProduct(int id, int storeId, int memberId, String impUID) {
-		productRepository.buyProduct(id, storeId, memberId, impUID);
+	public void buyProduct(int id, int storeId, int memberId, String impUID, String orderNum,
+			String name, String cellphoneNum, String cellphoneNum2,
+			String zipNo, String roadAddr, String addrDetail, String dlvyMemo) {
+		productRepository.buyProduct(id, storeId, memberId, impUID, orderNum, name, cellphoneNum, cellphoneNum2, zipNo, roadAddr, addrDetail, dlvyMemo);
 	}
 
 }

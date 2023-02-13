@@ -165,8 +165,18 @@ public interface ProductRepository {
 			productId = #{id},
 			storeId = #{storeId},
 			memberId = #{memberId},
-			impUID = #{impUID}
+			impUID = #{impUID},
+			orderNum = #{orderNum},
+			`name` = #{name},
+			cellphoneNum = #{cellphoneNum},
+			cellphoneNum2 = #{cellphoneNum2},
+			zipNo = #{zipNo},
+			roadAddr = #{roadAddr},
+			addrDetail = #{addrDetail},
+			dlvyMemo = #{dlvyMemo}
 			""")
-	public void buyProduct(int id, int storeId, int memberId, String impUID);
+	public void buyProduct(int id, int storeId, int memberId, String impUID, String orderNum,
+			String name, String cellphoneNum, String cellphoneNum2,
+			String zipNo, String roadAddr, String addrDetail, String dlvyMemo);
 
 }

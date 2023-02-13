@@ -12,7 +12,7 @@
 	document.domain = "localhost";
 	
 	function goPopup() {
-	    var pop = window.open("../member/jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+	    var pop = window.open("../popup/jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
 	}
 	
 	function jusoCallBack(zipNo, roadAddrPart1, addrDetail) {
@@ -27,23 +27,26 @@
 	
 	function requestPay() {
 		const payMethod = $("#pay_method").find("input[type=radio]:checked").val();
-		const buyer_email = $("input[name=ordEmail]").val();
 		const buyer_name = $("input[name=ordName]").val();
 		const buyer_tel = $("input[name=ordCellphoneNum]").val();
+		const buyer_email = $("input[name=ordEmail]").val();
+		const orderNum = "ORD_${product.id}_${now}";
 		
 		IMP.request_pay({
 			pg: "html5_inicis",
 			pay_method: payMethod,
-			merchant_uid: "ORD_${product.id}_${now}",
+			merchant_uid: orderNum,
 			name: "${product.productName}",
 			amount: ${(product.productPrice * param.productCnt) + product.productDlvyPrice},
-			buyer_email: buyer_email,
 			buyer_name: buyer_name,
 			buyer_tel: buyer_tel,
+			buyer_email: buyer_email,
 		}, function (rsp) { // callback
 			if (rsp.success) {
-				console.log(rsp);
-				window.location.href = `/usr/product/buyProduct?id=${product.id}&storeId=${store.id}&memberId=${rq.loginedMemberId}&impUID=\${rsp.imp_uid}`;
+				$("input[name=orderNum]").val(orderNum)
+				$("input[name=impUID]").val(rsp.imp_uid)
+				
+				$("#buyProduct").submit();
 			} else {
 				alert(rsp.error_msg);
 				
@@ -191,46 +194,54 @@
 			</div>
 		</div>
 	</div>
-	<div class="container mx-auto mt-1 p-10 border">
-		<h3 class="font-bold text-xl select-none mb-5">배송지정보
-			<a id="ordToRec" class="cursor-pointer py-2.5 px-5 ml-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-				주문자 정보 가져오기
-			</a>
-		</h3>
-		<div class="addressArea form-control">
-			<div class="flex items-center">
-				<span class="inline-block w-28 mr-1">수령자 이름</span>
-				<input type="text" name="name" placeholder="수령자 이름" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.name }" />
-			</div>
-			<div class="flex items-center mt-2">
-				<span class="inline-block w-28 mr-1">연락처 1</span>
-				<input type="text" name="cellphoneNum" placeholder="연락처 1" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.cellphoneNum }" />
-			</div>
-			<div class="flex items-center mt-2">
-				<span class="inline-block w-28 mr-1">연락처 2</span>
-				<input type="text" name="cellphoneNum2" placeholder="연락처 2" class="input input-ghost text-lg border-gray-400 w-80" />
-			</div>
-			<div class="flex items-center mt-2 w-9/12">
-				<span class="inline-block w-28 mr-1">배송지 주소</span>
-				<div class="flex-1">
-					<input type="hidden" id="confmKey" name="confmKey" value=""  >
-					<div class="flex items-center">
-						<input class="input input-ghost text-lg border-gray-400" type="text" id="zipNo" name="zipNo" placeholder="우편번호" style="width:200px" readonly="readonly" value="${rq.loginedMember.zipNo}">
-						<a class="ml-2 btn" onclick="goPopup();">주소검색</a>
-					</div>
-					
-					<div class="flex items-center mt-2">
-						<input class="input input-ghost text-lg border-gray-400" type="text" id="roadAddr" name="roadAddr" placeholder="도로명 주소" style="width:60%" readonly="readonly" value="${rq.loginedMember.roadAddr}">	
-						<input class="input input-ghost text-lg border-gray-400 ml-2" type="text" id="addrDetail" name="addrDetail" placeholder="상세 주소" style="width:40%"  value="${rq.loginedMember.addrDetail}">
+	<form id="buyProduct" action="buyProduct">
+		<input type="hidden" name="id" value="${product.id }" />
+		<input type="hidden" name="storeId" value="${store.id }" />
+		<input type="hidden" name="memberId" value="${rq.loginedMemberId }" />
+		<input type="hidden" name="orderNum" value="" />
+		<input type="hidden" name="impUID" value="" />
+		
+		<div class="container mx-auto mt-1 p-10 border">
+			<h3 class="font-bold text-xl select-none mb-5">배송지정보
+				<a id="ordToRec" class="cursor-pointer py-2.5 px-5 ml-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+					주문자 정보 가져오기
+				</a>
+			</h3>
+			<div class="addressArea form-control">
+				<div class="flex items-center">
+					<span class="inline-block w-28 mr-1">수령자 이름</span>
+					<input type="text" name="name" placeholder="수령자 이름" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.name }" />
+				</div>
+				<div class="flex items-center mt-2">
+					<span class="inline-block w-28 mr-1">연락처 1</span>
+					<input type="text" name="cellphoneNum" placeholder="연락처 1" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.cellphoneNum }" />
+				</div>
+				<div class="flex items-center mt-2">
+					<span class="inline-block w-28 mr-1">연락처 2</span>
+					<input type="text" name="cellphoneNum2" placeholder="연락처 2" class="input input-ghost text-lg border-gray-400 w-80" />
+				</div>
+				<div class="flex items-center mt-2 w-9/12">
+					<span class="inline-block w-28 mr-1">배송지 주소</span>
+					<div class="flex-1">
+						<input type="hidden" id="confmKey" name="confmKey" value=""  >
+						<div class="flex items-center">
+							<input class="input input-ghost text-lg border-gray-400" type="text" id="zipNo" name="zipNo" placeholder="우편번호" style="width:200px" readonly="readonly" value="${rq.loginedMember.zipNo}">
+							<a class="ml-2 btn" onclick="goPopup();">주소검색</a>
+						</div>
+						
+						<div class="flex items-center mt-2">
+							<input class="input input-ghost text-lg border-gray-400" type="text" id="roadAddr" name="roadAddr" placeholder="도로명 주소" style="width:60%" readonly="readonly" value="${rq.loginedMember.roadAddr}">	
+							<input class="input input-ghost text-lg border-gray-400 ml-2" type="text" id="addrDetail" name="addrDetail" placeholder="상세 주소" style="width:40%"  value="${rq.loginedMember.addrDetail}">
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="flex items-center mt-2 w-9/12">
-				<span class="inline-block w-28 mr-1">배송메모</span>
-				<input type="text" name="dlvyMemo" placeholder="요청사항을 입력합니다." class="flex-1 input input-ghost text-lg border-gray-400 w-80" />
+				<div class="flex items-center mt-2 w-9/12">
+					<span class="inline-block w-28 mr-1">배송메모</span>
+					<input type="text" name="dlvyMemo" placeholder="요청사항을 입력합니다." class="flex-1 input input-ghost text-lg border-gray-400 w-80" />
+				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 	
 	<div class="container mx-auto mt-3 p-10 border">
 		<h3 class="font-bold text-xl select-none mb-2">결제 수단</h3>

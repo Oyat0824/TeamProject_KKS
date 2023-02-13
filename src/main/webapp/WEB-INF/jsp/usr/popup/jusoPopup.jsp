@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>주소 검색 서비스</title>
+<title>도로명 주소 검색 서비스</title>
 <% 
 	String inputYn = request.getParameter("inputYn"); 
 	String roadAddrPart1 = request.getParameter("roadAddrPart1"); 
@@ -13,7 +13,6 @@
 </head>
 <script language="javascript">
 document.domain = "localhost";
-
 function init(){
 	
 	let url = location.href;

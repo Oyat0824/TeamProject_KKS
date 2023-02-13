@@ -20,7 +20,7 @@ CREATE TABLE genFile (
     fileExtTypeCode VARCHAR(10) NOT NULL,
     fileExtType2Code VARCHAR(10) NOT NULL,
     delDate DATETIME DEFAULT NULL COMMENT '삭제 날짜',
-	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제상태 (0 = 미삭제, 1 = 삭제)',
+	delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제상태 (0 = 미삭제, 1 = 삭제)',
     KEY relId (relTypeCode, relId, typeCode, type2Code, fileNo)
 );
 
@@ -40,9 +40,9 @@ CREATE TABLE `member`(
 	cellphoneNum VARCHAR(20) NOT NULL,
 	gender VARCHAR(10) NOT NULL COMMENT '성별 (male = 남자, female = 여자)',
 	birthday DATE NOT NULL,
-	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
-	storeState TINYINT NOT NULL DEFAULT 0 COMMENT '가게 유무 (0 = 무, 1 = 유)',
-	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
+	memberType TINYINT(9) NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
+	storeState TINYINT(1) NOT NULL DEFAULT 0 COMMENT '가게 유무 (0 = 무, 1 = 유)',
+	delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
 	delDate DATETIME COMMENT '탈퇴 날짜',
 	UNIQUE `uniqueKey` (loginId)
 );
@@ -83,7 +83,7 @@ CREATE TABLE product(
 	productPrice VARCHAR(40) NOT NULL,
 	productCategory VARCHAR(20),
 	productStock VARCHAR(20) NOT NULL, # 상품재고
-	productDlvy TINYINT NOT NULL, # 배송방법 (0 = 무료, 1 = 유료)
+	productDlvy TINYINT(1) NOT NULL COMMENT '배송 방법 (0 = 무료, 1 = 유료)',
 	productCourier VARCHAR(100) NOT NULL, # 택배사
 	productDlvyPrice VARCHAR(40) NOT NULL, # 배송 비용
 	productBody TEXT NOT NULL,
@@ -99,7 +99,17 @@ CREATE TABLE purchaseList(
 	productId INT UNSIGNED NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
-	impUID VARCHAR(200) NOT NULL,
+	impUID VARCHAR(200) NOT NULL, # 구매 고유 번호
+	orderNum VARCHAR(200) NOT NULL, # 주문 번호
+	`name` VARCHAR(20) NOT NULL,
+	cellphoneNum VARCHAR(20) NOT NULL,
+	cellphoneNum2 VARCHAR(20),
+	zipNo VARCHAR(20) NOT NULL,
+	roadAddr VARCHAR(200) NOT NULL,
+	addrDetail VARCHAR(200),	
+	dlvyMemo VARCHAR(100), # 배송 메모
+	waybill VARCHAR(200), # 운송장 번호
+	confirm TINYINT(1) DEFAULT 0 COMMENT '구매 확정 (0 = 무, 1 = 유)',
 	UNIQUE `uniqueKey` (impUID),
 	KEY `indexKey` (impUID)
 );

@@ -360,7 +360,9 @@ public class UsrProductController {
 	// 상품 구매
 	@RequestMapping("/usr/product/buyProduct")
 	@ResponseBody
-	public String buyProduct(int id, int storeId, int memberId, String impUID) {
+	public String buyProduct(int id, int storeId, int memberId, String impUID, String orderNum,
+			String name, String cellphoneNum, String cellphoneNum2,
+			String zipNo, String roadAddr, String addrDetail, String dlvyMemo) {
 		String _token = getToken();
 
 		try {
@@ -370,7 +372,7 @@ public class UsrProductController {
 			Map<String, Object> repsonse = restTemplate.getForObject(url, Map.class);
 			Map<String, Object> innerMap = (Map<String, Object>) repsonse.get("response");
 			
-			productService.buyProduct(id, storeId, memberId, impUID);
+			productService.buyProduct(id, storeId, memberId, impUID, orderNum, name, cellphoneNum, cellphoneNum2, zipNo, roadAddr, addrDetail, dlvyMemo);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -378,7 +380,12 @@ public class UsrProductController {
 			return Utility.jsReplace("상품 구매에 실패하였습니다.", Utility.f("/usr/product/view?id=%d&storeId=%d", id, storeId));
 		}
 		  
-		return "hi";
+		return "주문확인/배송조회 페이지로 이동시켜야함";
 	}
 
+	// 상품 구매 후 > 주문확인/배송조회 페이지로 이동
+	// 주문확인/배송조회 페이지 이하 주문목록 페이지는 해당 회원이 구매한 기록을 서치해 목록으로 보여준다.
+	// 해당 페이지에서는 구매확정, 리뷰쓰기, 재구매, 주문상세, 결제 날짜, 배송조회 간략한 주문한 상품 정보를 보여준다. (문의 하기는 시간이 있다면 진행)
+	// 배송조회는 운송장 번호가 없지만 판매자가 확인 후 작성할 수 있도록 판매자 공간도 만들어준다.
+	// 주문상세 페이지도 구현한다.
 }
