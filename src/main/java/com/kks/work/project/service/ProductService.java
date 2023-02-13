@@ -75,4 +75,9 @@ public class ProductService {
 		productRepository.deleteProduct(id);	
 	}
 
+	// 상품 구매
+	public void buyProduct(int id, int storeId, int memberId, String impUID) {
+		productRepository.buyProduct(id, storeId, memberId, impUID);
+	}
+
 }

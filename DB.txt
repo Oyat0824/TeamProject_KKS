@@ -91,6 +91,19 @@ CREATE TABLE product(
 	KEY `indexKey` (storeId)
 );
 
+##### purchaseList 테이블 생성
+CREATE TABLE purchaseList(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	productId INT UNSIGNED NOT NULL,
+	storeId INT UNSIGNED NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	impUID VARCHAR(200) NOT NULL,
+	UNIQUE `uniqueKey` (impUID),
+	KEY `indexKey` (impUID)
+);
+
 ##### category 테이블 생성
 CREATE TABLE category(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -106,6 +119,7 @@ SELECT * FROM genFile;
 SELECT * FROM `member`;
 SELECT * FROM store;
 SELECT * FROM product;
+SELECT * FROM purchaseList;
 SELECT * FROM category;
 
 ### member 테스트 데이터 생성

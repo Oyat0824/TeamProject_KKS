@@ -158,4 +158,15 @@ public interface ProductRepository {
 			""")
 	public void deleteProduct(int id);
 
+	@Insert("""
+			INSERT INTO purchaseList
+			SET regDate = NOW(),
+			updateDate = NOW(),
+			productId = #{id},
+			storeId = #{storeId},
+			memberId = #{memberId},
+			impUID = #{impUID}
+			""")
+	public void buyProduct(int id, int storeId, int memberId, String impUID);
+
 }

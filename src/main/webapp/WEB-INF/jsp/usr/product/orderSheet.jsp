@@ -32,7 +32,7 @@
 		const buyer_tel = $("input[name=ordCellphoneNum]").val();
 		
 		IMP.request_pay({
-			pg: "html5_inicis.INIpayTest",
+			pg: "html5_inicis",
 			pay_method: payMethod,
 			merchant_uid: "ORD_${product.id}_${now}",
 			name: "${product.productName}",
@@ -42,7 +42,8 @@
 			buyer_tel: buyer_tel,
 		}, function (rsp) { // callback
 			if (rsp.success) {
-				window.location.href = "http://localhost:8084/";
+				console.log(rsp);
+				window.location.href = `/usr/product/buyProduct?id=${product.id}&storeId=${store.id}&memberId=${rq.loginedMemberId}&impUID=\${rsp.imp_uid}`;
 			} else {
 				alert(rsp.error_msg);
 				
