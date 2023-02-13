@@ -162,6 +162,12 @@
 			
 			$(this).addClass("btn-accent");
 			$(this).siblings().removeClass("btn-accent");
+			
+			if(dlvy == 0) {
+				$("input[name=productDlvyPrice]").val(0);
+			} else {
+				$("input[name=productDlvyPrice]").val("");
+			}
 		});
 
 		// SmartDlvyGetData();
@@ -230,7 +236,7 @@
 									</label>
 									<label class="input-group mt-3">
 										<span>배송비용</span>
-										<input class="price input input-bordered w-full text-lg" name="productDlvyPrice" type="text" placeholder="배송 비용"/>
+										<input class="price input input-bordered w-full text-lg" name="productDlvyPrice" type="text" placeholder="배송 비용" />
 									</label>
 								</td>
 							</tr>

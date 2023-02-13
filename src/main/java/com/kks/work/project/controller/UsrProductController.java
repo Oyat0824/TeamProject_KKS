@@ -209,12 +209,12 @@ public class UsrProductController {
 
 	// 상품 수정 페이지 
 	@RequestMapping("/usr/product/modify")
-	public String showModify(Model model, int id, int storeId) {
-		// 본인 스토어 검사
-		ResultData<Store> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), storeId);
-	    
-	    if (actorCanModifyRD.isFail()) {
-	    	return rq.jsReturnOnView(actorCanModifyRD.getMsg(), true);
+	public String showModify(Model model, int id, int storeId, String storeModifyAuthKey) {
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), storeId, storeModifyAuthKey);
+
+	    if (storeVerifyTestRD.isFail()) {
+	    	return rq.jsReturnOnView(storeVerifyTestRD.getMsg(), false, "/usr/home/main");
 	    }
 	    
 	    Product product = productService.getProduct(id);
@@ -229,7 +229,7 @@ public class UsrProductController {
 	// 상품 수정
 	@RequestMapping("/usr/product/doModify")
 	@ResponseBody
-	public String doModify(HttpServletRequest req, int storeId, int id,
+	public String doModify(HttpServletRequest req, int storeId, int id, String storeModifyAuthKey,
 			String productName, String productPrice, String productCategory, String productStock, int productDlvy, String productCourier, String productDlvyPrice, String productBody,
 			MultipartRequest multipartRequest) {
 		// 본인 스토어 검사
@@ -262,7 +262,7 @@ public class UsrProductController {
 		}
 		productService.doModify(id, productName, productPrice, productCategory, productStock, productDlvy, productCourier, productDlvyPrice, productBody);
 
-		return Utility.jsReplace("상품정보를 수정했습니다!", Utility.f("view?storeId=%d&id=%d", storeId, id));
+		return Utility.jsReplace("상품정보를 수정했습니다!", Utility.f("list?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
 	}
 	
 	// 등록 상품 삭제

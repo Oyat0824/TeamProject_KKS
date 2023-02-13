@@ -68,6 +68,7 @@
 							<th class="text-sm">상품 이름</th>
 							<th class="text-sm">상품 가격</th>
 							<th class="text-sm">상품 재고</th>
+							<th class="text-sm">배송비</th>
 							<th class="text-sm">등록일</th>
 							<th class="text-sm">수정</th>
 							<th class="text-sm">삭제</th>
@@ -78,12 +79,21 @@
 						<c:forEach var="product" items="${products}">
 							<tr class="hover">
 								<td><div class="badge badge-lg border-transparent font-bold text-white">${product.ROWNUM}</div></td>
-								<td>${product.productCategory == "" ? "없음" : product.categoryName}</td>
+								<td><span>${product.productCategory == "" ? "없음" : product.categoryName}</span></td>
 								<td><a class="hover:text-indigo-700" href="view?storeId=${product.storeId}&id=${product.id}">${product.productName}</a></td>
-								<td><fmt:formatNumber value="${product.productPrice}" pattern="#,###" /></td>
-								<td><fmt:formatNumber value="${product.productStock }" pattern="#,###" /></td>
-								<td>${product.regDate.substring(0, 16) }</td>
-								<td><a class="hover:text-indigo-700" href="modify?storeId=${product.storeId}&id=${product.id}">수정</a></td>
+								<td><span><fmt:formatNumber value="${product.productPrice}" pattern="#,###" />원</span></td>
+								<td><span><fmt:formatNumber value="${product.productStock }" pattern="#,###" />개</span></td>
+								<td>
+									<c:if test="${product.productDlvy == 0}">
+										<span>무료</span>
+			    					</c:if>
+			    					
+			    					<c:if test="${product.productDlvy == 1}">
+			    						<span><fmt:formatNumber value="${product.productDlvyPrice}" pattern="#,###" />원</span>
+			    					</c:if>
+								</td>
+								<td><span>${product.regDate.substring(0, 10) }</span></td>
+								<td><a class="hover:text-indigo-700" href="modify?storeId=${product.storeId}&id=${product.id}&storeModifyAuthKey=${param.storeModifyAuthKey}">수정</a></td>
 								<td><a class="hover:text-indigo-700" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;" href="doDelete?storeId=${product.storeId}&id=${product.id}&storeModifyAuthKey=${param.storeModifyAuthKey}">삭제</a></td>
 							</tr>
 						</c:forEach>

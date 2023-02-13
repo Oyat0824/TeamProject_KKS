@@ -166,7 +166,7 @@
 		$(".price, .stock").on("keyup",function(){
 			updateTextView($(this));
 		});
-		
+
 		$(".DlvyBox > a").click(function(){
 			let dlvy = $(this).attr("data-dlvy");
 			
@@ -174,6 +174,12 @@
 			
 			$(this).addClass("btn-accent");
 			$(this).siblings().removeClass("btn-accent");
+			
+			if(dlvy == 0) {
+				$("input[name=productDlvyPrice]").val(0);
+			} else {
+				$("input[name=productDlvyPrice]").val("");
+			}
 		});
 		
 		// 택배사 API 불러오기
@@ -189,6 +195,7 @@
 			<form id="frm" action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return ProductRegister__submit(this);">
 				<input type="hidden" name="storeId" value="${param.storeId}" />
 				<input type="hidden" name="id" value="${product.id}" />
+				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
 				<input type="hidden" name="productBody" />
 				<div class="table-box-type-2">
 					<table class="table w-11/12 mx-auto">
