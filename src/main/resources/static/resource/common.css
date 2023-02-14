@@ -1,5 +1,18 @@
 @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
+html, body {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+}
+
 html > body,
 html > body .ProseMirror,
 html > body .toastui-editor-contents {
