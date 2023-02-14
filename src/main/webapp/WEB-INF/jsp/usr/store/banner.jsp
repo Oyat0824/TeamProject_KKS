@@ -67,7 +67,7 @@
 		<%@ include file="../common/sideMenu.jsp"%>
 		
 		<div class="w-full my-10">
-		
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">배너 등록</h1>
 			<form action="addBanner" method="POST" enctype="multipart/form-data" onsubmit="return BannerWrite__submitForm(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />

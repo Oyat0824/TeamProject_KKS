@@ -27,10 +27,25 @@
 	
 	function requestPay() {
 		const payMethod = $("#pay_method").find("input[type=radio]:checked").val();
-		const buyer_name = $("input[name=ordName]").val();
-		const buyer_tel = $("input[name=ordCellphoneNum]").val();
-		const buyer_email = $("input[name=ordEmail]").val();
 		const orderNum = "ORD_${product.id}_${now}";
+		
+		const ordName = $("input[name=ordName]").val();
+		const ordCellphoneNum = $("input[name=ordCellphoneNum]").val();
+		const ordEmail = $("input[name=ordEmail]").val();
+		const recName = $("input[name=name]").val();
+		const recCellphoneNum = $("input[name=cellphoneNum]").val();
+		const recZipNo = $("input[name=zipNo]").val();
+		const recRoadAddr = $("input[name=roadAddr]").val();
+		
+		if(ordName.length == 0 || ordCellphoneNum.length == 0 || ordEmail.length == 0) {
+			alert("주문자 정보를 적어주세요.");
+			return false;
+		}
+		
+		if(recName.length == 0 || recCellphoneNum.length == 0 || recZipNo.length == 0 || recRoadAddr.length == 0) {
+			alert("배송지 정보를 적어주세요.");
+			return false;
+		}
 		
 		IMP.request_pay({
 			pg: "html5_inicis",
@@ -38,9 +53,9 @@
 			merchant_uid: orderNum,
 			name: "${product.productName}",
 			amount: ${(product.productPrice * param.productCnt) + product.productDlvyPrice},
-			buyer_name: buyer_name,
-			buyer_tel: buyer_tel,
-			buyer_email: buyer_email,
+			buyer_name: ordName,
+			buyer_tel: ordCellphoneNum,
+			buyer_email: ordEmail,
 		}, function (rsp) { // callback
 			if (rsp.success) {
 				$("input[name=orderNum]").val(orderNum)
@@ -74,11 +89,11 @@
 		});
 		
 		$("#ordToRec").click(function() {
-			const buyer_name = $("input[name=ordName]").val();
-			const buyer_tel = $("input[name=ordCellphoneNum]").val();
+			const ordName = $("input[name=ordName]").val();
+			const ordCellphoneNum = $("input[name=ordCellphoneNum]").val();
 			
-			$("input[name=name]").val(buyer_name);
-			$("input[name=cellphoneNum]").val(buyer_tel);
+			$("input[name=name]").val(ordName);
+			$("input[name=cellphoneNum]").val(ordCellphoneNum);
 		});
 	})
 </script>
@@ -186,7 +201,7 @@
 			</div>
 			<div class="flex items-center mt-2">
 				<span class="inline-block w-28 mr-1">연락처</span>
-				<input type="tel" name="ordCellphoneNum" placeholder="연락처" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.cellphoneNum }" />
+				<input type="tel" maxlength="13" name="ordCellphoneNum" placeholder="연락처" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.cellphoneNum }" />
 			</div>
 			<div class="flex items-center mt-2">
 				<span class="inline-block w-28 mr-1">이메일</span>
@@ -196,6 +211,7 @@
 	</div>
 	<form id="buyProduct" action="buyProduct">
 		<input type="hidden" name="id" value="${product.id }" />
+		<input type="hidden" name="productCnt" value="${param.productCnt }" />
 		<input type="hidden" name="storeId" value="${store.id }" />
 		<input type="hidden" name="memberId" value="${rq.loginedMemberId }" />
 		<input type="hidden" name="orderNum" value="" />
@@ -214,11 +230,11 @@
 				</div>
 				<div class="flex items-center mt-2">
 					<span class="inline-block w-28 mr-1">연락처 1</span>
-					<input type="text" name="cellphoneNum" placeholder="연락처 1" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.cellphoneNum }" />
+					<input type="text" maxlength="13" name="cellphoneNum" placeholder="연락처 1" class="input input-ghost text-lg border-gray-400 w-80" value="${rq.loginedMember.cellphoneNum }" />
 				</div>
 				<div class="flex items-center mt-2">
 					<span class="inline-block w-28 mr-1">연락처 2</span>
-					<input type="text" name="cellphoneNum2" placeholder="연락처 2" class="input input-ghost text-lg border-gray-400 w-80" />
+					<input type="text" maxlength="13" name="cellphoneNum2" placeholder="연락처 2" class="input input-ghost text-lg border-gray-400 w-80" value="" />
 				</div>
 				<div class="flex items-center mt-2 w-9/12">
 					<span class="inline-block w-28 mr-1">배송지 주소</span>

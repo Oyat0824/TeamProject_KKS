@@ -97,6 +97,7 @@ CREATE TABLE purchaseList(
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
 	productId INT UNSIGNED NOT NULL,
+	productCnt INT UNSIGNED NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
 	impUID VARCHAR(200) NOT NULL, # 구매 고유 번호
@@ -109,7 +110,9 @@ CREATE TABLE purchaseList(
 	addrDetail VARCHAR(200),	
 	dlvyMemo VARCHAR(100), # 배송 메모
 	waybill VARCHAR(200), # 운송장 번호
+	ordCheck TINYINT(1) DEFAULT 0 COMMENT '주문 확인 (0 = 무, 1 = 유)',
 	confirm TINYINT(1) DEFAULT 0 COMMENT '구매 확정 (0 = 무, 1 = 유)',
+	cancel TINYINT(1) DEFAULT 0 COMMENT '주문 취소 (0 = 무, 1 = 유)',
 	UNIQUE `uniqueKey` (impUID),
 	KEY `indexKey` (impUID)
 );

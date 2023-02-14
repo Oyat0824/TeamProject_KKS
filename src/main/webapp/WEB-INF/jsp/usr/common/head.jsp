@@ -44,20 +44,39 @@
 						<script>
 							const lyrOpen = function() {
 								$(".my_lyr").toggleClass("open_lyr");
+								$(".myPage").removeClass("open_lyr");
+							}
+							
+							const lyrOpen2 = function() {
+								$(".myPage").toggleClass("open_lyr");
+								$(".my_lyr").removeClass("open_lyr");
 							}
 							
 							$(function(){
 								$("html").click(function(e) {   
-									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){   
+									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){
+										console.log($(e.target).parents(".open_lyr"))
 										$(".my_lyr").removeClass("open_lyr");
+										$(".myPage").removeClass("open_lyr");
 									}
 								});
 							});
 						</script>
-						<div class="text-sm">
-							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
-						</div>
-						
+						<ul class="flex text-sm">
+							<li><a class="hover:underline mr-5" href="">관심스토어</a></li>
+							<li class="relative">
+								<a class="lyr hover:underline mr-5" onclick="lyrOpen2(); return false;" href="javascript:void();" >
+									마이페이지<i class="fa-solid fa-caret-down ml-1"></i>
+								</a>
+								<div class="lyr myPage">
+									<div class="mb-1"><a href="/usr/product/orderList">주문확인/배송조회</a></div>
+									<div>찜한 상품</div>
+								</div>
+							</li>
+							<li><a class="hover:underline mr-5" href="">장바구니</a></li>
+							<li><a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a></li>
+						</ul>
+										
 						<div class="my_lyr">
 							<div class="flex items-center py-4 px-2 text-gray-600">
 								<div class="img_area">
@@ -99,7 +118,7 @@
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
 				<div class="flex">
 					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
-					<div class="mr-5"><a href="/usr/product/exposurelist">상품 목록</a></div>
+					<div class="mr-5"><a href="/usr/product/exposureList">상품 목록</a></div>
 				</div>
 			</div>
 		</div>

@@ -179,6 +179,7 @@
 		<%@ include file="../common/sideMenu.jsp"%>
 
 		<div class="w-full my-10">
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">상품 등록</h1>
 			<form id="frm" action="doRegister" method="POST" enctype="multipart/form-data" onsubmit="return ProductRegister__submit(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />

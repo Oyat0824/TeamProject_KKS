@@ -10,6 +10,12 @@
 
 <script>
 const ProductBuy__submit = function() {
+	if(${rq.loginedMemberId == 0}) {
+		alert("로그인 후 이용해주세요!");
+		
+		return false;
+	}
+	
 	let form = document.getElementById("productBuy");
 	// 상품 수량 검증
 	form.productCnt.value = form.productCnt.value.trim();
@@ -205,7 +211,16 @@ $(function() {
 						</div>
 					</div>
 				
-					<div><a class="btn btn-success w-full" href="javascript:()" onclick="return ProductBuy__submit();">구매하기</a></div>
+					<div>
+						<c:choose> 
+							<c:when test="${product.productStock == 0}">
+								<button class="btn w-full" disabled>품절</button>
+							</c:when> 
+							<c:otherwise>
+								<a class="btn btn-success w-full" href="javascript:()" onclick="return ProductBuy__submit();">구매하기</a>
+							</c:otherwise> 
+						</c:choose> 
+					</div>
 					<div class="flex mt-1">
 						<a class="btn flex-1 mr-1" href=""><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
 						<a class="btn flex-1 ml-1" href=""><i class="fa-solid fa-basket-shopping mr-1"></i> 장바구니</a>

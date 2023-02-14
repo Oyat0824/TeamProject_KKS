@@ -20,8 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kks.work.project.service.GenFileService;
 import com.kks.work.project.service.ProductService;
 import com.kks.work.project.service.StoreService;
@@ -30,6 +28,7 @@ import com.kks.work.project.util.Utility;
 import com.kks.work.project.vo.Category;
 import com.kks.work.project.vo.GenFile;
 import com.kks.work.project.vo.Product;
+import com.kks.work.project.vo.PurchaseList;
 import com.kks.work.project.vo.Rq;
 import com.kks.work.project.vo.Store;
 
@@ -190,7 +189,7 @@ public class UsrProductController {
 	}
 
 	// 상품 목록 페이지 | 사용자
-	@RequestMapping("/usr/product/exposurelist")
+	@RequestMapping("/usr/product/exposureList")
 	public String showProductExposureList(Model model, @RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum) {
 
@@ -213,7 +212,7 @@ public class UsrProductController {
 		model.addAttribute("products", products);
 		model.addAttribute("page", page);
 
-		return "/usr/product/exposurelist";
+		return "/usr/product/exposureList";
 	}
 
 	// 상품 수정 페이지
@@ -315,6 +314,177 @@ public class UsrProductController {
 		return "/usr/product/orderSheet";
 	}
 
+	// 상품 구매
+	@RequestMapping("/usr/product/buyProduct")
+	@ResponseBody
+	public String buyProduct(int id, int productCnt, int storeId, int memberId, String impUID, String orderNum,
+			String name, String cellphoneNum, String cellphoneNum2,
+			String zipNo, String roadAddr, String addrDetail, String dlvyMemo) {
+	
+		String _token = getToken();
+		int buyId = 0;
+
+		try {
+			String url = Utility.f("https://api.iamport.kr/payments/%s?_token=%s", impUID, _token);
+			
+			RestTemplate restTemplate = new RestTemplate();
+			Map<String, Object> repsonse = restTemplate.getForObject(url, Map.class);
+			Map<String, Object> innerMap = (Map<String, Object>) repsonse.get("response");
+			
+			buyId = productService.buyProduct(id, productCnt, storeId, memberId, impUID, orderNum, name, cellphoneNum, cellphoneNum2, zipNo, roadAddr, addrDetail, dlvyMemo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			return Utility.jsReplace("상품 구매에 실패하였습니다.", Utility.f("/usr/product/view?id=%d&storeId=%d", id, storeId));
+		}
+		
+		return Utility.jsReplace("", Utility.f("/usr/product/orderStatus?id=%d", buyId));
+	}
+	
+	// 주문 상세보기 || 로그인 멤버
+	@RequestMapping("/usr/product/orderStatus")
+	public String showOrderStatus(Model model, int id) {
+		PurchaseList purchase = productService.getPurchase(id);
+		
+		if(purchase.getMemberId() != rq.getLoginedMemberId()) {
+			return rq.jsReturnOnView("잘못된 정보입니다, 다시 시도해주세요.", false, "usr/main/home");
+		}
+		
+		String url = Utility.f("https://api.iamport.kr/payments/%s?_token=%s", purchase.getImpUID(), getToken());
+		
+		RestTemplate restTemplate = new RestTemplate();
+		Map<String, Object> repsonse = restTemplate.getForObject(url, Map.class);
+		Map<String, Object> innerMap = (Map<String, Object>) repsonse.get("response");
+		
+		// 지금은 결제 시스템 상황 상 완료로 진행 나중엔 status 값을 받아서 해당 값을 전달, 해당 값에 따라 결제 진행중, 결제 완료 표시
+		model.addAttribute("payMethod", innerMap.get("pay_method"));
+		model.addAttribute("vbank_name", innerMap.get("vbank_name"));
+		model.addAttribute("vbank_holder", innerMap.get("vbank_holder"));
+		model.addAttribute("vbank_num", innerMap.get("vbank_num"));
+		model.addAttribute("purchase", purchase);
+		
+		return "/usr/product/orderStatus";
+	}
+	
+	// 주문 확인/배송 조회 페이지 || 로그인 멤버
+	@RequestMapping("/usr/product/orderList")
+	public String showOrderList(Model model, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum) {
+		if (page <= 0) {
+			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
+		}
+		
+		// 현재 등록된 상품 수
+		int purchaseCount = productService.getPurchaseCount(searchKeyword, rq.getLoginedMemberId());
+		// 한 페이지에 나올 스토어 수
+		int itemsInAPage = itemsNum;
+		// 상품 수에 따른 페이지 수 계산
+		int pagesCount = (int) Math.ceil(purchaseCount / (double) itemsInAPage);
+
+		List<PurchaseList> purchaseList = productService.getPurchaseList(searchKeyword, itemsInAPage, page, rq.getLoginedMemberId());
+
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("purchaseCount", purchaseCount);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("purchaseList", purchaseList);
+		model.addAttribute("page", page);
+		
+		return "/usr/product/orderList";
+	}
+	
+	// 주문 목록 페이지 || 판매자
+	@RequestMapping("/usr/product/sellerOrderList")
+	public String showSellerOrderList(Model model, int id, String storeModifyAuthKey,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum) {
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), id,
+				storeModifyAuthKey);
+
+		if (storeVerifyTestRD.isFail()) {
+			return rq.jsReturnOnView(storeVerifyTestRD.getMsg(), false, "/usr/home/main");
+		}
+		
+		if (page <= 0) {
+			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
+		}
+		
+		// 현재 등록된 상품 수
+		int orderCount = productService.getOrderCount(searchKeyword, id);
+		// 한 페이지에 나올 스토어 수
+		int itemsInAPage = itemsNum;
+		// 상품 수에 따른 페이지 수 계산
+		int pagesCount = (int) Math.ceil(orderCount / (double) itemsInAPage);
+
+		List<PurchaseList> orderList = productService.getOrderList(searchKeyword, itemsInAPage, page, id);
+
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("orderCount", orderCount);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("orderList", orderList);
+		model.addAttribute("page", page);
+		
+		return "/usr/product/sellerOrderList";
+	}
+
+	// 구매 확정
+	@RequestMapping("/usr/product/confirmPurchase")
+	@ResponseBody
+	public String doConfirmPurchase(int id, int memberId) {
+		if(memberId != rq.getLoginedMemberId()) {
+			return Utility.jsReplace("잘못된 방식의 접근입니다.", "/usr/home/main");
+		}
+		
+		productService.confirmPurchase(id);
+		
+		return Utility.jsReplace("", "/usr/product/orderList");
+	}
+	
+	// 주문 취소
+	@RequestMapping("/usr/product/cancelPurchase")
+	@ResponseBody
+	public String doCancelPurchase(int id, int memberId) {
+		if(memberId != rq.getLoginedMemberId()) {
+			return Utility.jsReplace("잘못된 방식의 접근입니다.", "/usr/home/main");
+		}
+		
+		productService.cancelPurchase(id);
+		
+		return Utility.jsReplace("", "/usr/product/orderList");
+	}
+	
+	// 주문 취소 | 판매자
+	@RequestMapping("/usr/product/sellerCancelPurchase")
+	@ResponseBody
+	public String doSellerCancelPurchase(int storeId, String storeModifyAuthKey, int orderId, int productId, int ordPCnt) {
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), storeId, storeModifyAuthKey);
+
+		if (storeVerifyTestRD.isFail()) {
+			return rq.jsReturnOnView(storeVerifyTestRD.getMsg(), false, "/usr/home/main");
+		}
+		
+		productService.sellerCancelPurchase(orderId, productId, ordPCnt);
+		
+		return Utility.jsReplace("주문이 취소됐습니다.", Utility.f("sellerOrderList?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
+	}
+	
+	// 주문 확정, 운송장 번호 작성 | 판매자
+	@RequestMapping("/usr/product/checkPurchase")
+	@ResponseBody
+	public String doCheckPurchase(int storeId, String storeModifyAuthKey, int orderId, int productId, int ordCheck, int ordPCnt, String waybill) {
+		// 인증코드 및 본인 스토어 검사
+		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), storeId, storeModifyAuthKey);
+
+		if (storeVerifyTestRD.isFail()) {
+			return rq.jsReturnOnView(storeVerifyTestRD.getMsg(), false, "/usr/home/main");
+		}
+		
+		productService.checkPurchase(orderId, productId, ordCheck, ordPCnt, waybill);
+		
+		return Utility.jsReplace("주문을 확정했습니다.", Utility.f("sellerOrderList?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
+	}
+	
 	// 토큰 생성
 	public String getToken() {
 		String apiKey = "8281306145407044";
@@ -356,36 +526,4 @@ public class UsrProductController {
 
 		return _token;
 	}
-
-	// 상품 구매
-	@RequestMapping("/usr/product/buyProduct")
-	@ResponseBody
-	public String buyProduct(int id, int storeId, int memberId, String impUID, String orderNum,
-			String name, String cellphoneNum, String cellphoneNum2,
-			String zipNo, String roadAddr, String addrDetail, String dlvyMemo) {
-		String _token = getToken();
-
-		try {
-			String url = Utility.f("https://api.iamport.kr/payments/%s?_token=%s", impUID, _token);
-			
-			RestTemplate restTemplate = new RestTemplate();
-			Map<String, Object> repsonse = restTemplate.getForObject(url, Map.class);
-			Map<String, Object> innerMap = (Map<String, Object>) repsonse.get("response");
-			
-			productService.buyProduct(id, storeId, memberId, impUID, orderNum, name, cellphoneNum, cellphoneNum2, zipNo, roadAddr, addrDetail, dlvyMemo);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			return Utility.jsReplace("상품 구매에 실패하였습니다.", Utility.f("/usr/product/view?id=%d&storeId=%d", id, storeId));
-		}
-		  
-		return "주문확인/배송조회 페이지로 이동시켜야함";
-	}
-
-	// 상품 구매 후 > 주문확인/배송조회 페이지로 이동
-	// 주문확인/배송조회 페이지 이하 주문목록 페이지는 해당 회원이 구매한 기록을 서치해 목록으로 보여준다.
-	// 해당 페이지에서는 구매확정, 리뷰쓰기, 재구매, 주문상세, 결제 날짜, 배송조회 간략한 주문한 상품 정보를 보여준다. (문의 하기는 시간이 있다면 진행)
-	// 배송조회는 운송장 번호가 없지만 판매자가 확인 후 작성할 수 있도록 판매자 공간도 만들어준다.
-	// 주문상세 페이지도 구현한다.
 }

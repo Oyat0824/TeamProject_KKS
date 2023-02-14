@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Product;
+import com.kks.work.project.vo.PurchaseList;
 
 @Mapper
 public interface ProductRepository {
@@ -98,7 +99,7 @@ public interface ProductRepository {
 				SELECT * FROM product
 				WHERE 1 = 1
 				<if test="searchKeyword != ''">
-					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
 				ORDER BY id DESC
 				LIMIT #{limitStart}, #{itemsInAPage}
@@ -158,11 +159,13 @@ public interface ProductRepository {
 			""")
 	public void deleteProduct(int id);
 
+	// 상품 구매 시 구매목록에 추가
 	@Insert("""
 			INSERT INTO purchaseList
 			SET regDate = NOW(),
 			updateDate = NOW(),
 			productId = #{id},
+			productCnt = #{productCnt},
 			storeId = #{storeId},
 			memberId = #{memberId},
 			impUID = #{impUID},
@@ -175,8 +178,144 @@ public interface ProductRepository {
 			addrDetail = #{addrDetail},
 			dlvyMemo = #{dlvyMemo}
 			""")
-	public void buyProduct(int id, int storeId, int memberId, String impUID, String orderNum,
+	public void buyProduct(int id, int productCnt, int storeId, int memberId, String impUID, String orderNum,
 			String name, String cellphoneNum, String cellphoneNum2,
 			String zipNo, String roadAddr, String addrDetail, String dlvyMemo);
+
+	// 주문 목록, 개수 구하기
+	@Select("""
+			<script>
+				SELECT COUNT(*)
+				FROM purchaseList AS PC
+				INNER JOIN product AS P
+				ON PC.productId = P.id
+				WHERE 1 = 1
+				AND PC.memberId = #{memberId}
+				<if test="searchKeyword != ''">
+					AND P.productName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+			</script>
+			""")
+	public int getPurchaseCount(String searchKeyword, int memberId);
+	
+	// 주문 목록 || 로그인 멤버
+	@Select("""
+			<script>
+				SELECT PC.*,
+				P.productName AS productName,
+				P.productPrice AS productPrice
+				FROM purchaseList AS PC
+				INNER JOIN product AS P
+				ON PC.productId = P.id
+				WHERE 1 = 1
+				AND PC.memberId = #{loginedMemberId}
+				<if test="searchKeyword != ''">
+					AND P.productName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				ORDER BY PC.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
+			</script>
+			""")
+	public List<PurchaseList> getPurchaseList(String searchKeyword, int itemsInAPage, int limitStart, int loginedMemberId);
+
+	// 주문 목록, 개수 구하기 || 판매자
+	@Select("""
+		<script>
+			SELECT COUNT(*)
+			FROM purchaseList AS PC
+			INNER JOIN product AS P
+			ON PC.productId = P.id
+			WHERE 1 = 1
+			AND PC.storeId = #{storeId}
+			<if test="searchKeyword != ''">
+				AND P.productName LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+		</script>
+		""")
+	public int getOrderCount(String searchKeyword, int storeId);
+	
+	// 주문 목록 || 판매자
+	@Select("""
+		<script>
+			SELECT SUB.*,
+			P.productName AS productName,
+			P.productPrice AS productPrice
+			FROM(
+				SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, PC.*
+				FROM purchaseList AS PC, (SELECT @ROWNUM := 0 ) AS TEMP
+				WHERE PC.storeId = #{storeId}
+				) SUB
+			INNER JOIN product AS P
+			ON SUB.productId = P.id
+			<if test="searchKeyword != ''">
+				WHERE P.productName LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+			ORDER BY SUB.ROWNUM DESC
+			LIMIT #{limitStart}, #{itemsInAPage}
+		</script>
+		""")
+	public List<PurchaseList> getOrderList(String searchKeyword, int itemsInAPage, int limitStart, int storeId);
+	
+	// 주문 상세보기 || 로그인 멤버
+	@Select("""
+			SELECT PC.*,
+				S.storeName AS storeName,
+				M.cellphoneNum AS sellerTel,
+				P.productName AS productName,
+				P.productPrice AS productPrice,
+				P.productDlvy AS productDlvy,
+				P.productDlvyPrice AS productDlvyPrice
+			FROM purchaseList AS PC
+			INNER JOIN store AS S
+			ON PC.storeId = S.id
+			INNER JOIN `member` AS M
+			ON S.memberId = M.id
+			INNER JOIN product AS P
+			ON PC.productId = P.id
+			WHERE PC.id = #{id};
+			""")
+	public PurchaseList getPurchase(int id);
+	
+	// 구매 확정
+	@Update("""
+			UPDATE purchaseList
+			SET updateDate = NOW(),
+				confirm = 1
+			WHERE id = #{id}
+			""")
+	public void confirmPurchase(int id);
+	
+	// 주문 취소
+	@Update("""
+		UPDATE purchaseList
+		SET updateDate = NOW(),
+			cancel = 1
+		WHERE id = #{id}
+		""")
+	public void cancelPurchase(int id);
+	@Update("""
+		UPDATE product
+		SET productStock = productStock + #{ordPCnt}
+		WHERE id = #{productId}
+		""")
+	public void increaseProductStock(int productId, int ordPCnt);
+
+	// 주문 확인, 운송장 번호 전송
+	@Update("""
+		UPDATE purchaseList
+		SET updateDate = NOW(),
+			ordCheck = 1,
+			waybill = #{waybill}
+		WHERE id = #{orderId}
+		""")
+	public void checkPurchase(int orderId, String waybill);
+	@Update("""
+		UPDATE product
+		SET productStock = productStock - #{ordPCnt}
+		WHERE id = #{productId}
+		""")
+	public void decreaseProductStock(int productId, int ordPCnt);
+
+	
 
 }

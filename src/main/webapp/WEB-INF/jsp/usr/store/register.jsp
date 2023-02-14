@@ -197,15 +197,16 @@
 								</div>
 							</td>
 						</tr>
-						<tr>
-							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>스토어 등록</button></td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
+			
+			<div class="flex mt-5">
+				<button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>스토어 등록</button>
+			</div>
 		</form>
-		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
+		<div class="flex justify-end mt-5">
+			<button class="btn" onclick="history.back();"><i class="fa-solid fa-right-from-bracket mr-2"></i> 뒤로가기</button>
 		</div>
 	</div>
 </section>

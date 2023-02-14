@@ -123,8 +123,8 @@
 <section>
 	<div class="flex container mx-auto">
 		<%@ include file="../common/sideMenu.jsp"%>
-
 		<div class="w-full my-10">
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">스토어 수정</h1>
 			<form action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return StoreModify__submit(this);">
 				<input type="hidden" name="id" value="${store.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
