@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kks.work.project.vo.Product;
 import com.kks.work.project.vo.PurchaseList;
+import com.kks.work.project.vo.Review;
 
 @Mapper
 public interface ProductRepository {
@@ -340,6 +341,16 @@ public interface ProductRepository {
 		AND memberId = #{loginedMemberId}
 		""")
 	public int isReview(int id, int loginedMemberId);
+
+	// 리뷰 목록
+	@Select("""
+		SELECT *
+		FROM review
+		WHERE storeId = #{storeId}
+		AND productId = #{id}
+		ORDER BY id DESC;
+		""")
+	public List<Review> getReviews(int storeId, int id);
 
 	
 

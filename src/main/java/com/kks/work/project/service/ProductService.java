@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kks.work.project.repository.ProductRepository;
 import com.kks.work.project.vo.Product;
 import com.kks.work.project.vo.PurchaseList;
+import com.kks.work.project.vo.Review;
 
 @Service
 public class ProductService {
@@ -149,8 +150,14 @@ public class ProductService {
 		return id;
 	}
 
+	// 리뷰 존재 확인
 	public int isReview(int id, int loginedMemberId) {
 		return productRepository.isReview(id, loginedMemberId);
+	}
+	
+	// 리뷰 목록
+	public List<Review> getReviews(int storeId, int id) {
+		return productRepository.getReviews(storeId, id);
 	}
 
 }

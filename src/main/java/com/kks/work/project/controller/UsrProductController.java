@@ -29,6 +29,7 @@ import com.kks.work.project.vo.Category;
 import com.kks.work.project.vo.GenFile;
 import com.kks.work.project.vo.Product;
 import com.kks.work.project.vo.PurchaseList;
+import com.kks.work.project.vo.Review;
 import com.kks.work.project.vo.Rq;
 import com.kks.work.project.vo.Store;
 
@@ -144,11 +145,13 @@ public class UsrProductController {
 		List<Category> categorys = storeService.getCategorysByStoreId(storeId);
 		Product product = productService.getProductByStoreIdAndId(storeId, id);
 		List<GenFile> fileList = genFileService.getGenFiles("product", id, "extra", "productImg");
-
+		List<Review> reviews = productService.getReviews(storeId, id);
+		
 		model.addAttribute("store", store);
 		model.addAttribute("categorys", categorys);
 		model.addAttribute("product", product);
 		model.addAttribute("fileList", fileList);
+		model.addAttribute("reviews", reviews);
 
 		return "/usr/product/view";
 	}
