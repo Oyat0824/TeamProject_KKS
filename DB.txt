@@ -113,8 +113,8 @@ CREATE TABLE purchaseList(
 	ordCheck TINYINT(1) DEFAULT 0 COMMENT '주문 확인 (0 = 무, 1 = 유)',
 	confirm TINYINT(1) DEFAULT 0 COMMENT '구매 확정 (0 = 무, 1 = 유)',
 	cancel TINYINT(1) DEFAULT 0 COMMENT '주문 취소 (0 = 무, 1 = 유)',
-	UNIQUE `uniqueKey` (impUID),
-	KEY `indexKey` (impUID)
+	UNIQUE `uniqueKey` (impUID, orderNum),
+	KEY `indexKey` (impUID, orderNum)
 );
 
 ##### category 테이블 생성

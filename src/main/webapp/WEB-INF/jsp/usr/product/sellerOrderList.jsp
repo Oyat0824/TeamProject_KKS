@@ -65,7 +65,7 @@
 							<td><span>${order.regDate.substring(0, 10) }</span></td>
 							<td><span>${order.dlvyMemo == "" ? "-" : order.dlvyMemo}</span></td>
 							<td>
-								<form class="relative" action="checkPurchase">
+								<form class="relative" action="checkPurchase" ${order.cancel == 1 ? "onsubmit='return false;'" : '' }>
 									<input type="hidden" name="storeId" value="${param.id }" />
 									<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey }" />
 									<input type="hidden" name="orderId" value="${order.id }" />

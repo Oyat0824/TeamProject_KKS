@@ -140,8 +140,17 @@ public class ProductService {
 		}
 	}
 
-	
+	// 리뷰 작성
+	public int createReview(int storeId, int productId, int memberId, int rating, String reviewBody) {
+		productRepository.createReview(storeId, productId, memberId, rating, reviewBody);
+		
+		int id = productRepository.getLastInsertId();
+		
+		return id;
+	}
 
-	
+	public int isReview(int id, int loginedMemberId) {
+		return productRepository.isReview(id, loginedMemberId);
+	}
 
 }

@@ -346,6 +346,7 @@ public class UsrProductController {
 	@RequestMapping("/usr/product/orderStatus")
 	public String showOrderStatus(Model model, int id) {
 		PurchaseList purchase = productService.getPurchase(id);
+		int isReview = productService.isReview(purchase.getProductId(), rq.getLoginedMemberId());
 		
 		if(purchase.getMemberId() != rq.getLoginedMemberId()) {
 			return rq.jsReturnOnView("잘못된 정보입니다, 다시 시도해주세요.", false, "usr/main/home");
@@ -363,6 +364,7 @@ public class UsrProductController {
 		model.addAttribute("vbank_holder", innerMap.get("vbank_holder"));
 		model.addAttribute("vbank_num", innerMap.get("vbank_num"));
 		model.addAttribute("purchase", purchase);
+		model.addAttribute("isReview", isReview);
 		
 		return "/usr/product/orderStatus";
 	}
@@ -483,6 +485,53 @@ public class UsrProductController {
 		productService.checkPurchase(orderId, productId, ordCheck, ordPCnt, waybill);
 		
 		return Utility.jsReplace("주문을 확정했습니다.", Utility.f("sellerOrderList?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));
+	}
+	
+	// 리뷰 작성 페이지 | 구매자
+	@RequestMapping("/usr/product/review")
+	public String showReview(Model model, int storeId, int productId) {
+		Store store = storeService.getStoreById(storeId);
+		Product product = productService.getProduct(productId);
+
+		if (store.getId() != product.getStoreId()) {
+			return rq.jsReturnOnView("잘못된 정보입니다, 다시 시도해주세요.", true);
+		}
+
+		model.addAttribute("store", store);
+		model.addAttribute("product", product);
+		
+		return "/usr/product/review";
+	}
+	
+	// 리뷰 작성
+	@RequestMapping("/usr/product/createReview")
+	@ResponseBody
+	public String doCreateReview(int storeId, int productId, int memberId, int rating, String reviewBody, MultipartRequest multipartRequest) {
+		// 유효성 검사
+		if (Utility.isEmpty(storeId) || Utility.isEmpty(productId) || Utility.isEmpty(memberId)) {
+			return Utility.jsReplace("잘못된 경로로 접속하셨습니다.", "/usr/home/main");
+		}
+		if (Utility.isEmpty(rating)) {
+			return Utility.jsHistoryBack("평점을 입력해주세요.");
+		}
+		if (Utility.isEmpty(reviewBody)) {
+			return Utility.jsHistoryBack("리뷰 내용을 작성해주세요.");
+		}
+		
+		int id = productService.createReview(storeId, productId, memberId, rating, reviewBody);
+		
+		// 이미지 업로드
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, id);
+			}
+		}
+		
+		return Utility.jsClose("리뷰가 등록됐습니다!");
 	}
 	
 	// 토큰 생성

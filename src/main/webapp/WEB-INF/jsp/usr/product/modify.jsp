@@ -94,6 +94,10 @@
 		  return false;
 		}
 		
+		if(form.productDlvy.value == 0) {
+			form.productDlvyPrice.value = 0;
+		}
+		
 		// 콤마 제거
 		form.productPrice.value = uncomma(form.productPrice.value);
 		form.productStock.value = uncomma(form.productStock.value);

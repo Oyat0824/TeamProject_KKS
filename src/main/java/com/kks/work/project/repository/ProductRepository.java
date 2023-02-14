@@ -272,6 +272,8 @@ public interface ProductRepository {
 			ON S.memberId = M.id
 			INNER JOIN product AS P
 			ON PC.productId = P.id
+			INNER JOIN review AS R
+			ON PC.productId = R.productId
 			WHERE PC.id = #{id};
 			""")
 	public PurchaseList getPurchase(int id);
@@ -315,6 +317,28 @@ public interface ProductRepository {
 		WHERE id = #{productId}
 		""")
 	public void decreaseProductStock(int productId, int ordPCnt);
+
+	// 리뷰 작성
+	@Insert("""
+		INSERT INTO review
+		SET regDate = NOW(),
+		updateDate = NOW(),
+		storeId = #{storeId},
+		productId = #{productId},
+		memberId = #{memberId},
+		rating = #{rating},
+		reviewBody = #{reviewBody}
+		""")
+	public void createReview(int storeId, int productId, int memberId, int rating, String reviewBody);
+
+	// 리뷰 존재 확인
+	@Select("""
+		SELECT COUNT(*)
+		FROM review
+		WHERE productId = #{id}
+		AND memberId = #{loginedMemberId}
+		""")
+	public int isReview(int id, int loginedMemberId);
 
 	
 

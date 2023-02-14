@@ -66,7 +66,7 @@
 							<li><a class="hover:underline mr-5" href="">관심스토어</a></li>
 							<li class="relative">
 								<a class="lyr hover:underline mr-5" onclick="lyrOpen2(); return false;" href="javascript:void();" >
-									마이페이지<i class="fa-solid fa-caret-down ml-1"></i>
+									마이페이지<i class="lyr fa-solid fa-caret-down ml-1"></i>
 								</a>
 								<div class="lyr myPage">
 									<div class="mb-1"><a href="/usr/product/orderList">주문확인/배송조회</a></div>
