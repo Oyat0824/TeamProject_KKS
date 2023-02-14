@@ -55,7 +55,6 @@
 							$(function(){
 								$("html").click(function(e) {   
 									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){
-										console.log($(e.target).parents(".open_lyr"))
 										$(".my_lyr").removeClass("open_lyr");
 										$(".myPage").removeClass("open_lyr");
 									}

@@ -62,7 +62,7 @@
 						<a class="flex-auto block border-r py-3 text-center" href="cancelPurchase?id=${item.id}&memberId=${item.memberId}" onclick="return confirm('주문을 취소하시겠습니까?');">주문취소</a>
 					</c:if>
 					<c:if test="${item.cancel == 0 && item.ordCheck == 1}">
-						<a class="flex-auto block py-3 text-center" href="">배송조회</a>
+						<a class="block" target="_blank" href="https://info.sweettracker.co.kr/api/v1/trackingInfo?t_code=${purchase.productCourierCode}&t_invoice=${purchase.waybill}&t_key=PeejEA9In6DkVstXuCzaaw">배송조회</a>
 					</c:if>
 				</div>
 			</div>

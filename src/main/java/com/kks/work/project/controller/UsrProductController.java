@@ -70,7 +70,7 @@ public class UsrProductController {
 	@RequestMapping("/usr/product/doRegister")
 	@ResponseBody
 	public String doRegister(int id, String storeModifyAuthKey, String productName, String productPrice,
-			String productCategory, String productStock, int productDlvy, String productCourier,
+			String productCategory, String productStock, int productDlvy, String productCourier, String productCourierCode,
 			String productDlvyPrice, String productBody, MultipartRequest multipartRequest) {
 		// 인증코드 및 본인 스토어 검사
 		ResultData<Store> storeVerifyTestRD = storeService.StoreVerifyTest(rq.getLoginedMemberId(), id,
@@ -93,7 +93,7 @@ public class UsrProductController {
 		if (Utility.isEmpty(productDlvy)) {
 			return Utility.jsHistoryBack("배송 방식을 선택해주세요!");
 		}
-		if (Utility.isEmpty(productCourier)) {
+		if (Utility.isEmpty(productCourier) || Utility.isEmpty(productCourierCode)) {
 			return Utility.jsHistoryBack("배송사를 선택해주세요!");
 		}
 		if (productDlvy == 1 && Utility.isEmpty(productDlvyPrice)) {
@@ -123,7 +123,7 @@ public class UsrProductController {
 		}
 
 		int productId = productService.registerProduct(productName, productPrice, productCategory, productStock,
-				productDlvy, productCourier, productDlvyPrice, productBody, id);
+				productDlvy, productCourier, productCourierCode, productDlvyPrice, productBody, id);
 
 		// 이미지가 있다면 업로드
 		for (String fileInputName : fileMap.keySet()) {
@@ -239,7 +239,7 @@ public class UsrProductController {
 	@RequestMapping("/usr/product/doModify")
 	@ResponseBody
 	public String doModify(HttpServletRequest req, int storeId, int id, String storeModifyAuthKey, String productName,
-			String productPrice, String productCategory, String productStock, int productDlvy, String productCourier,
+			String productPrice, String productCategory, String productStock, int productDlvy, String productCourier, String productCourierCode,
 			String productDlvyPrice, String productBody, MultipartRequest multipartRequest) {
 		// 본인 스토어 검사
 		ResultData<Store> actorCanModifyRD = storeService.actorCanMD(rq.getLoginedMemberId(), storeId);
@@ -270,7 +270,7 @@ public class UsrProductController {
 			}
 		}
 		productService.doModify(id, productName, productPrice, productCategory, productStock, productDlvy,
-				productCourier, productDlvyPrice, productBody);
+				productCourier, productCourierCode, productDlvyPrice, productBody);
 
 		return Utility.jsReplace("상품정보를 수정했습니다!",
 				Utility.f("list?id=%d&storeModifyAuthKey=%s", storeId, storeModifyAuthKey));

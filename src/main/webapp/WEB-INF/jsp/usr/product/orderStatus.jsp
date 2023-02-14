@@ -84,7 +84,7 @@
 						</c:if>
 						<c:if test="${purchase.cancel == 0 && purchase.ordCheck == 1}">
 							<div class="flex-auto mx-1 p-2 border text-center">
-								<a class="block" href="">배송조회</a>
+								<a class="block" target="_blank" href="https://info.sweettracker.co.kr/api/v1/trackingInfo?t_code=${purchase.productCourierCode}&t_invoice=${purchase.waybill}&t_key=PeejEA9In6DkVstXuCzaaw">배송조회</a>
 							</div>
 						</c:if>
 						<c:if test="${purchase.cancel == 0 && purchase.confirm == 0}">

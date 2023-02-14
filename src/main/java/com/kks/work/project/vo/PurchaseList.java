@@ -36,6 +36,7 @@ public class PurchaseList{
 	private String productPrice;
 	private int productDlvy;
 	private String productDlvyPrice;
+	private String productCourierCode;
 	
 	// 스토어 정보
 	private String storeName;

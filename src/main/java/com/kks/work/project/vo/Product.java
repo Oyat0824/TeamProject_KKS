@@ -17,6 +17,7 @@ public class Product{
 	private String productStock;
 	private String productDlvy;
 	private String productCourier;
+	private String productCourierCode;
 	private String productDlvyPrice;
 	private String productBody;
 	private int storeId;

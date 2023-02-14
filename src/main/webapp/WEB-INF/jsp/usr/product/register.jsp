@@ -100,6 +100,8 @@
 		form.productPrice.value = uncomma(form.productPrice.value);
 		form.productStock.value = uncomma(form.productStock.value);
 		form.productDlvyPrice.value = uncomma(form.productDlvyPrice.value);
+		// 택배사 코드 기입
+		form.productCourierCode.value = form.productCourier[form.productCourier.selectedIndex].dataset.code;
 		
 		form.productBody.value = html;
 	}
@@ -144,7 +146,7 @@
 			dataType: "json",
 			success: function(data) {
 				$(data.Company).each(function(idx, data) {
-					$("select[name=productCourier]").append(`<option value="\${data.Name}">\${data.Name}</option>`);
+					$("select[name=productCourier]").append(`<option value="\${data.Name}" data-code="\${data.Code}">\${data.Name}</option>`);
 				})
 			},
 			error: function(e) {
@@ -174,7 +176,7 @@
 			}
 		});
 
-		// SmartDlvyGetData();
+		SmartDlvyGetData();
 	});
 </script>
 
@@ -188,6 +190,8 @@
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
 				<input type="hidden" name="productBody" />
+				<input type="hidden" name="productCourierCode" />
+				
 				<div class="table-box-type-2">
 					<table class="table w-11/12 mx-auto">
 						<colgroup>
@@ -236,7 +240,6 @@
 										<span>택배사</span>
 										<select class="select select-bordered flex-1" name="productCourier">
 											<option value="">없음</option>
-											<option value="테스트">테스트</option>
 										</select>
 									</label>
 									<label class="input-group mt-3">

@@ -25,12 +25,13 @@ public interface ProductRepository {
 			productStock = #{productStock},
 			productDlvy = #{productDlvy},
 			productCourier = #{productCourier},
+			productCourierCode = #{productCourierCode},
 			productDlvyPrice = #{productDlvyPrice},
 			productBody = #{productBody},
 			storeId = #{storeId}
 			""")
 	public void registerProduct(String productName, String productPrice, String productCategory,
-			String productStock, int productDlvy, String productCourier, String productDlvyPrice, String productBody, int storeId);
+			String productStock, int productDlvy, String productCourier, String productCourierCode, String productDlvyPrice, String productBody, int storeId);
 
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -138,6 +139,7 @@ public interface ProductRepository {
 					</if>
 					<if test="productCourier != null">
 						productCourier = #{productCourier},
+						productCourierCode = #{productCourierCode},
 					</if>
 					<if test="productDlvyPrice != null">
 						productDlvyPrice = #{productDlvyPrice},
@@ -150,7 +152,7 @@ public interface ProductRepository {
 			</script>
 			""")
 	public void doModify(int id, String productName, String productPrice, String productCategory, String productStock,
-			int productDlvy, String productCourier, String productDlvyPrice, String productBody);
+			int productDlvy, String productCourier, String productCourierCode, String productDlvyPrice, String productBody);
 	
 	// 등록된 상품 삭제
 	@Delete("""
@@ -264,7 +266,8 @@ public interface ProductRepository {
 				P.productName AS productName,
 				P.productPrice AS productPrice,
 				P.productDlvy AS productDlvy,
-				P.productDlvyPrice AS productDlvyPrice
+				P.productDlvyPrice AS productDlvyPrice,
+				P.productCourierCode AS productCourierCode
 			FROM purchaseList AS PC
 			INNER JOIN store AS S
 			ON PC.storeId = S.id
@@ -272,8 +275,6 @@ public interface ProductRepository {
 			ON S.memberId = M.id
 			INNER JOIN product AS P
 			ON PC.productId = P.id
-			INNER JOIN review AS R
-			ON PC.productId = R.productId
 			WHERE PC.id = #{id};
 			""")
 	public PurchaseList getPurchase(int id);
