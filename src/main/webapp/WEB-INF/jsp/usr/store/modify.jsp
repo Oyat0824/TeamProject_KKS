@@ -23,22 +23,17 @@
 		const storeLogoFileInput = form["file__store__0__extra__storeLogo__1"];
 		const storeImgFileInput = form["file__store__0__extra__storeImg__1"];
 
-		if (storeLogoFileInput.value) {
-			if (storeLogoFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				storeLogoFileInput.focus();
+		if (storeLogoFileInput.value && storeLogoFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			storeLogoFileInput.focus();
 
-				return false;
-			}
+			return false;
 		}
+		if (storeImgFileInput.value && storeImgFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			storeImgFileInput.focus();
 
-		if (storeImgFileInput.value) {
-			if (storeImgFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				storeImgFileInput.focus();
-
-				return false;
-			}
+			return false;
 		}
 		
 		if (chkTextByte() == false) {
@@ -128,8 +123,8 @@
 <section>
 	<div class="flex container mx-auto">
 		<%@ include file="../common/sideMenu.jsp"%>
-
 		<div class="w-full my-10">
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">스토어 수정</h1>
 			<form action="doModify" method="POST" enctype="multipart/form-data" onsubmit="return StoreModify__submit(this);">
 				<input type="hidden" name="id" value="${store.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
@@ -143,13 +138,11 @@
 							<tr>
 								<th>스토어 로고</th>
 								<td>
-									<div>
-										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 350px; height: 100px"
-											src="${rq.getImgUri('store', store.id, 'storeLogo')}" alt="" />
-									</div>
-									<div class="mb-1 delBtn">
-										<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
-											class="ckeckbox" type="checkbox" name="deleteFile__store__0__extra__storeLogo__1" value="Y" />
+									<div class="delBtn form-control mx-auto">
+										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 350px; height: 100px" src="${rq.getImgUri('store', store.id, 'storeLogo')}" alt="" />							
+										<label class="label cursor-pointer w-28 mx-auto">
+											<input class="checkbox" type="checkbox" name="deleteFile__store__0__extra__storeLogo__1" value="Y" />
+											<span class="label-text">이미지 삭제</span>
 										</label>
 									</div>
 									<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
@@ -159,15 +152,14 @@
 							<tr>
 								<th>스토어 이미지</th>
 								<td>
-									<div>
-										<img id="storeImg" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px"
-											src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
-									</div>
-									<div class="mb-1 delBtn">
-										<label class="cursor-pointer inline-flex"> <span class="label-text mr-2">이미지 삭제</span> <input
-											class="ckeckbox" type="checkbox" name="deleteFile__store__0__extra__storeImg__1" value="Y" />
+									<div class="delBtn form-control mx-auto">
+										<img id="storeLogo" class="object-cover mx-auto mb-3" style="width: 250px; height: 250px" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />							
+										<label class="label cursor-pointer w-28 mx-auto">
+											<input class="checkbox" type="checkbox" name="deleteFile__store__0__extra__storeImg__1" value="Y" />
+											<span class="label-text">이미지 삭제</span>
 										</label>
-									</div> <input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
+									</div>
+									<input onchange="return imgChg(this);" accept="image/gif, image/jpeg, image/png"
 									class="file-input file-input-bordered border-gray-400" name="file__store__0__extra__storeImg__1" type="file" />
 								</td>
 							</tr>

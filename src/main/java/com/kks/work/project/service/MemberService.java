@@ -29,7 +29,8 @@ public class MemberService {
 
 // 서비스 메서드
 	// 회원가입
-	public ResultData<Integer> doJoin(String loginId, String loginPw, String name, String gender, String birthday, String email , String cellphoneNum, String salt) {
+	public ResultData<Integer> doJoin(String loginId, String loginPw, String salt, 
+			String name, String zipNo, String roadAddr, String addrDetail, String email, String cellphoneNum, String gender, String birthday) {
 		// 로그인 아이디 중복체크
 		Member existsMember = getMemberByLoginId(loginId);
 		if (existsMember != null) {
@@ -42,7 +43,7 @@ public class MemberService {
 			return ResultData.from("F-9", Utility.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
 		}
 	
-		memberRepository.doJoin(loginId, loginPw, name, gender, birthday, email, cellphoneNum, salt);
+		memberRepository.doJoin(loginId, loginPw, salt, name, zipNo, roadAddr, addrDetail, email, cellphoneNum, gender, birthday);
 
 		int id = memberRepository.getLastInsertId();
 		
@@ -90,8 +91,8 @@ public class MemberService {
 	}
 	
 	// 회원정보 수정
-	public void doModify(int loginedMemberId, String email, String cellphoneNum) {
-		memberRepository.doModify(loginedMemberId, email, cellphoneNum);
+	public void doModify(int loginedMemberId, String zipNo, String roadAddr, String addrDetail, String email, String cellphoneNum) {
+		memberRepository.doModify(loginedMemberId, zipNo, roadAddr, addrDetail, email, cellphoneNum);
 		attrService.remove("member", loginedMemberId, "extra", "memberModifyAuthKey");
 	}
 	

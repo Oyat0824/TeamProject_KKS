@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor 
-public class Store{
+public class Review{
 	private int id;
 	private String regDate;
 	private String updateDate;
-	private String storeName;
-	private String storeDesc;
+	private int storeId;
+	private int productId;
 	private int memberId;
+	private int rating;
+	private String reviewBody;
 	
-	private String sellerName;
-	
-	public String getForPrintDesc() {
-		return this.storeDesc.replaceAll("\n", "<br />");
+	public String getForPrintReviewBody() {
+		return this.reviewBody.replaceAll("\n", "<br />");
 	}
 }

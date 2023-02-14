@@ -15,11 +15,14 @@ public class Product{
 	private String productPrice;
 	private String productCategory;
 	private String productStock;
+	private String productDlvy;
+	private String productCourier;
+	private String productCourierCode;
+	private String productDlvyPrice;
 	private String productBody;
 	private int storeId;
 	
 	private int ROWNUM;
-	private boolean actorCanChangeData;
 	private String storeName;
 	private String categoryName;
 	

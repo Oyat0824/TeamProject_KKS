@@ -33,6 +33,12 @@ public class UsrMemberController {
 	}
 
 // 액션 메서드
+	// 주소팝업 페이지
+	@RequestMapping("/usr/member/jusoPopup")
+	public String showJusoPopup() {
+		return "usr/member/jusoPopup";
+	}
+	
 	// 회원가입 페이지
 	@RequestMapping("/usr/member/join")
 	public String showJoin() {
@@ -42,7 +48,9 @@ public class UsrMemberController {
 	// 회원가입
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public String doJoin(String loginId, String loginPw, String loginPwChk, String name, String gender, String birthday, String email, String cellphoneNum, MultipartRequest multipartRequest) {
+	public String doJoin(String loginId, String loginPw, String loginPwChk,
+			String name, String zipNo, String roadAddr, String addrDetail, String gender, String birthday, String email, String cellphoneNum,
+			MultipartRequest multipartRequest) {
 		// 정규식
 		String reg_num = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$"; // 휴대폰 번호
 		String reg_email = "^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$"; // 길이까지 확실한 검증
@@ -61,14 +69,15 @@ public class UsrMemberController {
 		if (Utility.isEmpty(loginPwChk)) {
 			return Utility.jsHistoryBack("비밀번호 확인을 입력해주세요!");
 		}
+		if (loginPw.equals(loginPwChk) == false) {
+			return Utility.jsHistoryBack("비밀번호와 비밀번호 확인 부분이 일치하지 않습니다!");
+		}
+		
 		if (Utility.isEmpty(name)) {
 			return Utility.jsHistoryBack("이름을 입력해주세요!");
 		}
-		if (Utility.isEmpty(gender) || !gender.equals("male") && !gender.equals("female")) {
-			return Utility.jsHistoryBack("성별을 선택해주세요!");
-		}
-		if (Utility.isEmpty(birthday)) {
-			return Utility.jsHistoryBack("생년월일을 입력해주세요!");
+		if (Utility.isEmpty(zipNo) && Utility.isEmpty(roadAddr)) {
+			return Utility.jsHistoryBack("주소를 입력해주세요!");
 		}
 		if (Utility.isEmpty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");
@@ -82,15 +91,18 @@ public class UsrMemberController {
 		if (!Pattern.matches(reg_num, cellphoneNum)) {
 			return Utility.jsHistoryBack("전화번호 형식이 틀렸습니다.\\n" + "ex) 010-1234-5678");
 		}
-		if (loginPw.equals(loginPwChk) == false) {
-			return Utility.jsHistoryBack("비밀번호와 비밀번호 확인 부분이 일치하지 않습니다!");
+		if (Utility.isEmpty(gender) || !gender.equals("male") && !gender.equals("female")) {
+			return Utility.jsHistoryBack("성별을 선택해주세요!");
+		}
+		if (Utility.isEmpty(birthday)) {
+			return Utility.jsHistoryBack("생년월일을 입력해주세요!");
 		}
 
 		// SHA256_SALT 생성
 		String salt = Utility.getTempPassword(20);
 		
 		// 회원가입 실행
-		ResultData<Integer> doJoinRd = memberService.doJoin(loginId, Utility.getEncrypt(loginPw, salt), name, gender, birthday, email, cellphoneNum, salt);
+		ResultData<Integer> doJoinRd = memberService.doJoin(loginId, Utility.getEncrypt(loginPw, salt), salt, name, zipNo, roadAddr, addrDetail, email, cellphoneNum, gender, birthday);
 		
 		// 회원가입 실패
 		if (doJoinRd.isFail()) {
@@ -225,7 +237,8 @@ public class UsrMemberController {
 	// 회원정보 수정
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
-	public String doModify(HttpServletRequest req, String memberModifyAuthKey, String email, String cellphoneNum, MultipartRequest multipartRequest) {
+	public String doModify(HttpServletRequest req, String memberModifyAuthKey,
+			String zipNo, String roadAddr, String addrDetail, String email, String cellphoneNum, MultipartRequest multipartRequest) {
 		if (Utility.isEmpty(memberModifyAuthKey)) {
 			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
 		}
@@ -235,13 +248,26 @@ public class UsrMemberController {
 		if (chkMemberModifyAuthKeyRd.isFail()) {
 			return Utility.jsReplace(chkMemberModifyAuthKeyRd.getMsg(), "chkPassword");
 		}
+		
+		// 정규식
+		String reg_num = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$"; // 휴대폰 번호
+		String reg_email = "^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$"; // 길이까지 확실한 검증
 
 		// 유효성 검사
+		if (Utility.isEmpty(zipNo) && Utility.isEmpty(roadAddr)) {
+			return Utility.jsHistoryBack("주소를 입력해주세요!");
+		}
 		if (Utility.isEmpty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");
 		}
+		if (!Pattern.matches(reg_email, email)) {
+			return Utility.jsHistoryBack("이메일 형식이 틀렸습니다.\\n" + "ex) abc123@email.com" );
+		}
 		if (Utility.isEmpty(cellphoneNum)) {
 			return Utility.jsHistoryBack("전화번호를 입력해주세요!");
+		}
+		if (!Pattern.matches(reg_num, cellphoneNum)) {
+			return Utility.jsHistoryBack("전화번호 형식이 틀렸습니다.\\n" + "ex) 010-1234-5678");
 		}
 		
 		// 이미지 삭제 체크 했다면 삭제
@@ -264,7 +290,7 @@ public class UsrMemberController {
 			}
 		}
 
-		memberService.doModify(rq.getLoginedMemberId(), email, cellphoneNum);
+		memberService.doModify(rq.getLoginedMemberId(), zipNo, roadAddr, addrDetail, email, cellphoneNum);
 
 		return Utility.jsReplace("회원정보가 수정됐습니다.", "myPage");
 	}

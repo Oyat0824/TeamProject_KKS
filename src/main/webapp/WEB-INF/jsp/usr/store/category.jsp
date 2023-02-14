@@ -22,7 +22,24 @@
 			return false;
 		}
 		
-		form.submit();
+		$.get('../store/getCategoryByStoreIdAndOrderNo', {
+			orderNo : form.orderNo.value,
+			storeId : ${storeId},
+			ajaxMode : 'Y'
+		}, function(data){
+			if(data.success) {
+				if(form.orderNo.value == data.data1.orderNo) {
+					alert("순서가 중복 됩니다, 삭제 또는 수정 후 진행해주세요!!!");
+					form.orderNo.focus();
+					
+					return false;
+				}
+			}
+			
+			form.submit();
+		}, 'json');
+		
+		return false;	
 	}
 	
 	let originalIndex = null;
@@ -70,7 +87,7 @@
 		<%@ include file="../common/sideMenu.jsp"%>
 		
 		<div class="w-full my-10">
-		
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">카테고리</h1>
 			<form action="addCategory" method="POST" onsubmit="return CategoryWrite__submitForm(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />
@@ -82,7 +99,7 @@
 						
 						<thead>
 							<tr>
-								<th colspan="2" class="cHead">입력</th>
+								<th colspan="2" class="cHead">카테고리 입력</th>
 							</tr>
 						</thead>
 
@@ -93,7 +110,7 @@
 							</tr>
 							<tr>
 								<th>순서</th>
-								<td><input type="number" min="1" max="10" class="input input-bordered w-full" name="orderNo" value="${categorys.size() + 1}" ${categorys.size() == 10 ? 'disabled' : '' } placeholder="순서를 입력해주세요." required></td>
+								<td><input type="number" min="1" max="10" numberOnly class="input input-bordered w-full" name="orderNo" value="${categorys.size() + 1}" ${categorys.size() == 10 ? 'disabled' : '' } placeholder="순서를 입력해주세요." required></td>
 							</tr>
 						</tbody>
 					</table>
@@ -121,7 +138,7 @@
 						
 						<thead>
 							<tr>
-								<th colspan="4" class="cHead">목록</th>
+								<th colspan="4" class="cHead">카테고리 목록</th>
 							</tr>
 							
 							<tr>

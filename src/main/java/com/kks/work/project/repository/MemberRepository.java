@@ -16,14 +16,18 @@ public interface MemberRepository {
 			updateDate = NOW(),
 			loginId = #{loginId},
 			loginPw = #{loginPw},
+			salt = #{salt},
 			`name` = #{name},
-			gender = #{gender},
-			birthday = #{birthday},
+			zipNo = #{zipNo},
+			roadAddr = #{roadAddr},
+			addrDetail = #{addrDetail},
 			email = #{email},
 			cellphoneNum = #{cellphoneNum},
-			salt = #{salt}
+			gender = #{gender},
+			birthday = #{birthday}
 			""")
-	public void doJoin(String loginId, String loginPw, String name, String gender,  String birthday, String email, String cellphoneNum, String salt);
+	public void doJoin(String loginId, String loginPw, String salt, 
+			String name, String zipNo, String roadAddr, String addrDetail, String email, String cellphoneNum, String gender, String birthday);
 
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -71,17 +75,26 @@ public interface MemberRepository {
 				UPDATE `member`
 				<set>
 					updateDate = NOW(),
-					<if test="cellphoneNum != null">
-						cellphoneNum = #{cellphoneNum},
+					<if test="zipNo != null">
+						zipNo = #{zipNo},
+					</if>
+					<if test="roadAddr != null">
+						roadAddr = #{roadAddr},
+					</if>
+					<if test="addrDetail != null">
+						addrDetail = #{addrDetail},
 					</if>
 					<if test="email != null">
-						email = #{email}
+						email = #{email},
+					</if>
+					<if test="cellphoneNum != null">
+						cellphoneNum = #{cellphoneNum}
 					</if>
 				</set>
 				WHERE id = #{loginedMemberId}
 			</script>
 			""")
-	public void doModify(int loginedMemberId, String email, String cellphoneNum);
+	public void doModify(int loginedMemberId, String zipNo, String roadAddr, String addrDetail, String email, String cellphoneNum);
 
 	// 비밀번호 수정
 	@Update("""

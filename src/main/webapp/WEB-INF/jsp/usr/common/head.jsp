@@ -19,9 +19,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 <!-- 커스텀 공통 CSS -->
 <link rel="stylesheet" href="/resource/common.css" />
+<!-- 슬릭 슬라이더 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" />
 <!-- 공통 JS -->
 <script src="/resource/common.js" defer="defer"></script>
 </head>
+
 <body>
 	<header>
 		<div class="xl:container mx-auto">
@@ -39,24 +44,42 @@
 						<script>
 							const lyrOpen = function() {
 								$(".my_lyr").toggleClass("open_lyr");
+								$(".myPage").removeClass("open_lyr");
+							}
+							
+							const lyrOpen2 = function() {
+								$(".myPage").toggleClass("open_lyr");
+								$(".my_lyr").removeClass("open_lyr");
 							}
 							
 							$(function(){
 								$("html").click(function(e) {   
-									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){   
+									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){
 										$(".my_lyr").removeClass("open_lyr");
+										$(".myPage").removeClass("open_lyr");
 									}
 								});
 							});
 						</script>
-						<div class="text-sm">
-							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
-						</div>
-						
+						<ul class="flex text-sm">
+							<li><a class="hover:underline mr-5" href="">관심스토어</a></li>
+							<li class="relative">
+								<a class="lyr hover:underline mr-5" onclick="lyrOpen2(); return false;" href="javascript:void();" >
+									마이페이지<i class="lyr fa-solid fa-caret-down ml-1"></i>
+								</a>
+								<div class="lyr myPage">
+									<div class="mb-1"><a href="/usr/product/orderList">주문확인/배송조회</a></div>
+									<div>찜한 상품</div>
+								</div>
+							</li>
+							<li><a class="hover:underline mr-5" href="">장바구니</a></li>
+							<li><a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a></li>
+						</ul>
+										
 						<div class="my_lyr">
 							<div class="flex items-center py-4 px-2 text-gray-600">
 								<div class="img_area">
-									<img class="w-20 object-cover rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
+									<img class="w-20 rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
 								</div>
 								<div class="ml-3 text-area">
 									<p class="account">
@@ -92,7 +115,10 @@
 				</div>
 			</div>
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
-				<div><a href="/usr/store/list">스토어 목록</a></div>
+				<div class="flex">
+					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
+					<div class="mr-5"><a href="/usr/product/exposureList">상품 목록</a></div>
+				</div>
 			</div>
 		</div>
 	</header>

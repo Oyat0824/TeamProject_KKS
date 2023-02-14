@@ -2,8 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<c:set var="pageTitle" value="Store List" />
-<%@ include file="../common/head.jsp"%>
+<c:set var="pageTitle" value="Product Exposure List" /> 
+<%@ include file="../common/head.jsp" %>
 
 <script>
 	const chgForm = function(e) {
@@ -41,6 +41,7 @@
 			$("[data-type='${param.listStyle}']").addClass("text-blue-500");
 		}
 	})
+
 </script>
 
 <section class="mt-8 text-xl">
@@ -74,25 +75,25 @@
 			
 		<c:if test="${param.listStyle == 'list' || param.listStyle == null}">
 			<div class="list">
-				<c:forEach var="store" items="${stores}">
+				<c:forEach var="product" items="${products}">
 					<div class="flex items-center p-5 hover:bg-gray-50 border-b">
 						<div class="img_area mr-10">
-							<a href="view?id=${store.id}">
-								<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
+							<a href="view?storeId=${product.storeId}&id=${product.id}">
+								<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('product', product.id, 'productImg')}" alt="" />
 							</a>
 						</div>
 						
 						<div class="info_area">
-							<div class="storeName text-base">
-								<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
+							<div class="productName text-base">
+								<a class="font-bold" href="view?storeId=${product.storeId}&id=${product.id}">${product.productName}</a>
 							</div>
-							<div class="flex items-center storeDesc text-sm my-3 h-20 overflow-hidden">
-								<p>${store.getForPrintDesc() }</p>
+							<div class="flex items-center productBody text-sm my-3 h-20 overflow-hidden">
+								<p>${product.getForPrintBody() }</p>
 							</div>
-							<div class="storeEtc text-sm">
+							<div class="productEtc text-sm">
 								<a href="">리뷰 수 <span class="text-indigo-600">12</span></a>
 								<a class="dot" href="">구매건수 <span class="text-indigo-600">567</span></a>
-								<span class="dot">등록일 ${store.regDate.substring(0, 8).replace("-", ".") }</span>
+								<span class="dot">등록일 ${product.regDate.substring(0, 8).replace("-", ".") }</span>
 								<a class="dot" href="">찜하기 <span class="text-indigo-600">567</span></a>
 							</div>
 						</div>
@@ -104,32 +105,32 @@
 		<c:if test="${param.listStyle == 'gallery'}">
 			<div class="gallery">
 				<div class="flex flex-wrap">
-					<c:forEach var="store" items="${stores}" varStatus="status">
+					<c:forEach var="product" items="${products}" varStatus="status">
 						<c:if test="${status.index % 5 == 0 }">
 							<div class="flex w-full my-3 pb-5 border-b">
 								<c:forEach var="i" begin="${status.index}" end="${status.index + (5 - 1)}" step="1">
-									<c:if test="${ stores[i] != null }">
+									<c:if test="${ products[i] != null }">
 										<div class="flex flex-col items-center w-1/5 overflow-hidden">
 											<div class="img_area">
-												<a href="view?id=${stores[i].id}">
-													<img class="w-40 h-40 border-2 border-gray-400" src="${rq.getImgUri('store', stores[i].id, 'storeImg')}" alt="" />
+												<a href="view?storeId=${storeId.id}&id=${products[i].id}">
+													<img class="w-40 h-40 border-2 border-gray-400" src="${rq.getImgUri('product', products[i].id, 'productImg')}" alt="" />
 												</a>
 											</div>
 											
 											<div class="info_area flex flex-col items-center mt-2 pl-2">
-												<div class="storeName text-base">
-													<a class="font-bold" href="view?id=${stores[i].id}">
+												<div class="productName text-base">
+													<a class="font-bold" href="view?storeId=${storeId.id}&id=${products[i].id}">
 														<c:choose>
-															<c:when test="${fn:length(stores[i].storeName) > 15}">
-																<c:out value="${fn:substring(stores[i].storeName, 0, 15)}.." />
+															<c:when test="${fn:length(products[i].productName) > 15}">
+																<c:out value="${fn:substring(products[i].productName, 0, 15)}.." />
 															</c:when>
 															<c:otherwise>
-																<c:out value="${stores[i].storeName }" />
+																<c:out value="${products[i].productName }" />
 													        </c:otherwise>
 												        </c:choose>
 													</a>
 												</div>
-												<div class="storeEtc text-sm mt-2">
+												<div class="productEtc text-sm mt-2">
 													<a href="">리뷰 <span class="text-indigo-600">12</span></a>
 													<a class="dot" href="">구매 <span class="text-indigo-600">567</span></a>
 												</div>	
@@ -180,4 +181,5 @@
 		</div>
 	</div>
 </section>
-<%@ include file="../common/foot.jsp"%>
+
+<%@ include file="../common/foot.jsp"%>	

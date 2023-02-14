@@ -20,7 +20,7 @@ CREATE TABLE genFile (
     fileExtTypeCode VARCHAR(10) NOT NULL,
     fileExtType2Code VARCHAR(10) NOT NULL,
     delDate DATETIME DEFAULT NULL COMMENT '삭제 날짜',
-	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제상태 (0 = 미삭제, 1 = 삭제)',
+	delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제상태 (0 = 미삭제, 1 = 삭제)',
     KEY relId (relTypeCode, relId, typeCode, type2Code, fileNo)
 );
 
@@ -31,15 +31,18 @@ CREATE TABLE `member`(
 	updateDate DATETIME NOT NULL,
 	loginId VARCHAR(20) NOT NULL,
 	loginPw VARCHAR(200) NOT NULL,
+	salt VARCHAR(100) NOT NULL,
 	`name` VARCHAR(20) NOT NULL,
+	zipNo VARCHAR(20) NOT NULL,
+	roadAddr VARCHAR(200) NOT NULL,
+	addrDetail VARCHAR(200),
+	email VARCHAR(50) NOT NULL,	
+	cellphoneNum VARCHAR(20) NOT NULL,
 	gender VARCHAR(10) NOT NULL COMMENT '성별 (male = 남자, female = 여자)',
 	birthday DATE NOT NULL,
-	email VARCHAR(50) NOT NULL,
-	cellphoneNum VARCHAR(20) NOT NULL,
-	salt VARCHAR(100) NOT NULL,
-	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
-	storeState TINYINT NOT NULL DEFAULT 0 COMMENT '가게 유무 (0 = 무, 1 = 유)',
-	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
+	memberType TINYINT(9) NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
+	storeState TINYINT(1) NOT NULL DEFAULT 0 COMMENT '가게 유무 (0 = 무, 1 = 유)',
+	delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
 	delDate DATETIME COMMENT '탈퇴 날짜',
 	UNIQUE `uniqueKey` (loginId)
 );
@@ -76,21 +79,49 @@ CREATE TABLE product(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
-	productName VARCHAR(40) NOT NULL,
+	productName VARCHAR(100) NOT NULL,
 	productPrice VARCHAR(40) NOT NULL,
-	productCategory VARCHAR(20),  
+	productCategory VARCHAR(20),
 	productStock VARCHAR(20) NOT NULL, # 상품재고
-	productBody VARCHAR(100) NOT NULL,
+	productDlvy TINYINT(1) NOT NULL COMMENT '배송 방법 (0 = 무료, 1 = 유료)',
+	productCourier VARCHAR(100) NOT NULL, # 택배사
+	productDlvyPrice VARCHAR(40) NOT NULL, # 배송 비용
+	productBody TEXT NOT NULL,
+	storeId INT UNSIGNED NOT NULL,
+	KEY `indexKey` (storeId)
+);
+
+##### purchaseList 테이블 생성
+CREATE TABLE purchaseList(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	productId INT UNSIGNED NOT NULL,
+	productCnt INT UNSIGNED NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
-	KEY `indexKey` (storeId, memberId)
+	impUID VARCHAR(200) NOT NULL, # 구매 고유 번호
+	orderNum VARCHAR(200) NOT NULL, # 주문 번호
+	`name` VARCHAR(20) NOT NULL,
+	cellphoneNum VARCHAR(20) NOT NULL,
+	cellphoneNum2 VARCHAR(20),
+	zipNo VARCHAR(20) NOT NULL,
+	roadAddr VARCHAR(200) NOT NULL,
+	addrDetail VARCHAR(200),	
+	dlvyMemo VARCHAR(100), # 배송 메모
+	waybill VARCHAR(200), # 운송장 번호
+	ordCheck TINYINT(1) DEFAULT 0 COMMENT '주문 확인 (0 = 무, 1 = 유)',
+	confirm TINYINT(1) DEFAULT 0 COMMENT '구매 확정 (0 = 무, 1 = 유)',
+	cancel TINYINT(1) DEFAULT 0 COMMENT '주문 취소 (0 = 무, 1 = 유)',
+	UNIQUE `uniqueKey` (impUID, orderNum),
+	KEY `indexKey` (impUID, orderNum)
 );
 
 ##### category 테이블 생성
 CREATE TABLE category(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`name` VARCHAR(40) NOT NULL,
-	orderNo TINYINT UNSIGNED NOT NULL UNIQUE,
+	orderNo TINYINT UNSIGNED NOT NULL,
 	storeId INT UNSIGNED NOT NULL
 );
 
@@ -101,46 +132,72 @@ SELECT * FROM genFile;
 SELECT * FROM `member`;
 SELECT * FROM store;
 SELECT * FROM product;
+SELECT * FROM purchaseList;
 SELECT * FROM category;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
-loginId = 'test1',
-loginPw = 'test1',
-`name` = '유저',
-gender = 'female',
-birthday = '1995-08-24',
-email = 'test@naver.com',
-cellphoneNum = '010-1234-5678',
-salt = 'test1';
+loginId = "test1",
+loginPw = "test1",
+salt = "test1",
+`name` = "고말숙",
+zipNo = "35234",
+roadAddr = "대전광역시 서구 둔산로 52",
+addrDetail = "미라클빌딩 3층",
+email = "test1@test.com",	
+cellphoneNum = "010-1234-5678",
+gender = "female",
+birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
+memberType = 3;
 
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
-loginId = 'test2',
-loginPw = 'test2',
-`name` = '판매자',
-gender = 'male',
-birthday = NOW(),
-email = 'test@naver.com',
-cellphoneNum = '010-1234-5678',
-memberType = 6,
-salt = 'test2';
+loginId = "test2",
+loginPw = "test2",
+salt = "test2",
+`name` = "고길동",
+zipNo = "35234",
+roadAddr = "대전광역시 서구 둔산로 52",
+addrDetail = "미라클빌딩 3층",
+email = "test2@test.com",	
+cellphoneNum = "010-1234-5678",
+gender = "male",
+birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
+memberType = 6;
 
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
-loginId = 'admin',
-loginPw = 'admin',
-`name` = '관리자',
-gender = 'male',
-birthday = NOW(),
-email = 'test@naver.com',
-cellphoneNum = '010-1234-5678',
-memberType = 9,
-salt = 'admin';
+loginId = "test3",
+loginPw = "test3",
+salt = "test3",
+`name` = "맨돌핀",
+zipNo = "35234",
+roadAddr = "대전광역시 서구 둔산로 52",
+addrDetail = "미라클빌딩 3층",
+email = "test3@test.com",	
+cellphoneNum = "010-1234-5678",
+gender = "male",
+birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
+memberType = 6;
 
-UPDATE `member`
-SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = "admin",
+loginPw = "admin",
+salt = "admin",
+`name` = "관리자",
+zipNo = "35234",
+roadAddr = "대전광역시 서구 둔산로 52",
+addrDetail = "미라클빌딩 3층",
+email = "admin@admin.com",	
+cellphoneNum = "010-1234-5678",
+gender = "male",
+birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
+memberType = 9;
+
+UPDATE `member` SET loginPw = SHA2(CONCAT(loginPw, salt), 256);

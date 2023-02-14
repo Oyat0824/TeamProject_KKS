@@ -19,6 +19,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
+		<h1 class="font-bold text-xl select-none mb-5">비밀번호 확인</h1>
 		<form action="doChkPassword" method="POST" onsubmit="return MemberLogin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
@@ -35,15 +36,18 @@
 							<th>로그인 비밀번호</th>
 							<td><input class="input input-ghost w-full text-lg border-gray-400" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요." /></td>
 						</tr>
-						<tr>
-							<td colspan="2"><button class="btn btn-outline btn-accent w-full">비밀번호 확인</button></td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
+			
+			<div class="mt-5">
+				<div>
+					<button class="btn btn-active btn-accent w-full text-white text-base">비밀번호 확인</button>
+				</div>
+			</div>
 		</form>
-		<div class="btns flex justify-between mt-5">
-			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
+		<div class="flex justify-end mt-5">
+			<button class="btn" onclick="history.back();"><i class="fa-solid fa-right-from-bracket mr-2"></i> 뒤로가기</button>
 		</div>
 	</div>
 </section>
