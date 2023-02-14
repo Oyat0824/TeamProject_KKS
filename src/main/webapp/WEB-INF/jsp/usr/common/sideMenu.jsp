@@ -3,7 +3,7 @@
 
 <script>
 	$(function(){
-		let num = $("section").height();
+		let num = $("section").height() + 40;
 		
 		$("#sideMenu").css("height", num);
 	})
