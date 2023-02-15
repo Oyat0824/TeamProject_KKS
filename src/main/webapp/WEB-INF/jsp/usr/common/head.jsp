@@ -96,6 +96,11 @@
 								<div class="flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 									<a href="/usr/member/myPage">마이 페이지</a>
 								</div>
+								<c:if test="${rq.getLoginedMember().getMemberType() == 9 && rq.getLoginedMember().getStoreState() == 0}">
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/admin/AdminPage">관리자 페이지</a>
+									</div>
+								</c:if>
 								<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 0}">
 									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 										<a href="/usr/store/register">스토어 등록</a>
@@ -118,6 +123,7 @@
 				<div class="flex">
 					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
 					<div class="mr-5"><a href="/usr/product/exposureList">상품 목록</a></div>
+					<div class="mr-5"><a href="/admin/notice/list">공지사항</a></div>
 				</div>
 			</div>
 		</div>

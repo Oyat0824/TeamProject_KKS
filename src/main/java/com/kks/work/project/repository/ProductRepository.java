@@ -351,7 +351,74 @@ public interface ProductRepository {
 		ORDER BY id DESC;
 		""")
 	public List<Review> getReviews(int storeId, int id);
-
 	
+	// 관리자의 상품 리스트에서 보는 상품 카운트
+	@Select("""
+				<script>
+					SELECT COUNT(*)
+						FROM product
+						WHERE 1 = 1
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'productName'">
+									AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'storeName'">
+									AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											productName LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+				</script>
+				""")
+	public int getMyStoreProductsAdmCount(String searchKeywordTypeCode, String searchKeyword);
+		
+	// 관리자의 상품 리스트에서 상품 검색
+	@Select("""
+				<script>
+					SELECT *
+						FROM product
+						WHERE 1 = 1
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'productName'">
+									AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'storeName'">
+									AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											productName LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+						ORDER BY id DESC
+						LIMIT #{limitStart}, #{itemsInAPage}
+				</script>
+				""")
+	public List<Product> getProductsAdm(String searchKeywordTypeCode, String searchKeyword, int itemsInAPage,
+				int limitStart);
+
+	// 관리자 권한으로 상품 삭제
+	@Update("""
+				<script>
+					UPDATE product
+						<set>
+							updateDate = NOW(),
+							delProductStatus = 1,
+							delProductDate = NOW()
+						</set>
+						WHERE id = #{id}
+				</script>
+				""")
+	public void AdmdeleteProduct(int id);
 
 }

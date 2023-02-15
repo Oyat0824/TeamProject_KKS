@@ -21,6 +21,8 @@ public class Product{
 	private String productDlvyPrice;
 	private String productBody;
 	private int storeId;
+	private boolean delProductStatus;
+	private String delProductDate;
 	
 	private int ROWNUM;
 	private String storeName;
@@ -28,6 +30,20 @@ public class Product{
 	
 	public String getForPrintBody() {
 		return this.productBody.replaceAll("\n", "<br />");
+	}
+	
+	public String delStatusStr() {
+		if(delProductStatus == false) {
+			return "미삭제";
+		}
+		return "삭제";
+	}
+
+	public String delDateStr() {
+		if(delProductDate == null) {
+			return "없음";
+		}
+		return delProductDate.substring(2, 16);
 	}
 	
 }

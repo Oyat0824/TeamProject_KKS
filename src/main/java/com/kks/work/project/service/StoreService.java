@@ -171,4 +171,33 @@ public class StoreService {
 
 		return ResultData.from("S-1", "인증 성공", chkMyStoreVerifyRD.getData1Name(), chkMyStoreVerifyRD.getData1());
 	}
+	
+	// 관리자 입장에서 스토어 수 체크
+	public int getStoresAdmCount(String searchKeyword, String searchKeywordTypeCode) {
+		return storeRepository.getStoresAdmCount(searchKeyword, searchKeywordTypeCode);
+	}
+
+	// 관리자 입장에서 스토어 수에 따른 페이징
+	public List<Store> getStoresAdm(String searchKeywordTypeCode, String searchKeyword, int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+			
+		return storeRepository.getStoresAdm(searchKeyword, searchKeywordTypeCode, limitStart, itemsInAPage);
+	}
+
+	// 관리자 권한으로 스토어 삭제
+	public void AdmdeleteStore(List<Integer> storeIds) {
+		for (int storeId : storeIds) {
+			Store store = getStoreById(storeId);
+
+			if (store != null) {
+				AdmdeleteStore(store);
+			}
+		}	
+			
+	}
+
+	private void AdmdeleteStore(Store store) {
+		storeRepository.AdmdeleteStore(store.getId());	
+	}
+	
 }
