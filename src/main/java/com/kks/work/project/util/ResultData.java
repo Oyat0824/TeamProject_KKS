@@ -48,7 +48,8 @@ public class ResultData<DT> {
 		
 		return rd;
 	}
-	
+
+// 장바구니를 위한 리절트 데이터 | 추후 변경 방식
 	public static ResultData<List<ShoppingCart>> from(String resultCode, String msg, String data1Name,
 			List<ShoppingCart> showCart, int totalPriceSum) {
 		
@@ -60,7 +61,6 @@ public class ResultData<DT> {
 		rd.totalPriceSum = totalPriceSum;
 		return rd;
 	}
-	
 	public static ResultData<ShoppingCart> from(String resultCode, String msg, String data1Name,
 			ShoppingCart newCart, int totalPriceSum) {
 		
@@ -71,7 +71,6 @@ public class ResultData<DT> {
 		rd.data1 = newCart;
 		rd.totalPriceSum = totalPriceSum;
 		return rd;
-		
 	}
 	
 	public static <DT> ResultData<DT> from(String resultCode, String msg) {

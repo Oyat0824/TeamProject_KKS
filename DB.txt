@@ -140,6 +140,17 @@ CREATE TABLE category(
 	storeId INT UNSIGNED NOT NULL
 );
 
+## shopCart 테이블 생성
+CREATE TABLE shopCart (
+cartId INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+productId INT UNSIGNED NOT NULL,
+productName VARCHAR(40) NOT NULL,
+productPrice INT UNSIGNED NOT NULL,
+productCategory VARCHAR(40) NOT NULL,
+productCnt INT UNSIGNED NOT NULL,
+memberId INT UNSIGNED NOT NULL 
+);
+
 ##### 테이블 조회
 SELECT * FROM attr;
 SELECT * FROM genFile;
@@ -150,6 +161,12 @@ SELECT * FROM product;
 SELECT * FROM purchaseList;
 SELECT * FROM category;
 SELECT * FROM review;
+SELECT * FROM shopCart;
+
+SELECT COUNT(*)
+FROM review
+WHERE productId = 2
+AND memberId = 3;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`
@@ -216,36 +233,4 @@ gender = "male",
 birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
 memberType = 9;
 
-UPDATE `member`
-SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
-
-## shopCart 테이블 생성
-
-CREATE TABLE shopCart (
-cartId INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-productId INT UNSIGNED NOT NULL,
-productName VARCHAR(40) NOT NULL,
-productPrice INT UNSIGNED NOT NULL,
-productCategory VARCHAR(40) NOT NULL,
-productCnt INT UNSIGNED NOT NULL,
-memberId INT UNSIGNED NOT NULL 
-);
-
-SELECT * FROM shopCart;
-
-
-INSERT INTO `shopCart`
-SET productId = 1,
-	productName = '딸기',
-	productPrice = 1000,
-	productCategory = '과일',
-	productCnt = 3,
-	memberId = 1;
-
-INSERT INTO `shopCart`
-SET productId = 2,
-	productName = '사과',
-	productPrice = 1000,
-	productCategory = '과일',
-	productCnt = 5, 
-	memberId = 1;
+UPDATE `member` SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
