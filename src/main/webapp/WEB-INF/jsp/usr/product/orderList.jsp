@@ -52,8 +52,8 @@
 				</div>
 				
 				<div class="flex border border-t-0">
-					<c:if test="${item.cancel == 0 && item.confirm == 1 && isReview == 0}">
-						<a class="flex-auto block py-3 text-center" href="review?storeId=${item.storeId}&product.id=${item.productId}" onclick="window.open(this.href, '_blank', 'width=480, height=768'); return false;">리뷰쓰기</a>
+					<c:if test="${item.cancel == 0 && item.confirm == 1 && item.isReview == 0}">
+						<a class="flex-auto block py-3 text-center" href="review?storeId=${item.storeId}&productId=${item.productId}&purchaseId=${item.id}" onclick="window.open(this.href, '_blank', 'width=480, height=768'); return false;">리뷰쓰기</a>
 					</c:if>
 					<c:if test="${item.cancel == 0 && item.confirm == 0}">
 						<a class="flex-auto block border-r py-3 text-center" href="confirmPurchase?id=${item.id}&memberId=${item.memberId}" onclick="return confirm('구매를 확정하시겠습니까?');">구매확정</a>
