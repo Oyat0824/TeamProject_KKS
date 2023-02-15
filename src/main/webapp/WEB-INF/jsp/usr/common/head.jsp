@@ -34,7 +34,7 @@
 				<div>
 					<a class="font-bold" href="/">SB_Store</a>
 				</div>
-				<div class="gnb relative">
+				<div class="gnb relative flex">
 					<c:if test="${rq.getLoginedMemberId() == 0}">
 						<div class="w-14 h-6 bg-white bg-opacity-5 border border-black border-opacity-10 text-center text-sm">
 							<a href="/usr/member/login">로그인</a>
@@ -61,21 +61,16 @@
 								});
 							});
 						</script>
-						<ul class="flex text-sm">
-							<li><a class="hover:underline mr-5" href="">관심스토어</a></li>
-							<li class="relative">
-								<a class="lyr hover:underline mr-5" onclick="lyrOpen2(); return false;" href="javascript:void();" >
-									마이페이지<i class="lyr fa-solid fa-caret-down ml-1"></i>
-								</a>
-								<div class="lyr myPage">
-									<div class="mb-1"><a href="/usr/product/orderList">주문확인/배송조회</a></div>
-									<div>찜한 상품</div>
-								</div>
-							</li>
-							<li><a class="hover:underline mr-5" href="">장바구니</a></li>
-							<li><a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a></li>
-						</ul>
-										
+						<div class="text-sm">
+							<a  href="/usr/ShoppingCart/ShowCart" >장바구니<i class="fa-solid ml-1 pr-6"></i></a>
+						</div>
+						
+						
+						
+						<div class="text-sm">
+							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
+						</div>
+						
 						<div class="my_lyr">
 							<div class="flex items-center py-4 px-2 text-gray-600">
 								<div class="img_area">
