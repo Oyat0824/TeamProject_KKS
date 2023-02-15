@@ -273,3 +273,37 @@ input[type="number"]::-webkit-inner-spin-button {
 [data-tip]::before {
     white-space: pre;
 }
+
+main > .shopWrap {
+	height : 100%;
+	background: white;
+	padding-top : 60px;
+}     
+
+table-box-shopCart {
+	height : 100%;
+	border : 8px solid pink;
+}
+
+.cartTable {
+	margin-left : auto;
+	margin-right : auto;
+	border : 1px solid black;
+	text-align: center;
+}
+
+.basketHead {
+	background-color: white;
+	padding-top : 60px;
+}    
+
+.table-box-shopCart table, .table-box-shopCart table td, 
+.table-box-shopCart table tr, .table-box-shopCart table th {
+	border : 1px solid black;
+	border-collapse : collapse;
+}
+
+.tab.tabActive {
+	background-color: #3d3d4f;
+	color: #fff;
+}

@@ -72,7 +72,7 @@
 									<div>찜한 상품</div>
 								</div>
 							</li>
-							<li><a class="hover:underline mr-5" href="">장바구니</a></li>
+							<li><a class="hover:underline mr-5" href="/usr/ShoppingCart/ShowCart">장바구니</a></li>
 							<li><a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a></li>
 						</ul>
 										

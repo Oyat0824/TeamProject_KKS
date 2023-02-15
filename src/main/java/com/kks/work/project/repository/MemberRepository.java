@@ -107,7 +107,7 @@ public interface MemberRepository {
 			WHERE id = #{loginedMemberId}
 			""")
 	public void doPasswordModify(int loginedMemberId, String loginPw, String salt);
-	
+  
 	// 관리자 페이지에서 멤버리스트에서 멤버 카운트
 	@Select("""
 				<script>
@@ -182,6 +182,4 @@ public interface MemberRepository {
 				</script>
 				""")
 	public void deleteMember(int id);
-
-
 }

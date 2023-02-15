@@ -15,7 +15,7 @@ public class Product{
 	private String productPrice;
 	private String productCategory;
 	private String productStock;
-	private String productDlvy;
+	private int productDlvy;
 	private String productCourier;
 	private String productCourierCode;
 	private String productDlvyPrice;

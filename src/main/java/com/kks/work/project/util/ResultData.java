@@ -1,6 +1,9 @@
 package com.kks.work.project.util;
 
+import java.util.List;
 import java.util.Map;
+
+import com.kks.work.project.vo.ShoppingCart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,8 +20,9 @@ public class ResultData<DT> {
 	private String msg;
 	private DT data1;
 	private String data1Name;
+  private Object data2;
 	private String data2Name;
-	private Object data2;
+	private int totalPriceSum;
 	private Map<String, Object> body;
 	
 	// 생성자 메서드
@@ -26,6 +30,11 @@ public class ResultData<DT> {
 		this.resultCode = resultCode;
 		this.msg = msg;
 		this.body = Utility.mapOf(args);
+	}
+  
+  public void setData2(String data2Name, Object data2) {
+		this.data2Name = data2Name;
+		this.data2 = data2;
 	}
 	
 	/**
@@ -46,6 +55,30 @@ public class ResultData<DT> {
 		
 		return rd;
 	}
+
+// 장바구니를 위한 리절트 데이터 | 추후 변경 방식
+	public static ResultData<List<ShoppingCart>> from(String resultCode, String msg, String data1Name,
+			List<ShoppingCart> showCart, int totalPriceSum) {
+		
+		ResultData<List<ShoppingCart>> rd = new ResultData<>();
+		rd.resultCode = resultCode;
+		rd.msg = msg;
+		rd.data1Name = data1Name;
+		rd.data1 = showCart;
+		rd.totalPriceSum = totalPriceSum;
+		return rd;
+	}
+	public static ResultData<ShoppingCart> from(String resultCode, String msg, String data1Name,
+			ShoppingCart newCart, int totalPriceSum) {
+		
+		ResultData<ShoppingCart> rd = new ResultData<>();
+		rd.resultCode = resultCode;
+		rd.msg = msg;
+		rd.data1Name = data1Name;
+		rd.data1 = newCart;
+		rd.totalPriceSum = totalPriceSum;
+		return rd;
+	}
 	
 	public static <DT> ResultData<DT> from(String resultCode, String msg) {
 		return from(resultCode, msg, null, null);
@@ -64,11 +97,4 @@ public class ResultData<DT> {
 	public boolean isFail() {
 		return isSuccess() == false;
 	}
-	
-	public void setData2(String data2Name, Object data2) {
-		this.data2Name = data2Name;
-		this.data2 = data2;
-		
-	}
-	
 }

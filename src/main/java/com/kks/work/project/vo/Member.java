@@ -1,7 +1,5 @@
 package com.kks.work.project.vo;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +25,7 @@ public class Member{
 	private int memberType;
 	private int storeState;
 	private boolean delStatus;
+	private int delStatus;
 	private String delDate;
 	
 	private int storeId;
