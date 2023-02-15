@@ -239,7 +239,13 @@ $(function() {
 		찜하기도 만들어야함, 스토어 찜도 비슷하게 만들어야함
 	 -->
 	
-	<div class="container mx-auto border border-t-0 p-5">
+	<div class="container mx-auto border border-b-0 mt-5">
+		<div class="tabs w-full">
+			<a class="flex-auto tab border-r text-black text-base font-bold tabActive">상세정보</a> 
+			<a class="flex-auto tab text-black text-base font-bold">리뷰</a> 
+		</div>
+	</div>
+	<div class="container mx-auto border  p-5">
 		
 	</div>
 </section>

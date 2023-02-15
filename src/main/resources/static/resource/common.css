@@ -302,3 +302,8 @@ table-box-shopCart {
 	border : 1px solid black;
 	border-collapse : collapse;
 }
+
+.tab.tabActive {
+	background-color: #3d3d4f;
+	color: #fff;
+}
