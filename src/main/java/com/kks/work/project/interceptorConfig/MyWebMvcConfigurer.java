@@ -73,6 +73,8 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/product/register");
 		ir.excludePathPatterns("/usr/store/view");
 		ir.excludePathPatterns("/usr/store/list");
+		// 장바구니
+		ir.excludePathPatterns("/usr/ShoppingCart/InsertShoppingCart");
 		// 로그아웃
 		ir.addPathPatterns("/usr/member/doLogout");
 		// 회원정보 관련

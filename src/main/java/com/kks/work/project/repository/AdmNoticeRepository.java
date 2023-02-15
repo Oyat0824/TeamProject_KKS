@@ -71,7 +71,7 @@ public interface AdmNoticeRepository {
 				FROM notice
 				WHERE 1 = 1
 				<if test="searchKeyword != ''">
-					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+					AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
 			</script>
 			""")

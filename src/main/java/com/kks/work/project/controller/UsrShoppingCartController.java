@@ -38,21 +38,12 @@ public class UsrShoppingCartController {
 	@RequestMapping("/usr/ShoppingCart/InsertShoppingCart")
 	@ResponseBody
 	public String InsertShoppingCart(int productId,int productCnt) {
-		
 		//유효성 검사
 		if (Utility.isEmpty(productId)) {
 			 return Utility.jsHistoryBack("상품번호를 입력해주세요!");
 		}
-		
-		
-		
-		
 		if (Utility.isEmpty(productCnt)) {
 			 return Utility.jsHistoryBack("제품수량을 입력해주세요!");
-		}
-		
-		if (Utility.isEmpty(rq.getLoginedMember())) {
-			 return Utility.jsHistoryBack("로그인후 이용해주세요!");
 		}
 		
 		 ShoppingCartService.insertShoppingCart(productId,productCnt,rq.getLoginedMemberId());

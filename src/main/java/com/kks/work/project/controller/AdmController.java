@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kks.work.project.util.ResultData;
-import com.kks.work.project.util.Utility;
 import com.kks.work.project.service.GenFileService;
 import com.kks.work.project.service.MemberService;
 import com.kks.work.project.service.ProductService;
 import com.kks.work.project.service.StoreService;
+import com.kks.work.project.util.Utility;
 import com.kks.work.project.vo.Member;
 import com.kks.work.project.vo.Product;
 import com.kks.work.project.vo.Rq;
