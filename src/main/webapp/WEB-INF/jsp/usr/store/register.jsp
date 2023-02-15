@@ -29,22 +29,17 @@
 		const storeLogoFileInput = form["file__store__0__extra__storeLogo__1"];
 		const storeImgFileInput = form["file__store__0__extra__storeImg__1"];
 		
-		if (storeLogoFileInput.value) {
-			if (storeLogoFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				storeLogoFileInput.focus();
-				
-				return;
-			}
+		if (storeLogoFileInput.value && storeLogoFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			storeLogoFileInput.focus();
+			
+			return;
 		}
-		
-		if (storeImgFileInput.value) {
-			if (storeImgFileInput.files[0].size > maxSize) {
-				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-				storeImgFileInput.focus();
-				
-				return;
-			}
+		if (storeImgFileInput.value && storeImgFileInput.files[0].size > maxSize) {
+			alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+			storeImgFileInput.focus();
+			
+			return;
 		}
 		
 		if (chkTextByte() == false) {
@@ -195,22 +190,23 @@
 							<th>스토어 소개</th>
 							<td class="relative">
 								<div class="mb-2 text-red-500"><p id="textBoxMsg"></p> </div>
-								<textarea id="textBox" class="input w-full text-lg border-gray-400 p-2 text-base" style="height: 150px; resize: none;" name="storeDesc"
+								<textarea id="textBox" class="input w-full text-lg border-gray-400 p-3 text-base" style="height: 150px; resize: none;" name="storeDesc"
 									placeholder="스토어 소개">${store.storeDesc}</textarea>
 								<div class="textLengthWrap flex">
 									<p><span id="nowByte" style="color: green;">0</span>&nbsp;/&nbsp;100bytes</p>
 								</div>
 							</td>
 						</tr>
-						<tr>
-							<td colspan="2"><button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>스토어 등록</button></td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
+			
+			<div class="flex mt-5">
+				<button class="btn btn-outline btn-accent w-full"><i class="fa-solid fa-store"></i>스토어 등록</button>
+			</div>
 		</form>
-		<div class="btns mt-5">
-			<button class="btn btn-primary" onclick="history.back();"><i class="fa-solid fa-right-from-bracket"></i>뒤로가기</button>
+		<div class="flex justify-end mt-5">
+			<button class="btn" onclick="history.back();"><i class="fa-solid fa-right-from-bracket mr-2"></i> 뒤로가기</button>
 		</div>
 	</div>
 </section>

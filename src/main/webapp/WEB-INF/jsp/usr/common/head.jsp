@@ -44,12 +44,19 @@
 						<script>
 							const lyrOpen = function() {
 								$(".my_lyr").toggleClass("open_lyr");
+								$(".myPage").removeClass("open_lyr");
+							}
+							
+							const lyrOpen2 = function() {
+								$(".myPage").toggleClass("open_lyr");
+								$(".my_lyr").removeClass("open_lyr");
 							}
 							
 							$(function(){
 								$("html").click(function(e) {   
-									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){   
+									if($(e.target).parents(".open_lyr").length < 1 && !$(e.target).hasClass('lyr')){
 										$(".my_lyr").removeClass("open_lyr");
+										$(".myPage").removeClass("open_lyr");
 									}
 								});
 							});
@@ -67,7 +74,7 @@
 						<div class="my_lyr">
 							<div class="flex items-center py-4 px-2 text-gray-600">
 								<div class="img_area">
-									<img class="w-20 object-cover rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
+									<img class="w-20 rounded-full border-2" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', rq.loginedMemberId, 'profileImg')}" alt="" />
 								</div>
 								<div class="ml-3 text-area">
 									<p class="account">
@@ -105,7 +112,7 @@
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
 				<div class="flex">
 					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
-					<div class="mr-5"><a href="/usr/product/exposurelist">상품 목록</a></div>
+					<div class="mr-5"><a href="/usr/product/exposureList">상품 목록</a></div>
 				</div>
 			</div>
 		</div>

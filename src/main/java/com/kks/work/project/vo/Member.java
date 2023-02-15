@@ -15,14 +15,17 @@ public class Member{
 	private String updateDate;
 	private String loginId;
 	private String loginPw;
+	private String salt;
 	private String name;
-	private String gender;
-	private String birthday;
+	private String zipNo;
+	private String roadAddr;
+	private String addrDetail;
 	private String email;
 	private String cellphoneNum;
+	private String gender;
+	private String birthday;
 	private int memberType;
 	private int storeState;
-	private String salt;
 	private String delStatus;
 	private LocalDateTime delDate;
 	

@@ -179,6 +179,28 @@ public class Utility {
 				</script>
 				""", msg, uri);
 	}
+	
+	/**
+	 * 메시지가 있다면 메시지를 보여주고 팝업을 닫습니다.<br />
+	 * 메시지가 없다면 메시지는 보여주지 않고 팝업을 닫습니다.
+	 * 
+	 * @param msg 알림창에 보여줄 메시지
+	 */
+	public static String jsClose(String msg) {
+		if (msg == null) msg = "";
+
+		return Utility.f("""
+				<script>
+					const msg = "%s".trim();
+
+					if(msg.length > 0) {
+						alert(msg);
+					}
+
+					window.close();
+				</script>
+				""", msg);
+	}
 
 	/**
 	 * 지정된 시간 이후의 시간 표기

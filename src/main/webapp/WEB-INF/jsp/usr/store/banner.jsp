@@ -19,20 +19,18 @@
 		const maxSizeMb = 10;
 		const maxSize = maxSizeMb * 1024 * 1024;
 
-		const bannerImgFileInput = [];
+		const bImgFileList = [];
 		
-		bannerImgFileInput.push(form["file__store__0__extra__bannerImg__1"]);
-		bannerImgFileInput.push(form["file__store__0__extra__bannerImg__2"]);
-		bannerImgFileInput.push(form["file__store__0__extra__bannerImg__3"]);
+		bImgFileList.push(form["file__store__0__extra__bannerImg__1"]);
+		bImgFileList.push(form["file__store__0__extra__bannerImg__2"]);
+		bImgFileList.push(form["file__store__0__extra__bannerImg__3"]);
 		
-		for(i = 0; i < bannerImgFileInput.length; i++) {
-			if(bannerImgFileInput[i].value) {
-				if (bannerImgFileInput[i].files[0].size > maxSize) {
-					alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
-					bannerImgFileInput[i].focus();
-					
-					return false;
-				}
+		for(i = 0; i < bImgFileList.length; i++) {
+			if(bImgFileList[i].value && bImgFileList[i].files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				bImgFileList[i].focus();
+				
+				return false;
 			}
 		}
 	}
@@ -62,10 +60,6 @@
 		
 		return false;
 	}
-	
-	$(function() {
-		
-	})
 </script>
 
 <section>
@@ -73,7 +67,7 @@
 		<%@ include file="../common/sideMenu.jsp"%>
 		
 		<div class="w-full my-10">
-		
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">배너 등록</h1>
 			<form action="addBanner" method="POST" enctype="multipart/form-data" onsubmit="return BannerWrite__submitForm(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />

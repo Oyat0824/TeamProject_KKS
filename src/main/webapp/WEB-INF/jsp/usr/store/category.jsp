@@ -87,7 +87,7 @@
 		<%@ include file="../common/sideMenu.jsp"%>
 		
 		<div class="w-full my-10">
-		
+			<h1 class="w-11/12 mx-auto font-bold text-xl select-none mb-5">카테고리</h1>
 			<form action="addCategory" method="POST" onsubmit="return CategoryWrite__submitForm(this);">
 				<input type="hidden" name="id" value="${param.id}" />
 				<input type="hidden" name="storeModifyAuthKey" value="${param.storeModifyAuthKey}" />

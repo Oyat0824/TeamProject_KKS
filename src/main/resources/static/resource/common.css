@@ -1,5 +1,18 @@
 @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
+html, body {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+}
+
 html > body,
 html > body .ProseMirror,
 html > body .toastui-editor-contents {
@@ -62,10 +75,36 @@ html > body > header::after {
 	pointer-events: none;
 }
 
-.gnb > .my_lyr.open_lyr {
+.gnb > .my_lyr.open_lyr,
+.gnb .myPage.open_lyr {
 	display: flex;
 	flex-direction: column;
 	z-index: 9999;
+}
+
+.gnb .myPage {
+	display: none;
+	position: absolute;
+	top: 30px;
+	right: -15px;
+	width: 150px;
+	padding: 15px;
+	background-color: #fff;
+	color: #000;
+	z-index: 10;
+	box-shadow: 0px 2px 10px 1px grey;
+}
+
+.gnb .myPage:after, .gnb .myPage:before {
+	top: -10px;
+	right: 70px;
+	border: 5px solid transparent;
+	border-bottom-color: #fff;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
 }
 
 .table-box-type-1 > table th,
@@ -177,8 +216,9 @@ html > body > header::after {
 .productBtn .numBtn {
 	position: relative;
 	width: 10%;
-	height: 100%;
 	background-color: #f1f2f4;
+	cursor: pointer;
+	user-select: none;
 }
 
 .productBtn .numBtn > span {
@@ -224,8 +264,9 @@ html > body > header::after {
 	font-weight: bold;
 }
 
-.productBtn .numInput::-webkit-inner-spin-button {
-	-webkit-appearance: none;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
     margin: 0;
 }
 

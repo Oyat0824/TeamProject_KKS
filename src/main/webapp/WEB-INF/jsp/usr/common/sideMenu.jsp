@@ -27,11 +27,17 @@
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'productList' ? 'text-indigo-600 font-bold' : '' }">
 			<a class="block" href="/usr/product/list?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">상품 목록</a>
 		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b ${menuName == 'sellerOrderList' ? 'text-indigo-600 font-bold' : '' }">
+			<a class="block" href="/usr/product/sellerOrderList?id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey}">주문 목록</a>
+		</div>
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
 			<a class="block" href="#">스토어 삭제</a>
 		</div>
 		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
-			<a class="block" href="/usr/home/main">돌아가기</a>
+			<a class="block" href="/usr/store/view?id=${param.id }">내 스토어로</a>
+		</div>
+		<div class="box-content text-center text-lg leading-7 h-7 py-3 border-b">
+			<a class="block" href="/usr/home/main">메인으로</a>
 		</div>
 	</div>
 </div>
