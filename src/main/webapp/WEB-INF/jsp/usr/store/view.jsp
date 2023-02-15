@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="pageTitle" value="Store View" />
 <%@ include file="../common/head.jsp"%>
 <!-- 슬릭 슬라이더 -->
@@ -83,7 +84,7 @@ $(function() {
 		<h2 class="text-center font-bold text-3xl">베스트 상품</h2>
 		<div class="flex justify-center">
 			<c:forEach var="item" items="${bestProducts}">
-				<div class="flex flex-col items-center p-5 hover:bg-gray-50">
+				<div class="flex flex-col items-center p-5 hover:bg-gray-50 w-64">
 					<div class="img_area">
 						<a href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
 							<img class="w-60 h-60 border-2 border-gray-400" src="${rq.getImgUri('product', item.id, 'productImg')}" alt="" />
@@ -92,7 +93,16 @@ $(function() {
 					
 					<div class="info_area mt-2">
 						<div class="text-2xl">
-							<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">${item.productName}</a>
+							<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
+								<c:choose> 
+									<c:when test="${fn:length(item.productName) > 20}">
+										${item.productName.substring(0, 20)}...
+									</c:when> 
+									<c:otherwise>
+										${item.productName}
+									</c:otherwise> 
+								</c:choose> 
+							</a>
 						</div>
 						<div>
 							<span class="text-lg font-bold"><fmt:formatNumber value="${item.productPrice}" pattern="#,###" />원</span>
@@ -110,7 +120,7 @@ $(function() {
 		<h2 class="text-center font-bold text-3xl">신상품</h2>
 		<div class="flex justify-center">
 			<c:forEach var="item" items="${newProducts}">
-				<div class="flex flex-col items-center p-5 hover:bg-gray-50">
+				<div class="flex flex-col items-center p-5 hover:bg-gray-50 w-64">
 					<div class="img_area">
 						<a href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
 							<img class="w-60 h-60 border-2 border-gray-400" src="${rq.getImgUri('product', item.id, 'productImg')}" alt="" />
@@ -119,7 +129,16 @@ $(function() {
 					
 					<div class="info_area mt-2">
 						<div class="text-2xl">
-							<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">${item.productName}</a>
+							<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
+								<c:choose> 
+									<c:when test="${fn:length(item.productName) > 20}">
+										${item.productName.substring(0, 20)}...
+									</c:when> 
+									<c:otherwise>
+										${item.productName}
+									</c:otherwise> 
+								</c:choose> 
+							</a>							
 						</div>
 						<div>
 							<span class="text-lg font-bold"><fmt:formatNumber value="${item.productPrice}" pattern="#,###" />원</span>

@@ -344,3 +344,9 @@ table-box-shopCart {
 	z-index: 0;
 	padding: 0;
 }
+
+.toastui-editor-contents {
+	display: flex;
+	justify-content: center;
+	text-align: center; 
+}

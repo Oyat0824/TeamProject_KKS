@@ -420,7 +420,7 @@ public class UsrStoreController {
 	}
 	
 	
-	// 상품 목록 페이지
+	// 스토어 상품 목록 페이지
 	@RequestMapping("/usr/store/productList")
 	public String showBanner(Model model, int id,
 			@RequestParam(defaultValue = "1") int page,
@@ -442,7 +442,7 @@ public class UsrStoreController {
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(productsCount / (double) itemsInAPage);
 
-		List<Product> products = productService.getStoreInProducts(searchKeyword, itemsInAPage, page, listOrder, cate);
+		List<Product> products = productService.getStoreInProducts(searchKeyword, itemsInAPage, page, listOrder, cate, id);
 		
 	    model.addAttribute("store", store);
 	    model.addAttribute("categorys", categorys);

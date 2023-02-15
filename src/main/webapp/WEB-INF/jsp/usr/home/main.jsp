@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="pageTitle" value="MAIN" />
 <%@ include file="../common/head.jsp"%>
 
@@ -8,7 +9,7 @@
 .mainVisual {
     width: 100%;
     min-width: 1640px;
-    margin: 0 auto 120px;
+    margin: 0 auto 50px;
 }
 
 .mainVisual > .visual-wrap {
@@ -34,7 +35,7 @@
     background-position: center;
     background-size: cover;
     object-fit: cover;
-    height: 100vh;
+    height: 90vh;
 }
 
 .mainVisual > .visual-wrap > .slides > .slide-page .box > a > .txt-box {
@@ -242,9 +243,66 @@ $(function(){
 	</div>
 </section>
 
-<section class="mt-8">
+<!-- 스토어 목록 -->
+<section id="storeList" class="mt-5">
 	<div class="container mx-auto">
-		<h1>안녕하세요</h1>
+		<h2 class="text-center font-bold text-3xl">스토어 목록</h2>
+		<div class="flex justify-center">
+			<c:forEach var="item" items="${stores}">
+				<div class="flex flex-col items-center p-5 hover:bg-gray-50 w-64">
+					<div class="img_area">
+						<a href="/usr/store/view?id=${item.id}">
+							<img class="w-60 h-60 border-2 border-gray-400" src="${rq.getImgUri('store', item.id, 'storeImg')}" alt="" />
+						</a>
+					</div>
+					
+					<div class="info_area mt-2">
+						<div class="text-2xl">
+							<c:choose> 
+								<c:when test="${fn:length(item.storeName) > 20}">
+									<a class="font-bold" href="/usr/store/view?id=${item.id}">${item.storeName.substring(0, 20)}...</a>
+								</c:when> 
+								<c:otherwise>
+									<a class="font-bold" href="/usr/store/view?id=${item.id}">${item.storeName}</a>
+								</c:otherwise> 
+							</c:choose> 
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
+	</div>
+</section>
+
+<!-- 상품 목록 -->
+<section id="storeBest" class="mt-10">
+	<div class="container mx-auto">
+		<h2 class="text-center font-bold text-3xl">상품 목록</h2>
+		<div class="flex justify-center">
+			<c:forEach var="item" items="${Products}">
+				<div class="flex flex-col items-center p-5 hover:bg-gray-50 w-64">
+					<div class="img_area">
+						<a href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
+							<img class="w-60 h-60 border-2 border-gray-400" src="${rq.getImgUri('product', item.id, 'productImg')}" alt="" />
+						</a>
+					</div>
+					
+					<div class="info_area mt-2">
+						<div class="text-2xl">
+							<c:choose> 
+								<c:when test="${fn:length(item.productName) > 20}">
+									<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">${item.productName.substring(0, 20)}...</a>
+								</c:when> 
+								<c:otherwise>
+									<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">${item.productName}</a>
+								</c:otherwise> 
+							</c:choose> 
+							
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
 	</div>
 </section>
 

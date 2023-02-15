@@ -107,12 +107,12 @@ public interface StoreRepository {
 					FROM store AS S
 					LEFT JOIN review AS R
 					ON S.id = R.storeId
-					WHERE 1 = 1
 					GROUP BY S.id
 				) AS S
 				LEFT JOIN purchaseList AS PC
 				ON S.id = PC.storeId
-				WHERE PC.confirm = 1
+				AND PC.confirm = 1
+				WHERE 1 = 1
 				<if test="searchKeyword != ''">
 					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>

@@ -66,10 +66,10 @@ public class ProductService {
 	}
 	
 	// 스토어에서 보는 상품 리스트
-	public List<Product> getStoreInProducts(String searchKeyword, int itemsInAPage, int page, String listOrder, int cate) {
+	public List<Product> getStoreInProducts(String searchKeyword, int itemsInAPage, int page, String listOrder, int cate, int id) {
 		int limitStart = (page - 1) * itemsInAPage;
 		
-		return productRepository.getStoreInProducts(searchKeyword, itemsInAPage, limitStart, listOrder, cate);
+		return productRepository.getStoreInProducts(searchKeyword, itemsInAPage, limitStart, listOrder, cate, id);
 	}
 
 	// 상품 가져오기

@@ -87,7 +87,7 @@ CREATE TABLE product(
 	productCourier VARCHAR(100) NOT NULL, # 택배사
 	productCourierCode VARCHAR(100) NOT NULL, # 택배사 코드
 	productDlvyPrice VARCHAR(40) NOT NULL, # 배송 비용
-	productBody TEXT NOT NULL,
+	productBody LONGBLOB NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
 	KEY `indexKey` (storeId)
 );
@@ -125,11 +125,12 @@ CREATE TABLE review (
 	updateDate DATETIME NOT NULL,
 	storeId INT UNSIGNED NOT NULL,	
 	productId INT UNSIGNED NOT NULL,
+	purchaseId INT UNSIGNED NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
 	rating TINYINT(5) NOT NULL,
 	reviewBody TEXT NOT NULL,
-	UNIQUE `uniqueKey` (productId),
-	KEY `indexKey` (productId)
+	UNIQUE `uniqueKey` (purchaseId),
+	KEY `indexKey` (purchaseId)
 );
 
 ##### category 테이블 생성
@@ -142,24 +143,24 @@ CREATE TABLE category(
 
 ## shopCart 테이블 생성
 CREATE TABLE shopCart (
-cartId INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-productId INT UNSIGNED NOT NULL,
-productName VARCHAR(40) NOT NULL,
-productPrice INT UNSIGNED NOT NULL,
-productCategory VARCHAR(40) NOT NULL,
-productCnt INT UNSIGNED NOT NULL,
-memberId INT UNSIGNED NOT NULL 
+	cartId INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	productId INT UNSIGNED NOT NULL,
+	productName VARCHAR(40) NOT NULL,
+	productPrice INT UNSIGNED NOT NULL,
+	productCategory VARCHAR(40) NOT NULL,
+	productCnt INT UNSIGNED NOT NULL,
+	memberId INT UNSIGNED NOT NULL 
 );
 
 #### 공지사항 Notice 테이블 생성
 CREATE TABLE notice(
-    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    regDate DATETIME NOT NULL,
-    updateDate DATETIME NOT NULL,
-    memberId INT UNSIGNED NOT NULL,
-    title VARCHAR(200) NOT NULL,
-    `body` TEXT NOT NULL,
-    viewCount INT UNSIGNED NOT NULL DEFAULT 0
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	title VARCHAR(200) NOT NULL,
+	`body` TEXT NOT NULL,
+	viewCount INT UNSIGNED NOT NULL DEFAULT 0
 );
 
 ##### 테이블 조회

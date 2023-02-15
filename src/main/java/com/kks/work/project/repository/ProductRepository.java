@@ -117,12 +117,12 @@ public interface ProductRepository {
 					FROM product AS P
 					LEFT JOIN review AS R
 					ON P.id = R.productId
-					WHERE 1 = 1
 					GROUP BY P.id
 				) AS P
 				LEFT JOIN purchaseList AS PC
 				ON P.id = PC.productId
-				WHERE PC.confirm = 1
+				AND PC.confirm = 1
+				WHERE 1 = 1
 				<if test="searchKeyword != ''">
 					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
@@ -160,7 +160,7 @@ public interface ProductRepository {
 				) AS P
 				LEFT JOIN purchaseList AS PC
 				ON P.id = PC.productId
-				WHERE PC.confirm = 1
+				WHERE P.storeId = #{id}
 				<if test="searchKeyword != ''">
 					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
@@ -186,7 +186,7 @@ public interface ProductRepository {
 			</script>
 			""")
 	public List<Product> getStoreInProducts(String searchKeyword, int itemsInAPage, int limitStart, String listOrder,
-			int cate);
+			int cate, int id);
 	
 	// 상품 가져오기
 	@Select("""

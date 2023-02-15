@@ -20,7 +20,7 @@
 	<div class="w-full h-20 border-t border-b border-gray-300">
 		<div class="container flex items-center mx-auto h-full">
 			<div class="mr-10">
-				<a class="font-bold ${param.cate == '' ? 'text-indigo-600' : param.cate == null ? 'text-indigo-600' : ''}" href="/usr/store/productList?id=${store.id }">전체상품</a>
+				<a class="font-bold" href="/usr/store/productList?id=${store.id }">전체상품</a>
 			</div>
 			<c:forEach var="category" items="${categorys}" varStatus="status">
 				<div class="mr-10">
