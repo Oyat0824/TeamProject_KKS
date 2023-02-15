@@ -85,6 +85,7 @@ CREATE TABLE product(
 	productStock VARCHAR(20) NOT NULL, # 상품재고
 	productDlvy TINYINT(1) NOT NULL COMMENT '배송 방법 (0 = 무료, 1 = 유료)',
 	productCourier VARCHAR(100) NOT NULL, # 택배사
+	productCourierCode VARCHAR(100) NOT NULL,
 	productDlvyPrice VARCHAR(40) NOT NULL, # 배송 비용
 	productBody TEXT NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
@@ -211,7 +212,7 @@ productId INT UNSIGNED NOT NULL,
 productName VARCHAR(40) NOT NULL,
 productPrice INT UNSIGNED NOT NULL,
 productCategory VARCHAR(40) NOT NULL,
-productCount INT UNSIGNED NOT NULL,
+productCnt INT UNSIGNED NOT NULL,
 memberId INT UNSIGNED NOT NULL 
 );
 
@@ -223,7 +224,7 @@ SET productId = 1,
 	productName = '딸기',
 	productPrice = 1000,
 	productCategory = '과일',
-	productCount = 3,
+	productCnt = 3,
 	memberId = 1;
 
 INSERT INTO `shopCart`
@@ -231,5 +232,5 @@ SET productId = 2,
 	productName = '사과',
 	productPrice = 1000,
 	productCategory = '과일',
-	productCount = 5,
+	productCnt = 5, 
 	memberId = 1;
