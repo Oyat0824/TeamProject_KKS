@@ -56,7 +56,7 @@
 								<c:if test="${member.memberType != 9 }">
 									<tr class="hover">
 										<c:choose>
-											<c:when test="${member.delStatus != true }">
+											<c:when test="${member.delStatus != 1 }">
 												<td><input type="checkbox" class="checkbox-member-id" value="${member.id }" /></td>
 											</c:when>
 											<c:otherwise>

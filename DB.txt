@@ -151,6 +151,17 @@ productCnt INT UNSIGNED NOT NULL,
 memberId INT UNSIGNED NOT NULL 
 );
 
+#### 공지사항 Notice 테이블 생성
+CREATE TABLE notice(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    memberId INT UNSIGNED NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    `body` TEXT NOT NULL,
+    viewCount INT UNSIGNED NOT NULL DEFAULT 0
+);
+
 ##### 테이블 조회
 SELECT * FROM attr;
 SELECT * FROM genFile;
@@ -162,11 +173,7 @@ SELECT * FROM purchaseList;
 SELECT * FROM category;
 SELECT * FROM review;
 SELECT * FROM shopCart;
-
-SELECT COUNT(*)
-FROM review
-WHERE productId = 2
-AND memberId = 3;
+SELECT * FROM notice;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`

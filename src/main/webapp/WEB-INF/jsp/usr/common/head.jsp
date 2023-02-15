@@ -121,9 +121,9 @@
 			</div>
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
 				<div class="flex">
+					<div class="mr-5"><a href="/admin/notice/list">공지사항</a></div>
 					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
 					<div class="mr-5"><a href="/usr/product/exposureList">상품 목록</a></div>
-					<div class="mr-5"><a href="/admin/notice/list">공지사항</a></div>
 				</div>
 			</div>
 		</div>

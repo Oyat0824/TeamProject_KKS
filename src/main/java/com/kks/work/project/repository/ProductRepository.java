@@ -409,16 +409,16 @@ public interface ProductRepository {
 
 	// 관리자 권한으로 상품 삭제
 	@Update("""
-				<script>
-					UPDATE product
-						<set>
-							updateDate = NOW(),
-							delProductStatus = 1,
-							delProductDate = NOW()
-						</set>
-						WHERE id = #{id}
-				</script>
-				""")
+		<script>
+			UPDATE product
+				<set>
+					updateDate = NOW(),
+					delProductStatus = 1,
+					delProductDate = NOW()
+				</set>
+				WHERE id = #{id}
+		</script>
+		""")
 	public void AdmdeleteProduct(int id);
 
 }

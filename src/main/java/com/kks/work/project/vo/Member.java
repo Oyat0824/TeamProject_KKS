@@ -24,14 +24,13 @@ public class Member{
 	private String birthday;
 	private int memberType;
 	private int storeState;
-	private boolean delStatus;
 	private int delStatus;
 	private String delDate;
 	
 	private int storeId;
 	
 	public String delStatusStr() {
-		if(delStatus == false) {
+		if(delStatus == 0) {
 			return "미삭제";
 		}
 		return "삭제";
