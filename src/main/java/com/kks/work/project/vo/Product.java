@@ -27,6 +27,8 @@ public class Product{
 	private int ROWNUM;
 	private String storeName;
 	private String categoryName;
+	private int reviewCnt;
+	private int purchaseCnt;
 	
 	public String getForPrintBody() {
 		return this.productBody.replaceAll("\n", "<br />");

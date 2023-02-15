@@ -15,23 +15,27 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import com.kks.work.project.service.GenFileService;
+import com.kks.work.project.service.ProductService;
 import com.kks.work.project.service.StoreService;
 import com.kks.work.project.util.ResultData;
 import com.kks.work.project.util.Utility;
 import com.kks.work.project.vo.Category;
 import com.kks.work.project.vo.GenFile;
+import com.kks.work.project.vo.Product;
 import com.kks.work.project.vo.Rq;
 import com.kks.work.project.vo.Store;
 
 @Controller
 public class UsrStoreController {
 	private StoreService storeService;
+	private ProductService productService;
 	private Rq rq;
 	private GenFileService genFileService;
 
 	@Autowired
-	public UsrStoreController(StoreService storeService, Rq rq, GenFileService genFileService) {
+	public UsrStoreController(StoreService storeService, ProductService productService, Rq rq, GenFileService genFileService) {
 		this.storeService = storeService;
+		this.productService = productService;
 		this.rq = rq;
 		this.genFileService = genFileService;
 	}
@@ -99,10 +103,14 @@ public class UsrStoreController {
 	    Store store = storeService.getForPrintStoreById(rq.getLoginedMemberId(), id);
 	    List<Category> categorys = storeService.getCategorysByStoreId(id);
 	    List<GenFile> fileList = genFileService.getGenFiles("store", id, "extra", "bannerImg");
+	    List<Product> bestProducts = productService.getExposureProducts("", 5, 1, "reviewMany");
+	    List<Product> newProducts = productService.getExposureProducts("", 5, 1, "");
 		
 	    model.addAttribute("store", store);
 	    model.addAttribute("categorys", categorys);
 	    model.addAttribute("fileList", fileList);
+	    model.addAttribute("bestProducts", bestProducts);
+	    model.addAttribute("newProducts", newProducts);
 	    
 	    return "/usr/store/view";
 	}
@@ -192,7 +200,8 @@ public class UsrStoreController {
 	public String showList(Model model,
 			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "") String searchKeyword,
-			@RequestParam(defaultValue = "20") int itemsNum) {
+			@RequestParam(defaultValue = "20") int itemsNum,
+			@RequestParam(defaultValue = "") String listOrder) {
 		
 		// 랭킹 순(구매 건수가 많은), 리뷰 많은 순, 리뷰 적은 순, 등록일 순으로 쿼리 짜야함
 
@@ -207,7 +216,7 @@ public class UsrStoreController {
 		// 스토어 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(storesCount / (double) itemsInAPage);
 
-		List<Store> stores = storeService.getStores(searchKeyword, itemsInAPage, page);
+		List<Store> stores = storeService.getStores(searchKeyword, itemsInAPage, page, listOrder);
 
 		model.addAttribute("stores", stores);
 		model.addAttribute("storesCount", storesCount);
@@ -408,6 +417,43 @@ public class UsrStoreController {
 		genFileService.deleteGenFiles("store", id, "extra", "bannerImg", fileNo);
 
 		return Utility.jsReplace("", Utility.f("banner?id=%d&storeModifyAuthKey=%s", id, storeModifyAuthKey));
+	}
+	
+	
+	// 상품 목록 페이지
+	@RequestMapping("/usr/store/productList")
+	public String showBanner(Model model, int id,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "") String searchKeyword,
+			@RequestParam(defaultValue = "20") int itemsNum,
+			@RequestParam(defaultValue = "") String listOrder,
+			@RequestParam(defaultValue = "-1") int cate) {
+		Store store = storeService.getForPrintStoreById(rq.getLoginedMemberId(), id);
+	    List<Category> categorys = storeService.getCategorysByStoreId(id);
+
+	    if (page <= 0) {
+			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
+		}
+
+		// 현재 등록된 상품 수
+		int productsCount = productService.getStoreInProductsCount(searchKeyword, id);
+		// 한 페이지에 나올 스토어 수
+		int itemsInAPage = itemsNum;
+		// 상품 수에 따른 페이지 수 계산
+		int pagesCount = (int) Math.ceil(productsCount / (double) itemsInAPage);
+
+		List<Product> products = productService.getStoreInProducts(searchKeyword, itemsInAPage, page, listOrder, cate);
+		
+	    model.addAttribute("store", store);
+	    model.addAttribute("categorys", categorys);
+	    model.addAttribute("productsCount", productsCount);
+	    model.addAttribute("searchKeyword", searchKeyword);
+	    model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("products", products);
+		model.addAttribute("page", page);
+		
+		
+	    return "/usr/store/productList";
 	}
 }
 

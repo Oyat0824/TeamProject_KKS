@@ -46,6 +46,10 @@ public class ProductService {
 	public int getProductsCount(String searchKeyword) {
 		return productRepository.getProductsCount(searchKeyword);
 	}
+	
+	public int getStoreInProductsCount(String searchKeyword, int id) {
+		return productRepository.getStoreInProductsCount(searchKeyword, id);
+	}
 
 	// 판매자 입장에서의 상품관리를 위한 상품 리스트 
 	public List<Product> getProducts(int id, String searchKeyword, int itemsInAPage, int page) {
@@ -55,10 +59,17 @@ public class ProductService {
 	}
 	
 	// 유저입장에서 보는 상품 리스트
-	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int page) {
+	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int page, String listOrder) {
 		int limitStart = (page - 1) * itemsInAPage;
 		
-		return productRepository.getExposureProducts(searchKeyword, itemsInAPage, limitStart);
+		return productRepository.getExposureProducts(searchKeyword, itemsInAPage, limitStart, listOrder);
+	}
+	
+	// 스토어에서 보는 상품 리스트
+	public List<Product> getStoreInProducts(String searchKeyword, int itemsInAPage, int page, String listOrder, int cate) {
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		return productRepository.getStoreInProducts(searchKeyword, itemsInAPage, limitStart, listOrder, cate);
 	}
 
 	// 상품 가져오기

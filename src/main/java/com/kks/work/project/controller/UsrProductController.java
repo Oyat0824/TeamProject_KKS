@@ -159,7 +159,10 @@ public class UsrProductController {
 		int pagesCount = (int) Math.ceil(reviewCount / (double) itemsInAPage);
 
 		List<Review> reviews = productService.getReviews(storeId, id, itemsInAPage, page);
-		double reviewAvg = productService.getReviewAvg(id);
+		if (reviewCount > 0) {
+			double reviewAvg = productService.getReviewAvg(id);
+			model.addAttribute("reviewAvg", reviewAvg);
+		}
 		
 		model.addAttribute("store", store);
 		model.addAttribute("categorys", categorys);
@@ -169,7 +172,6 @@ public class UsrProductController {
 		model.addAttribute("reviewCount", reviewCount);
 		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("reviews", reviews);
-		model.addAttribute("reviewAvg", reviewAvg);
 		model.addAttribute("page", page);
 
 		return "/usr/product/view";
@@ -213,7 +215,8 @@ public class UsrProductController {
 	// 상품 목록 페이지 | 사용자
 	@RequestMapping("/usr/product/exposureList")
 	public String showProductExposureList(Model model, @RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum) {
+			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum,
+			@RequestParam(defaultValue = "") String listOrder) {
 
 		if (page <= 0) {
 			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
@@ -226,7 +229,7 @@ public class UsrProductController {
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(productsCount / (double) itemsInAPage);
 
-		List<Product> products = productService.getExposureProducts(searchKeyword, itemsInAPage, page);
+		List<Product> products = productService.getExposureProducts(searchKeyword, itemsInAPage, page, listOrder);
 
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("productsCount", productsCount);

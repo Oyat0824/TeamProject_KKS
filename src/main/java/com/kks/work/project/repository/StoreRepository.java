@@ -101,19 +101,40 @@ public interface StoreRepository {
 	// 스토어 목록
 	@Select("""
 			<script>
-				SELECT S.*, M.name AS sellerName
-				FROM store AS S
-				INNER JOIN `member` AS M
-				ON S.memberId = M.id
-				WHERE 1 = 1
+				SELECT S.*, COUNT(PC.id) AS purchaseCnt
+				FROM ( 
+					SELECT S.*, COUNT(R.id) AS reviewCnt
+					FROM store AS S
+					LEFT JOIN review AS R
+					ON S.id = R.storeId
+					WHERE 1 = 1
+					GROUP BY S.id
+				) AS S
+				LEFT JOIN purchaseList AS PC
+				ON S.id = PC.storeId
+				WHERE PC.confirm = 1
 				<if test="searchKeyword != ''">
 					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
-				ORDER BY S.id DESC
+				GROUP BY S.id
+				<choose>
+					<when test="listOrder == 'reviewMany'">
+						ORDER BY reviewCnt DESC
+					</when>
+					<when test="listOrder == 'purchaseMany'">
+						ORDER BY purchaseCnt DESC
+					</when>
+					<when test="listOrder == 'date'">
+						ORDER BY regDate ASC
+					</when>
+					<otherwise>
+						ORDER BY S.id DESC
+					</otherwise>
+				</choose>
 				LIMIT #{limitStart}, #{itemsInAPage}
 			</script>
 			""")
-	public List<Store> getStores(String searchKeyword, int itemsInAPage, int limitStart);
+	public List<Store> getStores(String searchKeyword, int itemsInAPage, int limitStart, String listOrder);
 	
 	// 카테고리가져오기 (id)
 	@Select("""

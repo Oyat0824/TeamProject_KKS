@@ -80,10 +80,10 @@ public class StoreService {
 	}
 	
 	// 스토어 목록
-	public List<Store> getStores(String searchKeyword, int itemsInAPage, int page) {
+	public List<Store> getStores(String searchKeyword, int itemsInAPage, int page, String listOrder) {
 		int limitStart = (page - 1) * itemsInAPage;
 		
-		return storeRepository.getStores(searchKeyword, itemsInAPage, limitStart);
+		return storeRepository.getStores(searchKeyword, itemsInAPage, limitStart, listOrder);
 	}
 	
 	

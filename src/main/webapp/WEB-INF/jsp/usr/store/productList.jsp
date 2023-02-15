@@ -15,8 +15,8 @@
 			return false;
 		}
 		
-		if($(e).data().form == "listStyle") {
-			$("#frm").find("[name=listStyle]").val($(e).data().type);
+		if($(e).data().form == "cate") {
+			$("#frm").find("[name=cate]").val($(e).data().type);
 			
 			$("#frm").submit();
 			
@@ -35,20 +35,21 @@
 			$("[data-form='listOrder']").removeClass("text-blue-500 font-bold");
 			$("[data-type='${param.listOrder}']").addClass("text-blue-500 font-bold");
 		}
-		
-		if($("#frm").find("[name=listStyle]").val() == "${param.listStyle}") {
-			$("[data-form='listStyle']").removeClass("text-blue-500");
-			$("[data-type='${param.listStyle}']").addClass("text-blue-500");
-		}
 	})
+
 </script>
+
+<!-- 스토어 헤더 -->
+<%@ include file="../common/storeHead.jsp"%>
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3 con">
 		<form id="frm" action="">
+			<input type="hidden" name="id" value="${store.id }" />
 			<input type="hidden" name="page" value="${param.page == null ? '1' : param.page}" />
 			<input type="hidden" name="listOrder" value="${param.listOrder == null ? '' : param.listOrder}" />
-			<input type="hidden" name="listStyle" value="${param.listStyle == null ? 'list' : param.listStyle}" />
+			<input type="hidden" name="cate" value="${param.cate == null ? '' : param.cate}" />
+			
 			<div class="flex justify-between text-base items-center pb-5 border-b">
 				<ul class="flex h-10">
 					<li class="mr-2 border"><a class="block p-2 text-blue-500 font-bold" href="#" data-form="listOrder" data-type="" onclick="return chgForm(this);">번호 순</a></li>
@@ -64,93 +65,57 @@
 							<option value="40" ${param.itemsNum == 40 ? "selected" : "" }>40개씩 보기</option>
 						</select>
 					</div>
-					<div class="flex h-10">
-						<a class="block mr-1 p-2 border w-10 text-center text-blue-500" href="#" data-form="listStyle" data-type="list" onclick="return chgForm(this);"><i class="fa-sharp fa-solid fa-list"></i></a>
-						<a class="block p-2 border w-10 text-center" href="#" data-form="listStyle" data-type="gallery" onclick="return chgForm(this);"><i class="fa-solid fa-border-all"></i></a>
-					</div>
 				</div>
 			</div>
-		
-			
-			<c:if test="${param.listStyle == 'list' || param.listStyle == null}">
-				<div class="list">
-					<c:forEach var="store" items="${stores}">
-						<div class="flex items-center p-5 hover:bg-gray-50 border-b">
-							<div class="img_area mr-10">
-								<a href="view?id=${store.id}">
-									<img class="w-36 h-36 border-2 border-gray-400" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" />
-								</a>
-							</div>
-							
-							<div class="info_area">
-								<div class="storeName text-base">
-									<a class="font-bold" href="view?id=${store.id}">${store.storeName}</a>
-								</div>
-								<div class="flex items-center storeDesc text-sm my-3 h-20 overflow-hidden">
-									<p>${store.getForPrintDesc() }</p>
-								</div>
-								<div class="storeEtc text-sm">
-									<span>리뷰 수 <span class="text-indigo-600">${store.reviewCnt }</span></span> 
-									<span class="dot">구매건수 <span class="text-indigo-600">${store.purchaseCnt }</span></span>
-									<span class="dot">등록일 ${store.regDate.substring(0, 10).replace("-", ".") }</span>
-									<span class="dot">찜하기 <span class="text-indigo-600">567</span></span>
-								</div>
-							</div>
-						</div>
-					</c:forEach>
-				</div>
-			</c:if>
-			
-			<c:if test="${param.listStyle == 'gallery'}">
-				<div class="gallery">
-					<div class="flex flex-wrap">
-						<c:forEach var="store" items="${stores}" varStatus="status">
-							<c:if test="${status.index % 5 == 0 }">
-								<div class="flex w-full my-3 pb-5 border-b">
-									<c:forEach var="i" begin="${status.index}" end="${status.index + (5 - 1)}" step="1">
-										<c:if test="${ stores[i] != null }">
-											<div class="flex flex-col items-center w-1/5 overflow-hidden">
-												<div class="img_area">
-													<a href="view?id=${stores[i].id}">
-														<img class="w-40 h-40 border-2 border-gray-400" src="${rq.getImgUri('store', stores[i].id, 'storeImg')}" alt="" />
+	
+			<div class="gallery">
+				<div class="flex flex-wrap">
+					<c:forEach var="product" items="${products}" varStatus="status">
+						<c:if test="${status.index % 5 == 0 }">
+							<div class="flex w-full my-3 pb-5 border-b">
+								<c:forEach var="i" begin="${status.index}" end="${status.index + (5 - 1)}" step="1">
+									<c:if test="${ products[i] != null }">
+										<div class="flex flex-col items-center w-1/5 overflow-hidden">
+											<div class="img_area">
+												<a href="/usr/product/view?storeId=${products[i].storeId}&id=${products[i].id}">
+													<img class="w-40 h-40 border-2 border-gray-400" src="${rq.getImgUri('product', products[i].id, 'productImg')}" alt="" />
+												</a>
+											</div>
+											
+											<div class="info_area flex flex-col items-center mt-2 pl-2">
+												<div class="productName text-base">
+													<a class="font-bold" href="/usr/product/view?storeId=${products[i].storeId}&id=${products[i].id}">
+														<c:choose>
+															<c:when test="${fn:length(products[i].productName) > 15}">
+																<c:out value="${fn:substring(products[i].productName, 0, 15)}.." />
+															</c:when>
+															<c:otherwise>
+																<c:out value="${products[i].productName }" />
+													        </c:otherwise>
+												        </c:choose>
 													</a>
 												</div>
-												
-												<div class="info_area flex flex-col items-center mt-2 pl-2">
-													<div class="storeName text-base">
-														<a class="font-bold" href="view?id=${stores[i].id}">
-															<c:choose>
-																<c:when test="${fn:length(stores[i].storeName) > 15}">
-																	<c:out value="${fn:substring(stores[i].storeName, 0, 15)}.." />
-																</c:when>
-																<c:otherwise>
-																	<c:out value="${stores[i].storeName }" />
-														        </c:otherwise>
-													        </c:choose>
-														</a>
-													</div>
-													<div class="storeEtc text-sm mt-2">
-														<span>리뷰 <span class="text-indigo-600">${store.reviewCnt }</span></span> 
-														<span class="dot">구매 <span class="text-indigo-600">${store.purchaseCnt }</span></span>
-													</div>	
-												</div>
+												<div class="productEtc text-sm mt-2">
+													<a href="">리뷰 <span class="text-indigo-600">${products[i].reviewCnt }</span></a>
+													<a class="dot" href="">구매 <span class="text-indigo-600">${products[i].purchaseCnt }</span></a>
+												</div>	
 											</div>
-										</c:if>
-									</c:forEach>
-								</div>
-							</c:if>	
-						</c:forEach>
-					</div>
+										</div>
+									</c:if>
+								</c:forEach>
+							</div>
+						</c:if>	
+					</c:forEach>
 				</div>
-			</c:if>
-			
+			</div>
+						
 			<div class="input-group flex justify-end mt-3">
 				<input type="text" placeholder="Search…" class="input input-bordered" name="searchKeyword" value="${param.searchKeyword }" />
 				<button class="btn btn-square">
 					Go
 				</button>
 			</div>
-		
+			
 		</form>
 		
 		<div class="pageNav flex justify-center my-5">
@@ -162,7 +127,7 @@
 				<c:set var="startPage" value="${endPage - (maxPageNum - 1)}" />
 				<c:set var="endPage" value="${pagesCount < endPage ? pagesCount : endPage }" />
 
-				<c:set var="pageBaseUri" value="&listOrder=${param.listOrder == null ? '' : param.listOrder}&listStyle=${param.listStyle == null ? 'list' : param.listStyle}&itemsNum=${param.itemsNum == null ? 20 : param.itemsNum }&searchKeyword=${searchKeyword }" />
+				<c:set var="pageBaseUri" value="&listOrder=${param.listOrder == null ? '' : param.listOrder}&&itemsNum=${param.itemsNum == null ? 20 : param.itemsNum }&searchKeyword=${searchKeyword }" />
 
 				<c:if test="${page == 1}">
 					<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
@@ -189,4 +154,5 @@
 		</div>
 	</div>
 </section>
+
 <%@ include file="../common/foot.jsp"%>

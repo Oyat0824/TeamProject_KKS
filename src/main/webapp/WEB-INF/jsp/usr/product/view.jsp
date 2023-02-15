@@ -265,6 +265,8 @@ $(function() {
 			</div>
 		</div>
 	</div>
+	
+<c:if test="${reviewCount > 0}">
 	<div class="container mx-auto border mt-2 p-5">
 		<div class="productReview">
 			<h3 class="font-bold text-xl select-none mb-2 pb-1 border-b">상품리뷰</h3>
@@ -371,5 +373,6 @@ $(function() {
 			</div>
 		</div>
 	</div>
+</c:if>
 </section>
 <%@ include file="../common/foot.jsp"%>

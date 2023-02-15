@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <c:set var="pageTitle" value="Store View" />
 <%@ include file="../common/head.jsp"%>
 <!-- 슬릭 슬라이더 -->
@@ -76,78 +77,86 @@ $(function() {
 	</div>
 </section>
 
-<!-- 상품 보기 부터 시작
- -->
-
 <!-- 베스트 부분 -->
-<section>
-	
+<section id="storeBest" class="mt-5">
+	<div class="container mx-auto">
+		<h2 class="text-center font-bold text-3xl">베스트 상품</h2>
+		<div class="flex justify-center">
+			<c:forEach var="item" items="${bestProducts}">
+				<div class="flex flex-col items-center p-5 hover:bg-gray-50">
+					<div class="img_area">
+						<a href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
+							<img class="w-60 h-60 border-2 border-gray-400" src="${rq.getImgUri('product', item.id, 'productImg')}" alt="" />
+						</a>
+					</div>
+					
+					<div class="info_area mt-2">
+						<div class="text-2xl">
+							<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">${item.productName}</a>
+						</div>
+						<div>
+							<span class="text-lg font-bold"><fmt:formatNumber value="${item.productPrice}" pattern="#,###" />원</span>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
+	</div>
 </section>
 
 <!-- 신상품 부분 -->
-<section>
-	
-</section>
-
-<!-- 전체상품 부분 -->
-<section>
-	
-</section>
-
-<!-- 판매자 정보 푸터 -->
-<section>
-	
-</section>
-
-<!-- 사이트 푸터 따로 제작 -->
-
-<section class="mt-8 text-xl">
-	<div class="container mx-auto px-3">
-		<div class="table-box-type-1">
-			<table class="table table-zebra w-full">
-				<colgroup>
-					<col width="200" />
-				</colgroup>
-
-				<tbody>
-					<tr>
-						<th>번호</th>
-						<td><div class="badge badge-lg bg-purple-600 border-transparent font-bold text-white">${store.id}</div></td>
-					</tr>
-					<tr>
-						<th>스토어 시작 일</th>
-						<td>${store.regDate}</td>
-					</tr>
-					<tr>
-						<th>스토어 수정 일</th>
-						<td>${store.updateDate}</td>
-					</tr>
-					<tr>
-						<th>스토어 이름</th>
-						<td>${store.storeName}</td>
-					</tr>
-					<tr>
-						<th>스토어 로고</th>
-						<td><img class="object-cover mx-auto" style="width: 160px; height: 50px" src="${rq.getImgUri('store', store.id, 'storeLogo')}" alt="" /></td>
-					</tr>
-					<tr>
-						<th>스토어 이미지</th>
-						<td><img class="object-cover mx-auto" style="width: 100px; height: 100px" src="${rq.getImgUri('store', store.id, 'storeImg')}" alt="" /></td>
-					</tr>
-					<tr>
-						<th>스토어 소개</th>
-						<td>${store.getForPrintDesc()}</td>
-					</tr>
-					<tr>
-						<th>판매자 이름</th>
-						<td>${store.sellerName}</td>
-					</tr>
-				</tbody>
-			</table>
+<section id="storeBest" class="mt-10">
+	<div class="container mx-auto">
+		<h2 class="text-center font-bold text-3xl">신상품</h2>
+		<div class="flex justify-center">
+			<c:forEach var="item" items="${newProducts}">
+				<div class="flex flex-col items-center p-5 hover:bg-gray-50">
+					<div class="img_area">
+						<a href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">
+							<img class="w-60 h-60 border-2 border-gray-400" src="${rq.getImgUri('product', item.id, 'productImg')}" alt="" />
+						</a>
+					</div>
+					
+					<div class="info_area mt-2">
+						<div class="text-2xl">
+							<a class="font-bold" href="/usr/product/view?storeId=${item.storeId }&id=${item.id}">${item.productName}</a>
+						</div>
+						<div>
+							<span class="text-lg font-bold"><fmt:formatNumber value="${item.productPrice}" pattern="#,###" />원</span>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
 		</div>
-		<div class="btns flex justify-between mt-5">
-			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
-		</div>
+	</div>
+</section>
+
+<section id="storeInfo" class="mt-10">
+	<div class="container mx-auto">
+		<table class="table border-2 w-3/6 mx-auto">
+			<colgroup>
+				<col width="200" />
+			</colgroup>
+			
+			<tbody>
+				<tr>
+					<th>스토어 등록일</th>
+					<td>${store.regDate}</td>
+				</tr>
+				<tr>
+					<th>스토어 이름</th>
+					<td>${store.storeName}</td>
+				</tr>
+				<tr>
+					<th>스토어 소개</th>
+					<td>${store.getForPrintDesc()}</td>
+				</tr>
+				<tr>
+					<th>판매자 이름</th>
+					<td>${store.sellerName}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </section>
 

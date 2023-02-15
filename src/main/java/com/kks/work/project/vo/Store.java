@@ -18,6 +18,8 @@ public class Store{
 	private String delStoreDate;
 	
 	private String sellerName;
+	private int reviewCnt;
+	private int purchaseCnt;
 	
 	public String getForPrintDesc() {
 		return this.storeDesc.replaceAll("\n", "<br />");
