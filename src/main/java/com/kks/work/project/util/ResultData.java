@@ -20,6 +20,8 @@ public class ResultData<DT> {
 	private String msg;
 	private DT data1;
 	private String data1Name;
+  private Object data2;
+	private String data2Name;
 	private int totalPriceSum;
 	private Map<String, Object> body;
 	
@@ -28,6 +30,11 @@ public class ResultData<DT> {
 		this.resultCode = resultCode;
 		this.msg = msg;
 		this.body = Utility.mapOf(args);
+	}
+  
+  public void setData2(String data2Name, Object data2) {
+		this.data2Name = data2Name;
+		this.data2 = data2;
 	}
 	
 	/**
@@ -90,6 +97,4 @@ public class ResultData<DT> {
 	public boolean isFail() {
 		return isSuccess() == false;
 	}
-
-
 }

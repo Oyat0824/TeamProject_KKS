@@ -1,5 +1,7 @@
 package com.kks.work.project.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -125,5 +127,33 @@ public class MemberService {
 	private void setTempPassword(Member member, String tempPassword, String salt) {
 		memberRepository.doPasswordModify(member.getId(), Utility.getEncrypt(tempPassword, salt), salt);
 	}
+	
+
+	// 멤버 카운트
+	public int getMembersCount(int memberType, String searchKeywordTypeCode, String searchKeyword) {
+		return memberRepository.getMembersCount(memberType, searchKeywordTypeCode, searchKeyword);
+	}
+
+	// 페이지
+	public List<Member> getMembers(int memberType, String searchKeywordTypeCode, String searchKeyword,
+			int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+		return memberRepository.getMembers(memberType, searchKeywordTypeCode, searchKeyword, limitStart, itemsInAPage);
+	}
+	
+	// 멤버 삭제
+		public void deleteMembers(List<Integer> memberIds) {
+			for (int memberId : memberIds) {
+				Member member = getMemberById(memberId);
+
+				if (member != null) {
+					deleteMember(member);
+				}
+			}
+		}
+
+		private void deleteMember(Member member) {
+			memberRepository.deleteMember(member.getId());
+		}
 
 }

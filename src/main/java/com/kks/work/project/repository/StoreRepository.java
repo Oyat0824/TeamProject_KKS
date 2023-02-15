@@ -182,4 +182,74 @@ public interface StoreRepository {
 			SELECT * FROM store
 			""")
 	public int getStoreId();
+	
+	// 관리자의 스토어 리스트에서 보는 스토어 카운트
+	@Select("""
+				<script>
+						SELECT COUNT(*)
+							FROM store
+							WHERE 1 = 1
+							<if test="searchKeyword != ''">
+								<choose>
+									<when test="searchKeywordTypeCode == 'storeName'">
+										AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+									</when>
+									<when test="searchKeywordTypeCode == 'memberId'">
+										AND memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+									</when>
+									<otherwise>
+										AND (
+												storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+												OR memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+											)
+									</otherwise>
+								</choose>
+							</if>
+				</script>
+			""")
+	public int getStoresAdmCount(String searchKeyword, String searchKeywordTypeCode);
+
+	// 관리자의 스토어 리스트에서 스토어 검색
+	@Select("""
+				<script>
+					SELECT *
+						FROM store
+						WHERE 1 = 1
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'storeName'">
+									AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'memberId'">
+									AND memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+						ORDER BY id DESC
+						LIMIT #{limitStart}, #{itemsInAPage}
+				</script>
+			""")
+	public List<Store> getStoresAdm(String searchKeyword, String searchKeywordTypeCode, int limitStart, 
+				int itemsInAPage);
+
+	// 관리자 권한으로 스토어 삭제
+	@Update("""
+				<script>
+					UPDATE store
+						<set>
+							updateDate = NOW(),
+							delStoreStatus = 1,
+							delStoreDate = NOW()
+						</set>
+						WHERE id = #{id}
+				</script>
+			""")
+	public void AdmdeleteStore(int id);
+		
 }
