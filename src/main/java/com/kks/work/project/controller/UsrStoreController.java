@@ -103,8 +103,8 @@ public class UsrStoreController {
 	    Store store = storeService.getForPrintStoreById(rq.getLoginedMemberId(), id);
 	    List<Category> categorys = storeService.getCategorysByStoreId(id);
 	    List<GenFile> fileList = genFileService.getGenFiles("store", id, "extra", "bannerImg");
-	    List<Product> bestProducts = productService.getExposureProducts("", 5, 1, "reviewMany");
-	    List<Product> newProducts = productService.getExposureProducts("", 5, 1, "");
+	    List<Product> bestProducts = productService.getStoreInProducts("", 5, 1, "reviewMany", -1, id);
+	    List<Product> newProducts = productService.getStoreInProducts("", 5, 1, "", -1, id);
 		
 	    model.addAttribute("store", store);
 	    model.addAttribute("categorys", categorys);
