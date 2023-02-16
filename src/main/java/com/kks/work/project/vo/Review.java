@@ -17,6 +17,8 @@ public class Review{
 	private int rating;
 	private String reviewBody;
 	
+	private String name;
+	
 	public String getForPrintReviewBody() {
 		return this.reviewBody.replaceAll("\n", "<br />");
 	}

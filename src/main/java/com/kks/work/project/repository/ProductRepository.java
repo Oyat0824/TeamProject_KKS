@@ -427,7 +427,7 @@ public interface ProductRepository {
 
 	// 리뷰 목록
 	@Select("""
-		SELECT R.*, M.name
+		SELECT R.*, M.name AS name
 		FROM review AS R
 		INNER JOIN `member` AS M
 		ON R.memberId = M.id

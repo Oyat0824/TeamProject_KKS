@@ -317,19 +317,22 @@ $(function() {
 										</div>
 									</div>
 								</div>
+								<div class="mt-1 text-gray-500">
+									<span>${review.name}</span> <span class="dot">${review.regDate.substring(0, 10) } </span>
+								</div>
 								<div class="mt-3">
 									${review.getForPrintReviewBody() }
 								</div>
 							</div>
 						</div>
 						<div class="flex mt-8">
-							<a href="">
+							<a href="${rq.getImgUri('review', review.id, 'reviewImg', 1)}" target="_blank">
 								<img class="rImg border p-1 w-20 mr-3" style="aspect-ratio: 1/1" src="${rq.getImgUri('review', review.id, 'reviewImg', 1)}" alt="" />
 							</a>
-							<a href="">
+							<a href="${rq.getImgUri('review', review.id, 'reviewImg', 2)}" target="_blank">
 								<img class="rImg border p-1 w-20 mr-3" style="aspect-ratio: 1/1" src="${rq.getImgUri('review', review.id, 'reviewImg', 2)}" alt="" />
 							</a>
-							<a href="">
+							<a href="${rq.getImgUri('review', review.id, 'reviewImg', 3)}" target="_blank">
 								<img class="rImg border p-1 w-20" style="aspect-ratio: 1/1" src="${rq.getImgUri('review', review.id, 'reviewImg', 3)}" alt="" />
 							</a>
 						</div>

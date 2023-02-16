@@ -135,7 +135,7 @@ public class UsrProductController {
 			}
 		}
 
-		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("view?storeId=%d&id=%d", id, productId));
+		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("list?id=%d&storeModifyAuthKey=%s", id, storeModifyAuthKey));
 	}
 
 	// 상품 상세보기

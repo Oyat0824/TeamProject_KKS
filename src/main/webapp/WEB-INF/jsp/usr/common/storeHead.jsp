@@ -24,7 +24,7 @@
 			</div>
 			<c:forEach var="category" items="${categorys}" varStatus="status">
 				<div class="mr-10">
-					<a class="${param.cate == category.id ? 'text-indigo-600' : ''}" href="#" data-form="cate" data-type="${category.id}" onclick="return chgForm(this);">${category.name}</a>
+					<a class="${param.cate == category.id ? 'text-indigo-600' : ''}" href="/usr/store/productList?id=${store.id}&cate=${category.id}" data-form="cate" data-type="${category.id}" onclick="return chgForm(this); ">${category.name}</a>
 				</div>
 			</c:forEach>
 		</div>
