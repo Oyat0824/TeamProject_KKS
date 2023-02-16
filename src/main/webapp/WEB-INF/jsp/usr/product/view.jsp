@@ -143,7 +143,7 @@ $(function() {
 <div class="flex container mx-auto my-2 text-sm breadcrumbs">
 	<ul>
 		<li><a href="/usr/store/view?id=${param.storeId }">홈</a></li> 
-		<li><a>${product.categoryName}</a></li> 
+		<li><a href="/usr/store/productList?id=${param.storeId }&cate=${product.productCategory}">${product.categoryName}</a></li> 
 	</ul>
 </div>
 
