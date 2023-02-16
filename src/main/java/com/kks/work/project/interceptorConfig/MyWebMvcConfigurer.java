@@ -57,7 +57,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		
 		// 관리자만 이용
 		ir = registry.addInterceptor(needAdminInterceptor);
-				// 공지사항
+		// 공지사항
 		ir.addPathPatterns("/admin/notice/**");
 		ir.addPathPatterns("/admin/notice/write");
 		ir.addPathPatterns("/admin/notice/doWrite");
@@ -68,13 +68,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
 		// 로그인 후 이용
 		ir = registry.addInterceptor(needLoginInterceptor);
-		// 스토어
-		ir.addPathPatterns("/usr/store/**");
-		ir.addPathPatterns("/usr/product/register");
-		ir.excludePathPatterns("/usr/store/view");
-		ir.excludePathPatterns("/usr/store/list");
-		// 장바구니
-		ir.excludePathPatterns("/usr/ShoppingCart/InsertShoppingCart");
+	// 멤버
 		// 로그아웃
 		ir.addPathPatterns("/usr/member/doLogout");
 		// 회원정보 관련
@@ -85,9 +79,21 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/member/doModify");
 		ir.addPathPatterns("/usr/member/passwordModify");
 		ir.addPathPatterns("/usr/member/doPasswordModify");
+	// 스토어
+		ir.addPathPatterns("/usr/store/**");
+		ir.excludePathPatterns("/usr/store/view");
+		ir.excludePathPatterns("/usr/store/list");
+		ir.excludePathPatterns("/usr/store/productList");
+	// 상품
+		ir.addPathPatterns("/usr/product/**");
+		ir.excludePathPatterns("/usr/product/view");
+		ir.excludePathPatterns("/usr/product/exposureList");
+		// 장바구니
+		ir.excludePathPatterns("/usr/ShoppingCart/InsertShoppingCart");
 
 		// 로그아웃 후 이용
 		ir = registry.addInterceptor(needLogoutInterceptor);
+	// 멤버
 		// 회원가입
 		ir.addPathPatterns("/usr/member/join");
 		ir.addPathPatterns("/usr/member/doJoin");
@@ -103,11 +109,23 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		
 		// 판매자만 이용
 		ir = registry.addInterceptor(needSellerInterceptor);
-		// 스토어 관련
+	// 스토어
 		ir.addPathPatterns("/usr/store/**");
-		ir.addPathPatterns("/usr/product/register");
 		ir.excludePathPatterns("/usr/store/view");
 		ir.excludePathPatterns("/usr/store/list");
+		ir.excludePathPatterns("/usr/store/productList");
+	// 상품
+		ir.addPathPatterns("/usr/product/**");
+		ir.excludePathPatterns("/usr/product/view");
+		ir.excludePathPatterns("/usr/product/exposureList");
+		ir.excludePathPatterns("/usr/product/orderSheet");
+		ir.excludePathPatterns("/usr/product/buyProduct");
+		ir.excludePathPatterns("/usr/product/orderStatus");
+		ir.excludePathPatterns("/usr/product/orderList");
+		ir.excludePathPatterns("/usr/product/confirmPurchase");
+		ir.excludePathPatterns("/usr/product/cancelPurchase");
+		ir.excludePathPatterns("/usr/product/review");
+		ir.excludePathPatterns("/usr/product/createReview");
 	}
 
 }

@@ -238,7 +238,7 @@ $(function() {
 	</div>
 
 	<div class="container mx-auto border p-5 mt-5">
-		<div class="productInfo">
+		<div class="productInfo3">
 			<h3 class="font-bold text-xl select-none mb-2 pb-1 border-b">상품정보</h3>
 			<table class="table w-1/2 mx-auto border-2">
 				<colgroup>
