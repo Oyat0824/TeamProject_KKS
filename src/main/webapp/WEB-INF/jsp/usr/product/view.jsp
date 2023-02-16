@@ -349,7 +349,7 @@ $(function() {
 					<c:set var="startPage" value="${endPage - (maxPageNum - 1)}" />
 					<c:set var="endPage" value="${pagesCount < endPage ? pagesCount : endPage }" />
 	
-					<c:set var="pageBaseUri" value="&id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey }&searchKeyword=${searchKeyword }" />
+					<c:set var="pageBaseUri" value="&storeId=${store.id }&id=${param.id }" />
 	
 					<c:if test="${page == 1}">
 						<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
