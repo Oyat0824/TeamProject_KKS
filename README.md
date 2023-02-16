@@ -7,6 +7,7 @@
 - HTML/CSS
 - JavaScript
 - Jquery
+- AJAX
 - Java
 - Spring Boot
 - JSP
