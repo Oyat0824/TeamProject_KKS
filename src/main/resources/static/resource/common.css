@@ -308,7 +308,7 @@ table-box-shopCart {
 	color: #fff;
 }
 
-.productInfo::after {
+.productInfo3::after {
 	display: block;
 	content: "";
 	width: 10%;
