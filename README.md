@@ -1,7 +1,7 @@
 # TeamProject_KKS
 코리아IT아카데미 웹&amp;앱 개발, 팀 프로젝트
 
-- [프로젝트 ](https://github.com/Oyat0824/TeamProject_KKS/graphs/contributors)
+- [프로젝트 기여율](https://github.com/Oyat0824/TeamProject_KKS/graphs/contributors)
 
 # 기능 구현
 - 회원 기능 (가입, 로그인/로그아웃, 아이디/비밀번호 찾기, 마이페이지 등등..)
