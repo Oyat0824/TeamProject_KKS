@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.kks.work.project.interceptor.BeforeActionInterceptor;
+import com.kks.work.project.interceptor.NeedAdminInterceptor;
 import com.kks.work.project.interceptor.NeedLoginInterceptor;
 import com.kks.work.project.interceptor.NeedLogoutInterceptor;
 import com.kks.work.project.interceptor.NeedSellerInterceptor;
@@ -19,6 +20,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 	private NeedLoginInterceptor needLoginInterceptor;
 	private NeedLogoutInterceptor needLogoutInterceptor;
 	private NeedSellerInterceptor needSellerInterceptor;
+	private NeedAdminInterceptor needAdminInterceptor;
 	
 	// 파일 생성 경로
 	@Value("${custom.genFileDirPath}")
@@ -28,11 +30,12 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 	@Autowired
 	public MyWebMvcConfigurer(BeforeActionInterceptor beforeActionInterceptor,
 			NeedLoginInterceptor needLoginInterceptor, NeedLogoutInterceptor needLogoutInterceptor,
-			NeedSellerInterceptor needSellerInterceptor) {
+			NeedSellerInterceptor needSellerInterceptor, NeedAdminInterceptor needAdminInterceptor) {
 		this.beforeActionInterceptor = beforeActionInterceptor;
 		this.needLoginInterceptor = needLoginInterceptor;
 		this.needLogoutInterceptor = needLogoutInterceptor;
 		this.needSellerInterceptor = needSellerInterceptor;
+		this.needAdminInterceptor = needAdminInterceptor;
 	}
 	
 	@Override
@@ -51,6 +54,17 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/favicon.ico");
 		ir.excludePathPatterns("/resource/**");
 		ir.excludePathPatterns("/error");
+		
+		// 관리자만 이용
+		ir = registry.addInterceptor(needAdminInterceptor);
+				// 공지사항
+		ir.addPathPatterns("/admin/notice/**");
+		ir.addPathPatterns("/admin/notice/write");
+		ir.addPathPatterns("/admin/notice/doWrite");
+		ir.addPathPatterns("/admin/notice/doDelete");
+		ir.addPathPatterns("/admin/notice/doModify");
+		ir.excludePathPatterns("/admin/notice/detail");
+		ir.excludePathPatterns("/admin/notice/list");
 
 		// 로그인 후 이용
 		ir = registry.addInterceptor(needLoginInterceptor);
@@ -59,6 +73,8 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/product/register");
 		ir.excludePathPatterns("/usr/store/view");
 		ir.excludePathPatterns("/usr/store/list");
+		// 장바구니
+		ir.excludePathPatterns("/usr/ShoppingCart/InsertShoppingCart");
 		// 로그아웃
 		ir.addPathPatterns("/usr/member/doLogout");
 		// 회원정보 관련

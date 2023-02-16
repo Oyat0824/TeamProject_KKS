@@ -43,4 +43,7 @@ public class PurchaseList{
 	
 	// 멤버 정보
 	private String sellerTel;
+	
+	// 리뷰 정보
+	private int isReview;
 }

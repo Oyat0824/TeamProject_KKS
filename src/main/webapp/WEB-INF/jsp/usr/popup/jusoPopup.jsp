@@ -12,26 +12,26 @@
 %>
 </head>
 <script language="javascript">
-document.domain = "localhost";
-function init(){
-	
-	let url = location.href;
-	let confmKey = "devU01TX0FVVEgyMDIzMDIxMzAxMjgwNDExMzUwNDE=";//승인키
-	
-	let resultType = "4"; // 도로명주소 검색결과 화면 출력유형, 1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명
-	let inputYn= "<%=inputYn%>";
-	
-	if(inputYn != "Y"){
-		document.form.confmKey.value = confmKey;
-		document.form.returnUrl.value = url;
-		document.form.resultType.value = resultType;
-		document.form.action="https://business.juso.go.kr/addrlink/addrLinkUrl.do"; // 인터넷망
-		document.form.submit();
-	} else {
-		opener.jusoCallBack("<%=zipNo%>", "<%=roadAddrPart1%>", "<%=addrDetail%>");
-		window.close();
+	document.domain = "localhost";
+	function init(){
+		
+		let url = location.href;
+		let confmKey = "devU01TX0FVVEgyMDIzMDIxMzAxMjgwNDExMzUwNDE=";//승인키
+		
+		let resultType = "4"; // 도로명주소 검색결과 화면 출력유형, 1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명
+		let inputYn= "<%=inputYn%>";
+		
+		if(inputYn != "Y"){
+			document.form.confmKey.value = confmKey;
+			document.form.returnUrl.value = url;
+			document.form.resultType.value = resultType;
+			document.form.action="https://business.juso.go.kr/addrlink/addrLinkUrl.do"; // 인터넷망
+			document.form.submit();
+		} else {
+			opener.jusoCallBack("<%=zipNo%>", "<%=roadAddrPart1%>", "<%=addrDetail%>");
+			window.close();
+		}
 	}
-}
 </script>
 <body onload="init();">
 	<form id="form" name="form" method="post">

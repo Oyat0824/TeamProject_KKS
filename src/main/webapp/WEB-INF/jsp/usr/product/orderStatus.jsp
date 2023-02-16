@@ -45,7 +45,6 @@
 			</div>
 			
 			<div class="flex mt-3">
-			<!-- 구매 확정인 경우, 상품 이름 옆 구매확정 아이콘 // 구매확정일 주문 수량 아래 추가 -->
 				<div class="thumnail mr-3">
 					<a href="view?id=${purchase.productId}&storeId=${purchase.storeId}">
 						<img class="w-24 h-24 p-1 border rounded-lg" src="${rq.getImgUri('product', purchase.productId, 'productImg', 1)}" />
@@ -79,7 +78,7 @@
 					<div class="flex mt-2">
 						<c:if test="${purchase.cancel == 0 && purchase.confirm == 1 && isReview == 0}">
 							<div class="flex-auto mx-1 p-2 border text-center">
-								<a class="block" href="review?storeId=${purchase.storeId}&productId=${purchase.productId}" onclick="window.open(this.href, '_blank', 'width=480, height=768'); return false;">리뷰쓰기</a>
+								<a class="block" href="review?storeId=${purchase.storeId}&productId=${purchase.productId}&purchaseId=${purchase.id}" onclick="window.open(this.href, '_blank', 'width=480, height=768'); return false;">리뷰쓰기</a>
 							</div>
 						</c:if>
 						<c:if test="${purchase.cancel == 0 && purchase.ordCheck == 1}">
@@ -186,7 +185,7 @@
 		</div>
 		
 		<div class="mt-5">
-			<button class="btn w-full" onclick="history.back();">뒤로가기</button>
+			<a class="btn w-full" href="orderList">뒤로가기</a>
 		</div>
 	</div>
 </section>

@@ -191,7 +191,6 @@
 		</table>
 	</div>
 	
-	
 	<div class="container mx-auto mt-10 p-10 border">
 		<h3 class="font-bold text-xl select-none mb-5">주문자 정보</h3>
 		<div class="addressArea form-control">

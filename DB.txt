@@ -85,8 +85,9 @@ CREATE TABLE product(
 	productStock VARCHAR(20) NOT NULL, # 상품재고
 	productDlvy TINYINT(1) NOT NULL COMMENT '배송 방법 (0 = 무료, 1 = 유료)',
 	productCourier VARCHAR(100) NOT NULL, # 택배사
+	productCourierCode VARCHAR(100) NOT NULL, # 택배사 코드
 	productDlvyPrice VARCHAR(40) NOT NULL, # 배송 비용
-	productBody TEXT NOT NULL,
+	productBody LONGBLOB NOT NULL,
 	storeId INT UNSIGNED NOT NULL,
 	KEY `indexKey` (storeId)
 );
@@ -117,12 +118,49 @@ CREATE TABLE purchaseList(
 	KEY `indexKey` (impUID, orderNum)
 );
 
+##### review 테이블 생성
+CREATE TABLE review (
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	storeId INT UNSIGNED NOT NULL,	
+	productId INT UNSIGNED NOT NULL,
+	purchaseId INT UNSIGNED NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	rating TINYINT(5) NOT NULL,
+	reviewBody TEXT NOT NULL,
+	UNIQUE `uniqueKey` (purchaseId),
+	KEY `indexKey` (purchaseId)
+);
+
 ##### category 테이블 생성
 CREATE TABLE category(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`name` VARCHAR(40) NOT NULL,
 	orderNo TINYINT UNSIGNED NOT NULL,
 	storeId INT UNSIGNED NOT NULL
+);
+
+## shopCart 테이블 생성
+CREATE TABLE shopCart (
+	cartId INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	productId INT UNSIGNED NOT NULL,
+	productName VARCHAR(40) NOT NULL,
+	productPrice INT UNSIGNED NOT NULL,
+	productCategory VARCHAR(40) NOT NULL,
+	productCnt INT UNSIGNED NOT NULL,
+	memberId INT UNSIGNED NOT NULL 
+);
+
+#### 공지사항 Notice 테이블 생성
+CREATE TABLE notice(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	title VARCHAR(200) NOT NULL,
+	`body` TEXT NOT NULL,
+	viewCount INT UNSIGNED NOT NULL DEFAULT 0
 );
 
 ##### 테이블 조회
@@ -134,6 +172,9 @@ SELECT * FROM store;
 SELECT * FROM product;
 SELECT * FROM purchaseList;
 SELECT * FROM category;
+SELECT * FROM review;
+SELECT * FROM shopCart;
+SELECT * FROM notice;
 
 ### member 테스트 데이터 생성
 INSERT INTO `member`

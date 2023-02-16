@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="pageTitle" value="Product View" />
 <%@ include file="../common/head.jsp"%>
+<%@ include file="../../usr/common/toastUiEditorLib.jsp"%>
 <!-- 슬릭 슬라이더 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
@@ -126,6 +128,11 @@ $(function() {
 		chkMaxInputNum();
 	});
 	
+	$(".rImg").each(function(idx, item) {
+		if($(item).attr("src") == "${rq.getProfileFallbackImgUri()}") {
+			$(item).parent().remove();
+		}
+	});
 });
 </script>
 
@@ -229,18 +236,146 @@ $(function() {
 			</form>
 		</div>
 	</div>
-	<!-- 
-		상품 상세정보, 리뷰 탭 을 만들어야함
-		상품 상세정보에는 상품 테이블에 있는 정보를 토대로 게시물 내용을 보여줌
-		리뷰 탭에는 리뷰 목록을 페이지로 만들어서 보여줘야함 (페이지 작업 해야함)
-		
-		구매건수는 주문목록(구매확정)된거를 기반으로 해당 상품을 찾아서 기록
-		리뷰건수는 해당상품으로 찾아서 카운트 후 기록
-		찜하기도 만들어야함, 스토어 찜도 비슷하게 만들어야함
-	 -->
-	
-	<div class="container mx-auto border border-t-0 p-5">
-		
+
+	<div class="container mx-auto border p-5 mt-5">
+		<div class="productInfo">
+			<h3 class="font-bold text-xl select-none mb-2 pb-1 border-b">상품정보</h3>
+			<table class="table w-1/2 mx-auto border-2">
+				<colgroup>
+					<col width="160">
+					<col width="50%">
+					<col width="160">
+					<col width="50%">
+				</colgroup>
+				<tr class="border-b">
+					<th class="bg-gray-200 rounded-none">상품이름</th>
+					<td>${product.productName }</td>
+				</tr>
+				<tr>
+					<th class="bg-gray-200 rounded-none">상품번호</th>
+					<td>${product.id }</td>
+					<th class="bg-gray-200 rounded-none">상품 등록일</th>
+					<td>${product.regDate }</td>
+				</tr>
+			</table>
+		</div>
+		<div class="productBody">
+			<div class="toast-ui-viewer" >
+				<script type="text/x-template">${product.productBody }</script>
+			</div>
+		</div>
 	</div>
+	
+<c:if test="${reviewCount > 0}">
+	<div class="container mx-auto border mt-2 p-5">
+		<div class="productReview">
+			<h3 class="font-bold text-xl select-none mb-2 pb-1 border-b">상품리뷰</h3>
+			<div class="flex justify-around mt-2 w-11/12 bg-gray-100 mx-auto p-10">
+				<div class="flex flex-col items-center">
+					<div>
+						<span class="font-bold">사용자 총 평점</span>
+					</div>
+					<div class="my-5">
+						<div class="star-ratings">
+							<div class="star-ratings-fill space-x-1 text-3xl" style="width: calc(20% * ${reviewAvg} + 1.5px)">
+								<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							</div>
+							<div class="star-ratings-base space-x-1 text-3xl">
+								<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							</div>
+						</div>
+					</div>
+					<div>
+						<span class="text-3xl font-bold">${reviewAvg} / 5</span>
+					</div>
+				</div>
+				<div class="flex flex-col items-center">
+					<div>
+						<span class="font-bold">전체 리뷰 수</span>
+					</div>
+					<div class="my-5"><i class="fa-solid fa-comment-dots text-3xl"></i></div>
+					<div><span class="text-3xl font-bold">${reviewCount}</span></div>
+				</div>
+			</div>
+			
+			<div class="flex flex-col mt-2">
+				<c:forEach var="review" items="${reviews}">
+					<div class="p-3 border mt-3">
+						<div class="flex items-center mt-2">
+							<div class="mx-4">
+								<img class="w-20 rounded-full" style="aspect-ratio: 1/1" src="${rq.getImgUri('member', review.memberId, 'profileImg', 1)}" alt="" />
+							</div>
+							<div class="flex-1 pl-5">
+								<span class="text-base font-bold">평점 : ${review.rating }점</span>
+								<div class="flex items-center">
+									<div class="star-ratings">
+										<div class="star-ratings-fill space-x-1 text-lg" style="width: calc(20% * ${review.rating })">
+											<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+										</div>
+										<div class="star-ratings-base space-x-1 text-lg">
+											<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+										</div>
+									</div>
+								</div>
+								<div class="mt-1 text-gray-500">
+									<span>${review.name}</span> <span class="dot">${review.regDate.substring(0, 10) } </span>
+								</div>
+								<div class="mt-3">
+									${review.getForPrintReviewBody() }
+								</div>
+							</div>
+						</div>
+						<div class="flex mt-8">
+							<a href="${rq.getImgUri('review', review.id, 'reviewImg', 1)}" target="_blank">
+								<img class="rImg border p-1 w-20 mr-3" style="aspect-ratio: 1/1" src="${rq.getImgUri('review', review.id, 'reviewImg', 1)}" alt="" />
+							</a>
+							<a href="${rq.getImgUri('review', review.id, 'reviewImg', 2)}" target="_blank">
+								<img class="rImg border p-1 w-20 mr-3" style="aspect-ratio: 1/1" src="${rq.getImgUri('review', review.id, 'reviewImg', 2)}" alt="" />
+							</a>
+							<a href="${rq.getImgUri('review', review.id, 'reviewImg', 3)}" target="_blank">
+								<img class="rImg border p-1 w-20" style="aspect-ratio: 1/1" src="${rq.getImgUri('review', review.id, 'reviewImg', 3)}" alt="" />
+							</a>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+			
+			<div class="pageNav flex justify-center mt-5">
+				<div class="btn-group">
+					<c:set var="maxPageNum" value="5" />
+					<fmt:parseNumber var="pageBlock" integerOnly="true" value="${page / maxPageNum}" />
+					<c:if test="${page % maxPageNum > 0}"><c:set var="pageBlock" value="${pageBlock + 1}" /></c:if>
+					<c:set var="endPage" value="${pageBlock * maxPageNum}" />
+					<c:set var="startPage" value="${endPage - (maxPageNum - 1)}" />
+					<c:set var="endPage" value="${pagesCount < endPage ? pagesCount : endPage }" />
+	
+					<c:set var="pageBaseUri" value="&id=${param.id }&storeModifyAuthKey=${param.storeModifyAuthKey }&searchKeyword=${searchKeyword }" />
+	
+					<c:if test="${page == 1}">
+						<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
+						<a class="btn btn-sm w-12 btn-disabled">&lt;</a>
+					</c:if>
+					<c:if test="${page > 1}">
+						<a class="btn btn-sm w-12" href="?page=1${pageBaseUri}">&lt;&lt;</a>
+						<a class="btn btn-sm w-12" href="?page=${page-1}${pageBaseUri}">&lt;</a>
+					</c:if>
+						
+					<c:forEach begin="${startPage }" end="${endPage }" var="i">
+						<a class="btn btn-sm w-12 ${page == i ? 'btn-active' : ''}" href="?page=${i}${pageBaseUri}">${i}</a>
+					</c:forEach>
+	
+					<c:if test="${page == pagesCount}">
+						<a class="btn btn-sm w-12 btn-disabled">&gt;</a>
+						<a class="btn btn-sm w-12 btn-disabled">&gt;&gt;</a>
+					</c:if>
+					<c:if test="${page < pagesCount}">
+						<a class="btn btn-sm w-12" href="?page=${page+1}${pageBaseUri}">&gt;</a>
+						<a class="btn btn-sm w-12" href="?page=${pagesCount}${pageBaseUri}">&gt;&gt;</a>
+					</c:if>
+				</div>
+			</div>
+		</div>
+	</div>
+</c:if>
 </section>
 <%@ include file="../common/foot.jsp"%>
