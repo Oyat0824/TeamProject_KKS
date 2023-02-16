@@ -78,7 +78,7 @@
 					<div class="flex mt-2">
 						<c:if test="${purchase.cancel == 0 && purchase.confirm == 1 && isReview == 0}">
 							<div class="flex-auto mx-1 p-2 border text-center">
-								<a class="block" href="review?storeId=${purchase.storeId}&productId=${purchase.productId}&purchaseId=${purchase.id}" onclick="window.open(this.href, '_blank', 'width=480, height=768'); return false;">리뷰쓰기</a>
+								<a class="block" href="review?storeId=${purchase.storeId}&productId=${purchase.productId}&purchaseId=${purchase.id}" onclick="window.open(this.href, '_blank', 'width=600, height=800'); return false;">리뷰쓰기</a>
 							</div>
 						</c:if>
 						<c:if test="${purchase.cancel == 0 && purchase.ordCheck == 1}">
