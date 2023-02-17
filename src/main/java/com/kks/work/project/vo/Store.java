@@ -16,11 +16,20 @@ public class Store{
 	private int memberId;
 	private boolean delStoreStatus;
 	private String delStoreDate;
+	private int userLike;
 	
 	private String sellerName;
 	
 	public String getForPrintDesc() {
 		return this.storeDesc.replaceAll("\n", "<br />");
+	}
+	
+	public int getUserLike() {
+	    return userLike;
+	}
+
+	public void setUserLike(int userLike) {
+	   this.userLike = userLike;
 	}
 	
 	public String delStatusStr() {

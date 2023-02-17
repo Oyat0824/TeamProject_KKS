@@ -147,7 +147,20 @@ $(function() {
 		</div>
 		<div class="btns flex justify-between mt-5">
 			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
-			<a class="btn" href=""><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
+			<c:if test="${rq.getLoginedMemberId() != 0 }"> <!-- 로그인 여부. 로그인 후에 찜 클릭 가능-->
+  				<a class="btn" href="../userLike/doUserLike?id=${store.id}&relTypeCode=store&like=1"><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
+  				<span class="badge">${store.userLike}</span>
+  				<c:if test="${store.userLike > 0}">
+   					<a class="btn" href="../userLike/doUserLike?id=${store.id}&relTypeCode=store&like=-1"><i class="fa-solid fa-heart mr-1"></i>취소하기</a>
+    				<span class="badge">-${store.userLike}</span>
+  				</c:if>
+			</c:if>
+<%-- 			<c:if test="${rq.getLoginedMemberId() != 0 }"> <!-- 로그인 여부. 로그인 후에 찜 클릭으로 찜하거나 취소 가능-->
+				<a class="btn" href="href="../userLike/doUserLike?id=${store.id }&relTypeCode=store&point=1"><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
+				<span class="badge">${store.userLike}</span>
+				<a class="btn" href="href="../userLike/doUserLike?id=${store.id }&relTypeCode=store&point=-1"><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
+				<span class="badge">${store.userLike - 1}</span>
+			</c:if> --%>
 		</div>
 	</div>
 </section>

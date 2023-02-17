@@ -62,9 +62,9 @@ public class UserLikeController {
 		userLikeService.doUserLike(rq.getLoginedMemberId(), like, relTypeCode, id);
 		
 		if(like == 1) {
-			return Utility.jsReplace(Utility.f("%d번 스토어 찜하기", id), Utility.f("../store/detail?id=%d", id));
+			return Utility.jsReplace(Utility.f("%d번 스토어 찜하기", id), Utility.f("../store/view?id=%d", id));
 		} else {
-			return Utility.jsReplace(Utility.f("%d번 스토어 찜하기", id), Utility.f("../store/detail?id=%d", id));
+			return Utility.jsReplace(Utility.f("%d번 스토어 찜하기", id), Utility.f("../store/view?id=%d", id));
 		}
 
 	}
