@@ -15,4 +15,5 @@ public class UserLike {
 	private String relTypeCode;
 	private int relId;
 	public int getLikeStore;
+
 }

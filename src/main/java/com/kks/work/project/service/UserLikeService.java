@@ -23,8 +23,14 @@ public class UserLikeService {
 	}
 
 
-	public void doUserLike(int loginedMemberId, int id, String relTypeCode, int like) {
-		return userLikeServiceRepository.doUserLike(loginedMemberId, relTypeCode, id);
+	public void doUserLike(int loginedMemberId, int id, String relTypeCode,  int like) {
+		userLikeServiceRepository.doUserLike(loginedMemberId, id, relTypeCode, like);
+	}
+
+
+	public void delUserLike(int loginedMemberId, String relTypeCode, int id) {
+		userLikeServiceRepository.delUserLike(loginedMemberId, relTypeCode, id);
+		
 	}
 
 }

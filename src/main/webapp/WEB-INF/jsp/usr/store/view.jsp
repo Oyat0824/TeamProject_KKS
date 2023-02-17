@@ -147,6 +147,7 @@ $(function() {
 		</div>
 		<div class="btns flex justify-between mt-5">
 			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
+			<a class="btn" href=""><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
 		</div>
 	</div>
 </section>
