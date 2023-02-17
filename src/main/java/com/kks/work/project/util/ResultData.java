@@ -39,7 +39,7 @@ public class ResultData<DT> {
 	 * @return 매개변수에 넣은 값을 토대로 나온 JSON
 	 * 
 	 * */
-	public static <DT> ResultData<DT> from(String resultCode, String msg, String data1Name, DT data1) {
+	public static <DT> ResultData <DT> from(String resultCode, String msg, String data1Name, DT data1) {
 		ResultData<DT> rd = new ResultData<>();
 		rd.resultCode = resultCode;
 		rd.msg = msg;
@@ -76,7 +76,7 @@ public class ResultData<DT> {
 	
 	public static <DT> ResultData<DT> from(String resultCode, String msg) {
 		return from(resultCode, msg, null, null);
-	}
+	}   
 
 	/**
 	 * ResultData 성공

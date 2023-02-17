@@ -231,8 +231,53 @@ productCnt INT UNSIGNED NOT NULL,
 memberId INT UNSIGNED NOT NULL 
 );
 
-SELECT * FROM shopCart;
 
+
+### userLike테이블 생성
+
+CREATE TABLE userLike(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    relTypeCode VARCHAR(20) NOT NULL,
+    relId INT UNSIGNED NOT NULL,
+    memberId INT UNSIGNED NOT NULL
+);
+
+
+###userLike 테스트데이터 생성
+INSERT INTO userLike
+SET regDate = NOW(),
+updateDate = NOW(), 
+relTypeCode = 'product',
+relId = 1,
+memberId = 1;
+
+INSERT INTO userLike
+SET regDate = NOW(),
+updateDate = NOW(), 
+relTypeCode = 'product',
+relId = 2,
+memberId = 1;
+
+INSERT INTO userLike
+SET regDate = NOW(),
+updateDate = NOW(), 
+relTypeCode = 'product',
+relId = 2,
+memberId = 2;
+
+INSERT INTO userLike
+SET regDate = NOW(),
+updateDate = NOW(), 
+relTypeCode = 'product',
+relId = 3,
+memberId = 2;
+
+
+
+
+### shopCart 테스트데이터 생성
 
 INSERT INTO `shopCart`
 SET productId = 1,

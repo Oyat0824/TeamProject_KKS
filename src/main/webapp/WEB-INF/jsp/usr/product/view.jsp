@@ -127,6 +127,35 @@ $(function() {
 	});
 	
 });
+
+
+
+function setUserLike(productId) {
+	
+	$.get('/usr/userLike/setUserLike', {
+		productId : productId,
+		
+		ajaxMode : 'Y'
+	}, function(data){
+	
+		console.log("asdada", data);
+		
+// 	if (data.data1 == 1) {
+// 		$('#userLike').
+// 	}
+	
+// 	else {
+// 		<i class="fa-regular fa-heart"></i>
+// 	}
+	
+// 	$('.' + data.data1.cartId).val(data.data1.productCnt);
+// 	document.getElementById('totalPrice').innerText=data.totalPriceSum;				
+					
+	}, 'json');
+}
+
+
+
 </script>
 
 <!-- 스토어 헤더 -->
@@ -222,7 +251,7 @@ $(function() {
 						</c:choose> 
 					</div>
 					<div class="flex mt-1">
-						<a class="btn flex-1 mr-1" href=""><i class="fa-solid fa-heart mr-1"></i>찜하기</a>
+						<a class="btn flex-1 mr-1" href="#" onclick = "setUserLike(${product.id});"><i id="userLike" class="fa-solid fa-heart mr-1"></i>찜하기</a>
 						<a class="btn flex-1 ml-1" href=""><i class="fa-solid fa-basket-shopping mr-1"></i> 장바구니</a>
 					</div>
 				</div>
