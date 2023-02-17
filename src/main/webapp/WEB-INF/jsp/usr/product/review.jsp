@@ -38,9 +38,9 @@
 		
 		const rImgFileList = [];
 		
-		rImgFileList.push(form["file__reivew__0__extra__reivewImg__1"]);
-		rImgFileList.push(form["file__reivew__0__extra__reivewImg__2"]);
-		rImgFileList.push(form["file__reivew__0__extra__reivewImg__3"]);
+		rImgFileList.push(form["file__review__0__extra__reviewImg__1"]);
+		rImgFileList.push(form["file__review__0__extra__reviewImg__2"]);
+		rImgFileList.push(form["file__review__0__extra__reviewImg__3"]);
 		
 		for(i = 0; i < rImgFileList.length; i++) {
 			if(rImgFileList[i].value && rImgFileList[i].files[0].size > maxSize) {
@@ -114,14 +114,16 @@
 				</a>
 			</div>
 			<div class="desc flex-auto">
+				<div><span class="text-sm text-gray-500">주문번호 : ${purchase.orderNum}</span></div>
 				<div><span class="text-sm text-gray-500">[SB_STORE] ${store.storeName}</span></div>
-				<div><span class="whitespace-nowrap">${product.productName}</span></div>
+				<div><span>${product.productName}</span></div>
 			</div>		
 		</div>
 		
 		<form action="createReview" onsubmit="return chkSubmit(this);" method="POST" enctype="multipart/form-data">
 			<input type="hidden" name="storeId" value="${store.id }" />
 			<input type="hidden" name="productId" value="${product.id }" />
+			<input type="hidden" name="purchaseId" value="${purchase.id}" />
 			<input type="hidden" name="memberId" value="${rq.getLoginedMemberId()}" />
 			
 			<div class="flex flex-col items-center justify-center w-full mt-2 py-6 border-b bg-white">
@@ -149,9 +151,9 @@
 				
 				<div class="flex flex-col items-center">
 					<div class="px-5">
-						<input accept="image/gif, image/jpeg, image/png" class="w-full mb-2 file-input file-input-bordered" name="file__reivew__0__extra__reivewImg__1" type="file" />
-						<input accept="image/gif, image/jpeg, image/png" class="w-full mb-2 file-input file-input-bordered" name="file__reivew__0__extra__reivewImg__2" type="file" />
-						<input accept="image/gif, image/jpeg, image/png" class="w-full mb-2 file-input file-input-bordered" name="file__reivew__0__extra__reivewImg__3" type="file" />
+						<input accept="image/gif, image/jpeg, image/png" class="w-full mb-2 file-input file-input-bordered" name="file__review__0__extra__reviewImg__1" type="file" />
+						<input accept="image/gif, image/jpeg, image/png" class="w-full mb-2 file-input file-input-bordered" name="file__review__0__extra__reviewImg__2" type="file" />
+						<input accept="image/gif, image/jpeg, image/png" class="w-full mb-2 file-input file-input-bordered" name="file__review__0__extra__reviewImg__3" type="file" />
 					</div>
 					<div>
 						<span class="text-sm text-red-500">상품과 무관한 사진/동영상을 첨부한 리뷰는 통보없이 삭제됩니다.</span>

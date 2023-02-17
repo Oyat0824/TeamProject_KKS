@@ -20,6 +20,8 @@ public class ResultData<DT> {
 	private String msg;
 	private DT data1;
 	private String data1Name;
+	private Object data2;
+	private String data2Name;
 	private int totalPriceSum;
 	private Map<String, Object> body;
 	
@@ -28,6 +30,12 @@ public class ResultData<DT> {
 		this.resultCode = resultCode;
 		this.msg = msg;
 		this.body = Utility.mapOf(args);
+	}
+  
+	// 데이터 세팅 2
+	public void setData2(String data2Name, Object data2) {
+		this.data2Name = data2Name;
+		this.data2 = data2;
 	}
 	
 	/**
@@ -48,7 +56,8 @@ public class ResultData<DT> {
 		
 		return rd;
 	}
-	
+
+// 장바구니를 위한 리절트 데이터 | 추후 변경 방식
 	public static ResultData<List<ShoppingCart>> from(String resultCode, String msg, String data1Name,
 			List<ShoppingCart> showCart, int totalPriceSum) {
 		
@@ -60,7 +69,6 @@ public class ResultData<DT> {
 		rd.totalPriceSum = totalPriceSum;
 		return rd;
 	}
-	
 	public static ResultData<ShoppingCart> from(String resultCode, String msg, String data1Name,
 			ShoppingCart newCart, int totalPriceSum) {
 		
@@ -71,7 +79,6 @@ public class ResultData<DT> {
 		rd.data1 = newCart;
 		rd.totalPriceSum = totalPriceSum;
 		return rd;
-		
 	}
 	
 	public static <DT> ResultData<DT> from(String resultCode, String msg) {
@@ -91,6 +98,4 @@ public class ResultData<DT> {
 	public boolean isFail() {
 		return isSuccess() == false;
 	}
-
-
 }

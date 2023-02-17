@@ -75,6 +75,19 @@ public interface ProductRepository {
 			""")
 	public int getProductsCount(String searchKeyword);
 	
+	// 상품 목록, 개수 구하기 | 스토어 에서
+	@Select("""
+			<script>
+				SELECT COUNT(*)
+				FROM product
+				WHERE storeId = #{id}
+				<if test="searchKeyword != ''">
+					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+			</script>
+			""")
+	public int getStoreInProductsCount(String searchKeyword, int id);
+	
 	// 판매자 입장에서의 상품관리를 위한 상품 리스트
 	@Select("""
 			<script>
@@ -98,17 +111,83 @@ public interface ProductRepository {
 	// 유저 입장에서 보는 상품 리스트
 	@Select("""
 			<script>
-				SELECT * FROM product
+				SELECT P.*, COUNT(PC.id) AS purchaseCnt
+				FROM ( 
+					SELECT P.*, COUNT(R.id) AS reviewCnt
+					FROM product AS P
+					LEFT JOIN review AS R
+					ON P.id = R.productId
+					GROUP BY P.id
+				) AS P
+				LEFT JOIN purchaseList AS PC
+				ON P.id = PC.productId
+				AND PC.confirm = 1
 				WHERE 1 = 1
 				<if test="searchKeyword != ''">
 					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
-				ORDER BY id DESC
+				GROUP BY P.id
+				<choose>
+					<when test="listOrder == 'reviewMany'">
+						ORDER BY reviewCnt DESC
+					</when>
+					<when test="listOrder == 'purchaseMany'">
+						ORDER BY purchaseCnt DESC
+					</when>
+					<when test="listOrder == 'date'">
+						ORDER BY regDate ASC
+					</when>
+					<otherwise>
+						ORDER BY P.id DESC
+					</otherwise>
+				</choose>
 				LIMIT #{limitStart}, #{itemsInAPage}
 			</script>
 			""")
-	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int limitStart);
+	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int limitStart, String listOrder);
 
+	// 스토어에서 보는 상품 리스트
+	@Select("""
+			<script>
+				SELECT P.*, COUNT(PC.id) AS purchaseCnt
+				FROM ( 
+					SELECT P.*, COUNT(R.id) AS reviewCnt
+					FROM product AS P
+					LEFT JOIN review AS R
+					ON P.id = R.productId
+					WHERE 1 = 1
+					GROUP BY P.id
+				) AS P
+				LEFT JOIN purchaseList AS PC
+				ON P.id = PC.productId
+				WHERE P.storeId = #{id}
+				<if test="searchKeyword != ''">
+					AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				<if test="cate != -1">
+					AND productCategory = #{cate}
+				</if>
+				GROUP BY P.id
+				<choose>
+					<when test="listOrder == 'reviewMany'">
+						ORDER BY reviewCnt DESC
+					</when>
+					<when test="listOrder == 'purchaseMany'">
+						ORDER BY purchaseCnt DESC
+					</when>
+					<when test="listOrder == 'date'">
+						ORDER BY regDate ASC
+					</when>
+					<otherwise>
+						ORDER BY P.id DESC
+					</otherwise>
+				</choose>
+				LIMIT #{limitStart}, #{itemsInAPage}
+			</script>
+			""")
+	public List<Product> getStoreInProducts(String searchKeyword, int itemsInAPage, int limitStart, String listOrder,
+			int cate, int id);
+	
 	// 상품 가져오기
 	@Select("""
 			SELECT *
@@ -204,17 +283,20 @@ public interface ProductRepository {
 	// 주문 목록 || 로그인 멤버
 	@Select("""
 			<script>
-				SELECT PC.*,
+				SELECT PC.*, COUNT(R.id) AS isReview,
 				P.productName AS productName,
 				P.productPrice AS productPrice
 				FROM purchaseList AS PC
 				INNER JOIN product AS P
 				ON PC.productId = P.id
+				LEFT JOIN review AS R
+				ON PC.id = R.purchaseId
 				WHERE 1 = 1
 				AND PC.memberId = #{loginedMemberId}
 				<if test="searchKeyword != ''">
 					AND P.productName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
+				GROUP BY PC.id
 				ORDER BY PC.id DESC
 				LIMIT #{limitStart}, #{itemsInAPage}
 			</script>
@@ -327,31 +409,118 @@ public interface ProductRepository {
 		updateDate = NOW(),
 		storeId = #{storeId},
 		productId = #{productId},
+		purchaseId = #{purchaseId},
 		memberId = #{memberId},
 		rating = #{rating},
 		reviewBody = #{reviewBody}
 		""")
-	public void createReview(int storeId, int productId, int memberId, int rating, String reviewBody);
+	public void createReview(int storeId, int productId, int purchaseId, int memberId, int rating, String reviewBody);
 
 	// 리뷰 존재 확인
 	@Select("""
 		SELECT COUNT(*)
 		FROM review
-		WHERE productId = #{id}
+		WHERE purchaseId = #{id}
 		AND memberId = #{loginedMemberId}
 		""")
 	public int isReview(int id, int loginedMemberId);
 
 	// 리뷰 목록
 	@Select("""
-		SELECT *
-		FROM review
+		SELECT R.*, M.name AS name
+		FROM review AS R
+		INNER JOIN `member` AS M
+		ON R.memberId = M.id
 		WHERE storeId = #{storeId}
 		AND productId = #{id}
-		ORDER BY id DESC;
+		ORDER BY R.id DESC
+		LIMIT #{limitStart}, #{itemsInAPage}
 		""")
-	public List<Review> getReviews(int storeId, int id);
-
+	public List<Review> getReviews(int storeId, int id, int limitStart, int itemsInAPage);
 	
+	// 리뷰 수 구하기
+	@Select("""
+		SELECT COUNT(*)
+		FROM review
+		WHERE productId = #{id}
+		""")
+	public int getReviewsCount(int id);
+	
+	// 리뷰 평균 점수 구하기
+	@Select("""
+		SELECT ROUND(AVG(rating),1)
+		FROM review
+		WHERE productId = #{id}
+		""")
+	public double getReviewAvg(int id);
+	
+	// 관리자의 상품 리스트에서 보는 상품 카운트
+	@Select("""
+				<script>
+					SELECT COUNT(*)
+						FROM product
+						WHERE 1 = 1
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'productName'">
+									AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'storeName'">
+									AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											productName LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+				</script>
+				""")
+	public int getMyStoreProductsAdmCount(String searchKeywordTypeCode, String searchKeyword);
+		
+	// 관리자의 상품 리스트에서 상품 검색
+	@Select("""
+				<script>
+					SELECT *
+						FROM product
+						WHERE 1 = 1
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'productName'">
+									AND productName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'storeName'">
+									AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											productName LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+						ORDER BY id DESC
+						LIMIT #{limitStart}, #{itemsInAPage}
+				</script>
+				""")
+	public List<Product> getProductsAdm(String searchKeywordTypeCode, String searchKeyword, int itemsInAPage,
+				int limitStart);
+
+	// 관리자 권한으로 상품 삭제
+	@Update("""
+		<script>
+			UPDATE product
+				<set>
+					updateDate = NOW(),
+					delProductStatus = 1,
+					delProductDate = NOW()
+				</set>
+				WHERE id = #{id}
+		</script>
+		""")
+	public void AdmdeleteProduct(int id);
 
 }

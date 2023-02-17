@@ -101,19 +101,40 @@ public interface StoreRepository {
 	// 스토어 목록
 	@Select("""
 			<script>
-				SELECT S.*, M.name AS sellerName
-				FROM store AS S
-				INNER JOIN `member` AS M
-				ON S.memberId = M.id
+				SELECT S.*, COUNT(PC.id) AS purchaseCnt
+				FROM ( 
+					SELECT S.*, COUNT(R.id) AS reviewCnt
+					FROM store AS S
+					LEFT JOIN review AS R
+					ON S.id = R.storeId
+					GROUP BY S.id
+				) AS S
+				LEFT JOIN purchaseList AS PC
+				ON S.id = PC.storeId
+				AND PC.confirm = 1
 				WHERE 1 = 1
 				<if test="searchKeyword != ''">
 					AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
 				</if>
-				ORDER BY S.id DESC
+				GROUP BY S.id
+				<choose>
+					<when test="listOrder == 'reviewMany'">
+						ORDER BY reviewCnt DESC
+					</when>
+					<when test="listOrder == 'purchaseMany'">
+						ORDER BY purchaseCnt DESC
+					</when>
+					<when test="listOrder == 'date'">
+						ORDER BY regDate ASC
+					</when>
+					<otherwise>
+						ORDER BY S.id DESC
+					</otherwise>
+				</choose>
 				LIMIT #{limitStart}, #{itemsInAPage}
 			</script>
 			""")
-	public List<Store> getStores(String searchKeyword, int itemsInAPage, int limitStart);
+	public List<Store> getStores(String searchKeyword, int itemsInAPage, int limitStart, String listOrder);
 	
 	// 카테고리가져오기 (id)
 	@Select("""
@@ -182,4 +203,74 @@ public interface StoreRepository {
 			SELECT * FROM store
 			""")
 	public int getStoreId();
+	
+	// 관리자의 스토어 리스트에서 보는 스토어 카운트
+	@Select("""
+				<script>
+						SELECT COUNT(*)
+							FROM store
+							WHERE 1 = 1
+							<if test="searchKeyword != ''">
+								<choose>
+									<when test="searchKeywordTypeCode == 'storeName'">
+										AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+									</when>
+									<when test="searchKeywordTypeCode == 'memberId'">
+										AND memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+									</when>
+									<otherwise>
+										AND (
+												storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+												OR memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+											)
+									</otherwise>
+								</choose>
+							</if>
+				</script>
+			""")
+	public int getStoresAdmCount(String searchKeyword, String searchKeywordTypeCode);
+
+	// 관리자의 스토어 리스트에서 스토어 검색
+	@Select("""
+				<script>
+					SELECT *
+						FROM store
+						WHERE 1 = 1
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'storeName'">
+									AND storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'memberId'">
+									AND memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											storeName LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR memberId LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+						ORDER BY id DESC
+						LIMIT #{limitStart}, #{itemsInAPage}
+				</script>
+			""")
+	public List<Store> getStoresAdm(String searchKeyword, String searchKeywordTypeCode, int limitStart, 
+				int itemsInAPage);
+
+	// 관리자 권한으로 스토어 삭제
+	@Update("""
+				<script>
+					UPDATE store
+						<set>
+							updateDate = NOW(),
+							delStoreStatus = 1,
+							delStoreDate = NOW()
+						</set>
+						WHERE id = #{id}
+				</script>
+			""")
+	public void AdmdeleteStore(int id);
+		
 }

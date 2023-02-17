@@ -1,5 +1,7 @@
 package com.kks.work.project.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -105,4 +107,79 @@ public interface MemberRepository {
 			WHERE id = #{loginedMemberId}
 			""")
 	public void doPasswordModify(int loginedMemberId, String loginPw, String salt);
+  
+	// 관리자 페이지에서 멤버리스트에서 멤버 카운트
+	@Select("""
+				<script>
+					SELECT COUNT(*)
+						FROM `member`
+						WHERE 1 = 1
+						<if test="memberType != 0">
+							AND memberType = #{memberType}
+						</if>
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'loginId'">
+									AND loginId LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'name'">
+									AND name LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											loginId LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR name LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+				</script>
+				""")
+	public int getMembersCount(int memberType, String searchKeywordTypeCode, String searchKeyword);
+	
+	// 관리자 페이지에서 멤버리스트에서 멤버 검색
+	@Select("""
+				<script>
+					SELECT *
+						FROM `member`
+						WHERE 1 = 1
+						<if test="memberType != 0">
+							AND memberType = #{memberType}
+						</if>
+						<if test="searchKeyword != ''">
+							<choose>
+								<when test="searchKeywordTypeCode == 'loginId'">
+									AND loginId LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<when test="searchKeywordTypeCode == 'name'">
+									AND name LIKE CONCAT('%', #{searchKeyword}, '%')
+								</when>
+								<otherwise>
+									AND (
+											loginId LIKE CONCAT('%', #{searchKeyword}, '%')
+											OR name LIKE CONCAT('%', #{searchKeyword}, '%')
+										)
+								</otherwise>
+							</choose>
+						</if>
+						ORDER BY id DESC
+						LIMIT #{limitStart}, #{itemsInAPage}
+				</script>
+				""")
+	public List<Member> getMembers(int memberType, String searchKeywordTypeCode, String searchKeyword, int limitStart,
+				int itemsInAPage);
+
+	// 관리자 권한으로 멤버 삭제
+	@Update("""
+				<script>
+					UPDATE `member`
+						<set>
+							updateDate = NOW(),
+							delStatus = 1,
+							delDate = NOW()
+						</set>
+						WHERE id = #{id}
+				</script>
+				""")
+	public void deleteMember(int id);
 }

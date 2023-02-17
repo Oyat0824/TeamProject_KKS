@@ -270,6 +270,10 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
 }
 
+[data-tip]::before {
+    white-space: pre;
+}
+
 main > .shopWrap {
 	height : 100%;
 	background: white;
@@ -278,41 +282,72 @@ main > .shopWrap {
 
 table-box-shopCart {
 	height : 100%;
-	
 	border : 8px solid pink;
 }
 
 .cartTable {
-	
 	margin-left : auto;
 	margin-right : auto;
 	border : 1px solid black;
 	text-align: center;
 }
 
- .basketHead {
+.basketHead {
 	background-color: white;
 	padding-top : 60px;
 }    
 
-
-
-
 .table-box-shopCart table, .table-box-shopCart table td, 
 .table-box-shopCart table tr, .table-box-shopCart table th {
-
- border : 1px solid black;
-  border-collapse : collapse;
-	}
-    
-
- /* html, html>body, html>body main {
-	width: 100%;
-    height: 100%;
-	
-} 	*/
-
-body {
-	border : 1px solid gold;
+	border : 1px solid black;
+	border-collapse : collapse;
 }
 
+.tab.tabActive {
+	background-color: #3d3d4f;
+	color: #fff;
+}
+
+.productInfo3::after {
+	display: block;
+	content: "";
+	width: 10%;
+	height: 3px;
+	background-color: #000;
+	margin: 40px auto;
+}
+
+.star-ratings {
+	user-select: none;
+	color: #aaa9a9; 
+	position: relative;
+	unicode-bidi: bidi-override;
+	width: max-content;
+	-webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+	-webkit-text-stroke-width: 1.1px;
+	-webkit-text-stroke-color: #2b2a29;
+}
+ 
+.star-ratings-fill {
+	color: #fff58c;
+	padding: 0;
+	position: absolute;
+	z-index: 1;
+	display: flex;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	-webkit-text-fill-color: gold;
+}
+ 
+.star-ratings-base {
+	z-index: 0;
+	padding: 0;
+}
+
+.toastui-editor-contents {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center; 
+}

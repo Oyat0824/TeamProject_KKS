@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
-<html>
+<html class="light" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle}</title>
@@ -34,7 +34,7 @@
 				<div>
 					<a class="font-bold" href="/">SB_Store</a>
 				</div>
-				<div class="gnb relative flex">
+				<div class="gnb relative">
 					<c:if test="${rq.getLoginedMemberId() == 0}">
 						<div class="w-14 h-6 bg-white bg-opacity-5 border border-black border-opacity-10 text-center text-sm">
 							<a href="/usr/member/login">로그인</a>
@@ -61,16 +61,21 @@
 								});
 							});
 						</script>
-						<div class="text-sm">
-							<a  href="/usr/ShoppingCart/ShowCart" >장바구니<i class="fa-solid ml-1 pr-6"></i></a>
-						</div>
-						
-						
-						
-						<div class="text-sm">
-							<a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a>
-						</div>
-						
+						<ul class="flex text-sm">
+							<li><a class="hover:underline mr-5" href="">관심스토어</a></li>
+							<li class="relative">
+								<a class="lyr hover:underline mr-5" onclick="lyrOpen2(); return false;" href="javascript:void();" >
+									마이페이지<i class="lyr fa-solid fa-caret-down ml-1"></i>
+								</a>
+								<div class="lyr myPage">
+									<div class="mb-1"><a href="/usr/product/orderList">주문확인/배송조회</a></div>
+									<div>찜한 상품</div>
+								</div>
+							</li>
+							<li><a class="hover:underline mr-5" href="/usr/ShoppingCart/ShowCart">장바구니</a></li>
+							<li><a class="lyr hover:underline" onclick="lyrOpen(); return false;" href="javascript:void();" >${rq.loginedMember.name}<i class="lyr fa-solid fa-caret-down ml-1"></i></a></li>
+						</ul>
+										
 						<div class="my_lyr">
 							<div class="flex items-center py-4 px-2 text-gray-600">
 								<div class="img_area">
@@ -91,6 +96,11 @@
 								<div class="flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 									<a href="/usr/member/myPage">마이 페이지</a>
 								</div>
+								<c:if test="${rq.getLoginedMember().getMemberType() == 9 && rq.getLoginedMember().getStoreState() == 0}">
+									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
+										<a href="/admin/AdminPage">관리자 페이지</a>
+									</div>
+								</c:if>
 								<c:if test="${rq.getLoginedMember().getMemberType() == 6 && rq.getLoginedMember().getStoreState() == 0}">
 									<div class="border-l flex items-center justify-center flex-1 bg-gray-100 border-t border-gray-300 text-center font-bold">
 										<a href="/usr/store/register">스토어 등록</a>
@@ -111,6 +121,7 @@
 			</div>
 			<div class="h-16 mx-5 flex items-center justify-between text-white">
 				<div class="flex">
+					<div class="mr-5"><a href="/admin/notice/list">공지사항</a></div>
 					<div class="mr-5"><a href="/usr/store/list">스토어 목록</a></div>
 					<div class="mr-5"><a href="/usr/product/exposureList">상품 목록</a></div>
 				</div>

@@ -46,6 +46,10 @@ public class ProductService {
 	public int getProductsCount(String searchKeyword) {
 		return productRepository.getProductsCount(searchKeyword);
 	}
+	
+	public int getStoreInProductsCount(String searchKeyword, int id) {
+		return productRepository.getStoreInProductsCount(searchKeyword, id);
+	}
 
 	// 판매자 입장에서의 상품관리를 위한 상품 리스트 
 	public List<Product> getProducts(int id, String searchKeyword, int itemsInAPage, int page) {
@@ -55,10 +59,17 @@ public class ProductService {
 	}
 	
 	// 유저입장에서 보는 상품 리스트
-	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int page) {
+	public List<Product> getExposureProducts(String searchKeyword, int itemsInAPage, int page, String listOrder) {
 		int limitStart = (page - 1) * itemsInAPage;
 		
-		return productRepository.getExposureProducts(searchKeyword, itemsInAPage, limitStart);
+		return productRepository.getExposureProducts(searchKeyword, itemsInAPage, limitStart, listOrder);
+	}
+	
+	// 스토어에서 보는 상품 리스트
+	public List<Product> getStoreInProducts(String searchKeyword, int itemsInAPage, int page, String listOrder, int cate, int id) {
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		return productRepository.getStoreInProducts(searchKeyword, itemsInAPage, limitStart, listOrder, cate, id);
 	}
 
 	// 상품 가져오기
@@ -142,8 +153,8 @@ public class ProductService {
 	}
 
 	// 리뷰 작성
-	public int createReview(int storeId, int productId, int memberId, int rating, String reviewBody) {
-		productRepository.createReview(storeId, productId, memberId, rating, reviewBody);
+	public int createReview(int storeId, int productId, int purchaseId, int memberId, int rating, String reviewBody) {
+		productRepository.createReview(storeId, productId, purchaseId, memberId, rating, reviewBody);
 		
 		int id = productRepository.getLastInsertId();
 		
@@ -154,10 +165,48 @@ public class ProductService {
 	public int isReview(int id, int loginedMemberId) {
 		return productRepository.isReview(id, loginedMemberId);
 	}
+
+	// 리뷰 수 구하기
+	public int getReviewsCount(int id) {
+		return productRepository.getReviewsCount(id);
+	}
+	// 리뷰 평균 점수 구하기
+	public double getReviewAvg(int id) {
+		return productRepository.getReviewAvg(id);
+	}
+	// 리뷰 구하기
+	public List<Review> getReviews(int storeId, int id, int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		return productRepository.getReviews(storeId, id, limitStart, itemsInAPage);
+	}
 	
-	// 리뷰 목록
-	public List<Review> getReviews(int storeId, int id) {
-		return productRepository.getReviews(storeId, id);
+	// 관리자 입장에서 상품 수 체크
+	public int getMyStoreProductsAdmCount(String searchKeywordTypeCode, String searchKeyword) {
+		return productRepository.getMyStoreProductsAdmCount(searchKeywordTypeCode, searchKeyword);
+	}
+		
+	// 관리자 입장에서 상품 수에 따른 페이징
+	public List<Product> getProductsAdm(String searchKeywordTypeCode, String searchKeyword, int itemsInAPage,
+			int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+
+		return productRepository.getProductsAdm(searchKeywordTypeCode, searchKeyword, itemsInAPage, limitStart);
+	}
+
+	// 관리자 권한으로 상품 삭제
+	public void AdmdeleteProduct(List<Integer> productIds) {
+		for (int productId : productIds) {
+			Product product = getProduct(productId);
+
+			if (product != null) {
+				AdmdeleteProduct(product);
+			}
+		}	
+	}
+
+	private void AdmdeleteProduct(Product product) {
+		productRepository.AdmdeleteProduct(product.getId());
 	}
 
 }

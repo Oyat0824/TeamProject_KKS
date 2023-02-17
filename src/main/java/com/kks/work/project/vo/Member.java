@@ -1,7 +1,5 @@
 package com.kks.work.project.vo;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,8 +24,23 @@ public class Member{
 	private String birthday;
 	private int memberType;
 	private int storeState;
-	private String delStatus;
-	private LocalDateTime delDate;
+	private int delStatus;
+	private String delDate;
 	
 	private int storeId;
+	
+	public String delStatusStr() {
+		if(delStatus == 0) {
+			return "미삭제";
+		}
+		return "삭제";
+	}
+
+	public String delDateStr() {
+		if(delDate == null) {
+			return "없음";
+		}
+		return delDate.substring(2, 16);
+	}
+	
 }

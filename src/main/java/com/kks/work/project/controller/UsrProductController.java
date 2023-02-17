@@ -135,23 +135,44 @@ public class UsrProductController {
 			}
 		}
 
-		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("view?storeId=%d&id=%d", id, productId));
+		return Utility.jsReplace(Utility.f("상품이 등록됐습니다!", id), Utility.f("list?id=%d&storeModifyAuthKey=%s", id, storeModifyAuthKey));
 	}
 
 	// 상품 상세보기
 	@RequestMapping("/usr/product/view")
-	public String showView(Model model, int storeId, int id) {
+	public String showView(Model model, int storeId, int id,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int itemsNum) {
 		Store store = storeService.getStoreById(storeId);
 		List<Category> categorys = storeService.getCategorysByStoreId(storeId);
 		Product product = productService.getProductByStoreIdAndId(storeId, id);
 		List<GenFile> fileList = genFileService.getGenFiles("product", id, "extra", "productImg");
-		List<Review> reviews = productService.getReviews(storeId, id);
+		
+		if (page <= 0) {
+			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
+		}
+		
+		// 현재 등록된 리뷰 수
+		int reviewCount = productService.getReviewsCount(id);
+		// 한 페이지에 나올 리뷰 수
+		int itemsInAPage = itemsNum;
+		// 리뷰 수에 따른 페이지 수 계산
+		int pagesCount = (int) Math.ceil(reviewCount / (double) itemsInAPage);
+
+		List<Review> reviews = productService.getReviews(storeId, id, itemsInAPage, page);
+		if (reviewCount > 0) {
+			double reviewAvg = productService.getReviewAvg(id);
+			model.addAttribute("reviewAvg", reviewAvg);
+		}
 		
 		model.addAttribute("store", store);
 		model.addAttribute("categorys", categorys);
 		model.addAttribute("product", product);
 		model.addAttribute("fileList", fileList);
+		
+		model.addAttribute("reviewCount", reviewCount);
+		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("reviews", reviews);
+		model.addAttribute("page", page);
 
 		return "/usr/product/view";
 	}
@@ -175,7 +196,7 @@ public class UsrProductController {
 
 		// 현재 등록된 상품 수
 		int productsCount = productService.getMyStoreProductsCount(id, searchKeyword);
-		// 한 페이지에 나올 스토어 수
+		// 한 페이지에 나올 상품 수
 		int itemsInAPage = itemsNum;
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(productsCount / (double) itemsInAPage);
@@ -194,7 +215,8 @@ public class UsrProductController {
 	// 상품 목록 페이지 | 사용자
 	@RequestMapping("/usr/product/exposureList")
 	public String showProductExposureList(Model model, @RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum) {
+			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "20") int itemsNum,
+			@RequestParam(defaultValue = "") String listOrder) {
 
 		if (page <= 0) {
 			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다.", true);
@@ -207,7 +229,7 @@ public class UsrProductController {
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(productsCount / (double) itemsInAPage);
 
-		List<Product> products = productService.getExposureProducts(searchKeyword, itemsInAPage, page);
+		List<Product> products = productService.getExposureProducts(searchKeyword, itemsInAPage, page, listOrder);
 
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("productsCount", productsCount);
@@ -349,7 +371,7 @@ public class UsrProductController {
 	@RequestMapping("/usr/product/orderStatus")
 	public String showOrderStatus(Model model, int id) {
 		PurchaseList purchase = productService.getPurchase(id);
-		int isReview = productService.isReview(purchase.getProductId(), rq.getLoginedMemberId());
+		int isReview = productService.isReview(purchase.getId(), rq.getLoginedMemberId());
 		
 		if(purchase.getMemberId() != rq.getLoginedMemberId()) {
 			return rq.jsReturnOnView("잘못된 정보입니다, 다시 시도해주세요.", false, "usr/main/home");
@@ -382,7 +404,7 @@ public class UsrProductController {
 		
 		// 현재 등록된 상품 수
 		int purchaseCount = productService.getPurchaseCount(searchKeyword, rq.getLoginedMemberId());
-		// 한 페이지에 나올 스토어 수
+		// 한 페이지에 나올 상품 수
 		int itemsInAPage = itemsNum;
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(purchaseCount / (double) itemsInAPage);
@@ -416,7 +438,7 @@ public class UsrProductController {
 		
 		// 현재 등록된 상품 수
 		int orderCount = productService.getOrderCount(searchKeyword, id);
-		// 한 페이지에 나올 스토어 수
+		// 한 페이지에 나올 상품 수
 		int itemsInAPage = itemsNum;
 		// 상품 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(orderCount / (double) itemsInAPage);
@@ -442,7 +464,7 @@ public class UsrProductController {
 		
 		productService.confirmPurchase(id);
 		
-		return Utility.jsReplace("", "/usr/product/orderList");
+		return Utility.jsReroad("");
 	}
 	
 	// 주문 취소
@@ -492,9 +514,10 @@ public class UsrProductController {
 	
 	// 리뷰 작성 페이지 | 구매자
 	@RequestMapping("/usr/product/review")
-	public String showReview(Model model, int storeId, int productId) {
+	public String showReview(Model model, int storeId, int productId, int purchaseId) {
 		Store store = storeService.getStoreById(storeId);
 		Product product = productService.getProduct(productId);
+		PurchaseList purchase = productService.getPurchase(purchaseId);
 
 		if (store.getId() != product.getStoreId()) {
 			return rq.jsReturnOnView("잘못된 정보입니다, 다시 시도해주세요.", true);
@@ -502,6 +525,7 @@ public class UsrProductController {
 
 		model.addAttribute("store", store);
 		model.addAttribute("product", product);
+		model.addAttribute("purchase", purchase);
 		
 		return "/usr/product/review";
 	}
@@ -509,7 +533,7 @@ public class UsrProductController {
 	// 리뷰 작성
 	@RequestMapping("/usr/product/createReview")
 	@ResponseBody
-	public String doCreateReview(int storeId, int productId, int memberId, int rating, String reviewBody, MultipartRequest multipartRequest) {
+	public String doCreateReview(int storeId, int productId, int purchaseId, int memberId, int rating, String reviewBody, MultipartRequest multipartRequest) {
 		// 유효성 검사
 		if (Utility.isEmpty(storeId) || Utility.isEmpty(productId) || Utility.isEmpty(memberId)) {
 			return Utility.jsReplace("잘못된 경로로 접속하셨습니다.", "/usr/home/main");
@@ -521,7 +545,7 @@ public class UsrProductController {
 			return Utility.jsHistoryBack("리뷰 내용을 작성해주세요.");
 		}
 		
-		int id = productService.createReview(storeId, productId, memberId, rating, reviewBody);
+		int id = productService.createReview(storeId, productId, purchaseId, memberId, rating, reviewBody);
 		
 		// 이미지 업로드
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
