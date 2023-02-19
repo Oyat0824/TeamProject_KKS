@@ -163,6 +163,16 @@ CREATE TABLE notice(
 	viewCount INT UNSIGNED NOT NULL DEFAULT 0
 );
 
+#### 찜하기 테이블
+CREATE TABLE userLike(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    relTypeCode VARCHAR(20) NOT NULL,
+    relId INT UNSIGNED NOT NULL,
+    memberId INT UNSIGNED NOT NULL
+);
+
 ##### 테이블 조회
 SELECT * FROM attr;
 SELECT * FROM genFile;
@@ -220,6 +230,22 @@ zipNo = "35234",
 roadAddr = "대전광역시 서구 둔산로 52",
 addrDetail = "미라클빌딩 3층",
 email = "test3@test.com",	
+cellphoneNum = "010-1234-5678",
+gender = "male",
+birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
+memberType = 6;
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = "test5",
+loginPw = "test5",
+salt = "test5",
+`name` = "장철수",
+zipNo = "35234",
+roadAddr = "대전광역시 서구 둔산로 52",
+addrDetail = "미라클빌딩 3층",
+email = "test5@test.com",	
 cellphoneNum = "010-1234-5678",
 gender = "male",
 birthday = DATE_FORMAT(NOW(), '%Y-%m-%d'),
