@@ -3,16 +3,6 @@
 
 - [프로젝트 기여율](https://github.com/Oyat0824/TeamProject_KKS/graphs/contributors)
 
-# 사용한 기술
-- HTML/CSS
-- JavaScript
-- Jquery
-- AJAX
-- Java
-- Spring Boot
-- JSP
-- MariaDB(MySql)
-
 # 기능 구현
 ### 회원 기능
 - 회원가입, 본인인증
