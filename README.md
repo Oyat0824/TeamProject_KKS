@@ -53,22 +53,36 @@
 - 스토어 및 상품 검색
 - 번호, 등록일, 리뷰 많은, 구매 많은 순으로 정렬 기능
 
-# 사용한 라이브러리
-> 메일 발송 및 파일 관리, JSP를 위해 사용한 라이브러리입니다.
-- [JSTL](https://mvnrepository.com/artifact/javax.servlet/jstl)
+# 개발 환경
+### 개발 툴
+- [SpringToolSuite4](https://spring.io/tools)
+- [XAMPP](https://www.apachefriends.org/)
+- [SQLyog](https://github.com/webyog/sqlyog-community/wiki/Downloads)
+- [Maven](https://mvnrepository.com/)
+
+### 기술 스택
+> DB 연결 및 스프링부트 사용을 쉽게하는 Lombok
+> 메일 발송 및 파일 관리, JSP 사용을 위해 사용했습니다.
+- [JDBC](https://mvnrepository.com/artifact/mysql/mysql-connector-java)
+- [Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 - [Tomcat Embed Jasper](https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper)
+- [JSTL](https://mvnrepository.com/artifact/javax.servlet/jstl)
 - [Spring Context Support](https://mvnrepository.com/artifact/org.springframework/spring-context-support)
 - [JavaMail API](https://mvnrepository.com/artifact/com.sun.mail/javax.mail)
 - [Guava: Google Core Libraries For Java](https://mvnrepository.com/artifact/com.google.guava/guava)
-- [Project Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 
-> 디자인과 텍스트 에디터, 슬라이드를 위해 사용한 라이브러리입니다.
+> 기본적인 동적 홈페이지 구성을 위해 사용했으며, 디자인과 슬라이드, 텍스트 에디터를 위해 사용했습니다.
+- JavaScript / AJAX
 - [제이쿼리](https://jquery.com/)
-- [폰트어썸](https://fontawesome.com/)
 - [슬릭](https://kenwheeler.github.io/slick/)
 - [테일윈드](https://tailwindcss.com/)
 - [데이지UI](https://daisyui.com/)
 - [토스트UI](https://ui.toast.com/)
+- [폰트어썸](https://fontawesome.com/)
+
+### 프레임 워크
+- [Spring Boot Starter Web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)
+- [MyBatis Spring Boot Starter](https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter)
 
 # 사용한 API
 - [아임포트](https://portone.io/korea/ko)
