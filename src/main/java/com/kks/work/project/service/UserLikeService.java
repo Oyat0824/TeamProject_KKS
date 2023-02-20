@@ -23,8 +23,8 @@ public class UserLikeService {
 	}
 
 
-	public void doUserLike(int loginedMemberId, int id, String relTypeCode,  int like) {
-		userLikeServiceRepository.doUserLike(loginedMemberId, id, relTypeCode, like);
+	public void doUserLike(int loginedMemberId, String relTypeCode, int id, int liked) {
+		userLikeServiceRepository.doUserLike(loginedMemberId, relTypeCode, id, liked);
 	}
 
 

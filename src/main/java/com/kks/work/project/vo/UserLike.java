@@ -14,6 +14,6 @@ public class UserLike {
 	private int memberId;
 	private String relTypeCode;
 	private int relId;
-	public int getLikeStore;
+	private int getLikeStore;
 
 }

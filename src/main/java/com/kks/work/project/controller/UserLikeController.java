@@ -31,13 +31,13 @@ public class UserLikeController {
 		this.rq = rq;
 	}
 
-	@RequestMapping("/usr/store/getUserLikePoint")
+	@RequestMapping("/usr/userLike/getUserLikePoint")
 	@ResponseBody
 	public ResultData<UserLike> getUserLikePoint(int id, String relTypeCode) {
 		
 		Store store = storeService.getStoreById(id);
 		
-		if(store == null) { return ResultData.from("F-1", "해당  스토어는 존재하지 않습니다"); }
+		if(store == null) { return ResultData.from("F-1", "해당 스토어는 존재하지 않습니다"); }
 		
 		UserLike userLike = userLikeService.getUserLike(rq.getLoginedMemberId(),
 		relTypeCode, id);
@@ -47,21 +47,22 @@ public class UserLikeController {
 	}
 
 	// 찜하기
-	@RequestMapping("/usr/store/doUserLike")
+	@RequestMapping("/usr/userLike/doUserLike")
 	@ResponseBody
-	public String doUserLike(int id, String relTypeCode, int like) {
+	public String doUserLike(int id, String relTypeCode, int liked) {
 
+		// 찜할 스토어를 가져오기
 		Store store = storeService.getStoreById(id);
 
 		if (store == null) {
-			return Utility.jsHistoryBack("해당  스토어는 존재하지 않습니다");
+			return Utility.jsHistoryBack("해당 스토어는 존재하지 않습니다");
 		}
 
 		UserLike userLike = userLikeService.getUserLike(rq.getLoginedMemberId(), relTypeCode, id);
 		
-		userLikeService.doUserLike(rq.getLoginedMemberId(), like, relTypeCode, id);
+		userLikeService.doUserLike(rq.getLoginedMemberId(), relTypeCode, id, liked);
 		
-		if(like == 1) {
+		if(liked == 1) {
 			return Utility.jsReplace(Utility.f("%d번 스토어 찜하기", id), Utility.f("../store/view?id=%d", id));
 		} else {
 			return Utility.jsReplace(Utility.f("%d번 스토어 찜하기", id), Utility.f("../store/view?id=%d", id));
@@ -70,28 +71,29 @@ public class UserLikeController {
 	}
 	
 	// 찜 취소
-	@RequestMapping("/usr/store/remUserLike")
+	@RequestMapping("/usr/userLike/delUserLike")
 	@ResponseBody
-	public String delUserLike(int id, String relTypeCode, int like) {
+	public String delUserLike(int id, String relTypeCode, int liked) {
 		
+		// 찜 취소 스토어를 가져오기
 		Store store = storeService.getStoreById(id);
 		
 		if (store == null) {
-			return Utility.jsHistoryBack("해당  스토어는 존재하지 않습니다");
+			return Utility.jsHistoryBack("해당 스토어는 존재하지 않습니다");
 		}
 		
 		UserLike userLike = userLikeService.getUserLike(rq.getLoginedMemberId(), relTypeCode, id);
 		
 		if(userLike.getGetLikeStore() == 0) {
-			return Utility.jsHistoryBack("취소할거 없음");
+			return Utility.jsHistoryBack("취소할 찜이 없습니다.");
 		}
 		
 		userLikeService.delUserLike(rq.getLoginedMemberId(), relTypeCode, id);
 		
-		if(like == 1) {
-			return Utility.jsReplace(Utility.f("해당 스토어 찜 취소", id), Utility.f("../store/detail?id=%d", id));
+		if(liked == 1) {
+			return Utility.jsReplace(Utility.f("해당 스토어 찜 취소", id), Utility.f("../store/view?id=%d", id));
 		} else {
-			return Utility.jsReplace(Utility.f("해당 스토어 찜 취소", id), Utility.f("../store/detail?id=%d", id));
+			return Utility.jsReplace(Utility.f("해당 스토어 찜 취소", id), Utility.f("../store/view?id=%d", id));
 		}
 	}
 	

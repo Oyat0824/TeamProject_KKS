@@ -199,5 +199,16 @@ public class StoreService {
 	private void AdmdeleteStore(Store store) {
 		storeRepository.AdmdeleteStore(store.getId());	
 	}
+
+	// 찜하기
+	public void addLike(String memberId, String storeId) {
+		storeRepository.addLike(memberId, storeId);
+		
+	}
+	// 찜삭제
+	public void removeLike(String memberId, String storeId) {
+		 storeRepository.removeLike(memberId, storeId);	
+	}
+
 	
 }

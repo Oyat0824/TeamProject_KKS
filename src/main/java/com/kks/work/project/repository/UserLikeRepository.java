@@ -12,24 +12,26 @@ public interface UserLikeRepository {
 
 	// UserLike 가져오기
 	@Select("""
-			SELECT * FROM userLike
+			SELECT *
+			FROM userLike
 			WHERE relTypeCode = #{relTypeCode} 
-			AND memberId = #{loginedMemberId}
+			AND memberId = #{loginedMemberId} 
 			AND relId = #{id}
+			LIMIT 1
 			""")
 	UserLike getUserLike(int loginedMemberId, String relTypeCode, int id);
 
 	// UserLike 추가(찜하기)
 	@Insert("""
 			INSERT INTO userLike
-				SET regDate = NOW()
-					updateDate = NOW()
-					memberId = #{loginedMemberId}
-					relTypeCode = #{relTypeCode}
-					relId = #{id}
-					like = #{like}
+				SET regDate = NOW(),
+					updateDate = NOW(),
+					memberId = #{loginedMemberId},
+					relTypeCode = #{relTypeCode},
+					relId = #{id},
+					liked = #{liked};
 			""")
-	void doUserLike(int loginedMemberId, int id, String relTypeCode, int like);
+	void doUserLike(int loginedMemberId, String relTypeCode, int id, int liked);
 
 	// UserLike 추가(찜취소)
 	@Delete("""

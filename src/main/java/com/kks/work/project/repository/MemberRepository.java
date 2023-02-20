@@ -182,4 +182,5 @@ public interface MemberRepository {
 				</script>
 				""")
 	public void deleteMember(int id);
+
 }

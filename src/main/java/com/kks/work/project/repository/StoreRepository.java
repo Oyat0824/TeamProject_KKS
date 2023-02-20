@@ -251,5 +251,24 @@ public interface StoreRepository {
 				</script>
 			""")
 	public void AdmdeleteStore(int id);
-		
+
+	// 찜하기
+	@Insert("""
+			INSERT INTO `like` 
+			SET regDate = NOW(), 
+				updateDate = NOW(), 
+				memberId = #{memberId}, 
+				storeId = #{storeId}		
+			""")
+	public void addLike(String memberId, String storeId);
+
+	// 찜삭제
+	@Delete("""
+			DELETE FROM `like` 
+			WHERE memberId = #{memberId}
+			AND storeId = #{storeId}	
+			""")
+	public void removeLike(String memberId, String storeId);
+
+
 }
