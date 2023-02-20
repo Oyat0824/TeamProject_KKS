@@ -116,7 +116,7 @@
 			<div class="desc flex-auto">
 				<div><span class="text-sm text-gray-500">주문번호 : ${purchase.orderNum}</span></div>
 				<div><span class="text-sm text-gray-500">[SB_STORE] ${store.storeName}</span></div>
-				<div><span class="whitespace-nowrap">${product.productName}</span></div>
+				<div><span>${product.productName}</span></div>
 			</div>		
 		</div>
 		
