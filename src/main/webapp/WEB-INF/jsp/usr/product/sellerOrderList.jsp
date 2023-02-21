@@ -37,7 +37,7 @@
 						<th class="text-sm">주문일</th>
 						<th class="text-sm">배송 메모</th>
 						<th class="text-sm">운송장 번호</th>
-						<th class="text-sm">주문 취소</th>
+						<th class="text-sm">주문 상황</th>
 					</tr>
 				</thead>
 

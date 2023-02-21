@@ -12,7 +12,8 @@
 %>
 </head>
 <script language="javascript">
-	document.domain = "localhost";
+	// document.domain = "localhost";
+	
 	function init(){
 		
 		let url = location.href;

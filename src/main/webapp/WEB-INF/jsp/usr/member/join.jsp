@@ -221,12 +221,14 @@
 			*/
 			if (rsp.success) {
 				console.log(rsp);
+			} else {
+				console.log(rsp)
 			}
 		});
 	}
 	
 	// 도로명 주소 API
-	document.domain = "localhost";
+	// document.domain = "localhost";
 	
 	function goPopup() {
 	    var pop = window.open("../popup/jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
