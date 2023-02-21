@@ -64,6 +64,7 @@
 - [Guava: Google Core Libraries For Java](https://mvnrepository.com/artifact/com.google.guava/guava)
 
 > 기본적인 동적 홈페이지 구성을 위해 사용했으며, 디자인과 슬라이드, 텍스트 에디터를 위해 사용했습니다.
+- HTML / CSS
 - JavaScript / AJAX
 - [제이쿼리](https://jquery.com/)
 - [슬릭](https://kenwheeler.github.io/slick/)
